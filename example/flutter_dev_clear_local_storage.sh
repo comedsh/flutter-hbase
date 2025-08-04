@@ -1,0 +1,1 @@
+flutter run --dart-define=APP_ENV=dev --dart-define=CLEAR_LOCAL_STORAGE=true --no-enable-impeller
