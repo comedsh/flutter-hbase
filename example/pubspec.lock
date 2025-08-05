@@ -2,13 +2,13 @@
 # See https://dart.dev/tools/pub/glossary#lockfile
 packages:
   appbase:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: appbase
-      sha256: "22e80530a442139d0f6ca63a532fb5544e67ab4359a3e401c4a5375f24422138"
+      sha256: eb1965537aeedf863a5a6ec9e935193b91062da5ef97a08c1a7a8d68870c78ea
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   archive:
     dependency: transitive
     description:
@@ -406,7 +406,7 @@ packages:
     source: hosted
     version: "8.2.8"
   get:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: get
       sha256: c79eeb4339f1f3deffd9ec912f8a923834bec55f7b49c9e882b8fef2c139d425
@@ -884,6 +884,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  quiver:
+    dependency: transitive
+    description:
+      name: quiver
+      sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.2"
   retry:
     dependency: transitive
     description:
@@ -901,7 +909,7 @@ packages:
     source: hosted
     version: "0.28.0"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       sha256: "6e8bf70b7fef813df4e9a36f658ac46d107db4b4cfe1048b477d4e453a8159f5"
@@ -1058,7 +1066,7 @@ packages:
     source: hosted
     version: "2.1.0"
   sycomponents:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sycomponents
       sha256: aae7eda75192e288bb2fe28a6d9f54b37ac5ba531aac1f4a83f7a9449487fba8
