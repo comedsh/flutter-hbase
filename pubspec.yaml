@@ -39,6 +39,24 @@ dependencies:
   quiver: ^3.2.2
   get: ^4.6.6
   shared_preferences: ^2.2.3
+  flutter_staggered_grid_view: ^0.7.0
+  # 将 infinite_scroll_pagination 的版本固定为 4.0.0 避免出现如下的错误；（背景：在构建 swapface_base_app 的时候因为 infinite_scroll_pagination 升级为 4.1.0 后出现如下错误）
+  # RenderViewport does not support returning intrinsic dimensions.
+  # Calculating the intrinsic dimensions would require instantiating every child of the viewport, which
+  # defeats the point of viewports being lazy.
+  # If you are merely trying to shrink-wrap the viewport in the main axis direction, consider a
+  # RenderShrinkWrappingViewport render object (ShrinkWrappingViewport widget), which achieves that
+  # effect without implementing the intrinsic dimension API.
+  #
+  # The relevant error-causing widget was:
+  #  SliverFillRemaining
+  #   SliverFillRemaining:file:///Users/mac/.pub-cache/hosted/pub.dev/infinite_scroll_pagination-4.1.0/lib/src/widgets/helpers/paged_layout_builder.dart:311:16
+  #
+  # When the exception was thrown, this was the stack:
+  # #0      RenderViewportBase.debugThrowIfNotCheckingIntrinsics.<anonymous closure> (package:flutter/src/rendering/viewport.dart:491:9)
+  # #1      RenderViewportBase.debugThrowIfNotCheckingIntrinsics (package:flutter/src/rendering/viewport.dart:505:6)
+  # #2      RenderViewportBase.computeMaxIntrinsicHeight (package:flutter/src/rendering/viewport.dart:529:12)
+  infinite_scroll_pagination: 4.0.0  
   sycomponents:
     version: ^2.0.0
     hosted:
@@ -46,7 +64,7 @@ dependencies:
   appbase:
     version: ^1.0.0
     hosted:
-      url: http://localhost:4000/  
+      url: http://localhost:4000/
 
 
 dev_dependencies:

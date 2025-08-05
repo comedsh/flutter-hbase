@@ -3,14 +3,14 @@ class Profile {
   final String name;
   final String avatar;
   final String? description;
-  final int follwerCount;
+  final int followerCount;
 
   Profile({
     required this.code, 
     required this.name, 
     required this.avatar, 
     this.description, 
-    required this.follwerCount
+    required this.followerCount
   });
 
   Profile.fromJson(Map<String, dynamic> json)
@@ -18,7 +18,7 @@ class Profile {
       name = json['name'],
       avatar = json['avatar'],
       description = json['description'],
-      follwerCount = json['follwerCount'];
+      followerCount = json['followerCount'];
 
   /// 注意 save [User] 到本地存储会用到该方法进行序列化
   Map<String, dynamic> toJson() => 
@@ -27,6 +27,6 @@ class Profile {
       'name': name,
       'avatar': avatar,
       'description': description,
-      'follwerCount': follwerCount
+      'followerCount': followerCount
     };  
 }

@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: appbase
-      sha256: eb1965537aeedf863a5a6ec9e935193b91062da5ef97a08c1a7a8d68870c78ea
+      sha256: "314a91a57233a588cb5da384321a8d5ffcf14d289b47ef5a9e3fb2ff3b8db497"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+2"
+    version: "1.0.0+5"
   archive:
     dependency: transitive
     description:
@@ -363,6 +363,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_staggered_grid_view:
+    dependency: transitive
+    description:
+      name: flutter_staggered_grid_view
+      sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -572,6 +580,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  infinite_scroll_pagination:
+    dependency: transitive
+    description:
+      name: infinite_scroll_pagination
+      sha256: b68bce20752fcf36c7739e60de4175494f74e99e9a69b4dd2fe3a1dd07a7f16a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   intl:
     dependency: transitive
     description:
@@ -977,6 +993,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  sliver_tools:
+    dependency: transitive
+    description:
+      name: sliver_tools
+      sha256: eae28220badfb9d0559207badcbbc9ad5331aac829a88cb0964d330d2a4636a6
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.12"
   source_span:
     dependency: transitive
     description:
@@ -1069,10 +1093,10 @@ packages:
     dependency: "direct main"
     description:
       name: sycomponents
-      sha256: aae7eda75192e288bb2fe28a6d9f54b37ac5ba531aac1f4a83f7a9449487fba8
+      sha256: "33ad64e23bc141411c453840f76c6bf73a6081a67955329135e2d06a1d03765b"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.3+1"
+    version: "2.0.3+4"
   synchronized:
     dependency: transitive
     description:

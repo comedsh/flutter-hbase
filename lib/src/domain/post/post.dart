@@ -50,13 +50,13 @@ class Post {
       location = json['location'],
       favorites = json['favorites'],
       likes = json['likes'],
-      height = json['height'],
-      width = json['width'],
+      height = json['height'].toDouble(),
+      width = json['width'].toDouble(),
       thumbnail = json['thumbnail'],
       type = PostType.values.byName(json['type']),
       uploadTs = DateTime.parse(json['uploadTs']),
       isPinned = json['isPinned'],
-      slots = json['slots'].map((slot) => PostSlot.fromJson(slot)),
+      slots = json['slots'].map<PostSlot>((s) => PostSlot.fromJson(s)).toList(),
       profile = Profile.fromJson(json['profile']);
 
   /// 注意 save [User] 到本地存储会用到该方法进行序列化
