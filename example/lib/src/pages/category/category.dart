@@ -20,7 +20,6 @@ class CategoryPage extends StatelessWidget {
           backgroundColor: Colors.transparent, // 透明 appbar 必填
           scrolledUnderElevation: 0,  // 如果不设置，拽动页面 appbar 会出现阴影；
           /// 设置透明 appbar 结束
-          
           /// TabBar 必须嵌入到 title 中否则布局会留白
           title:
             TabBar(
@@ -39,15 +38,19 @@ class CategoryPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: tabs.map((tab) {
+            /// TODO parameterize the chnCodes,
+            var postPager = ChannelPostGridPager(chnCodes: ['hanbeauti'], isReelOnly:  true);
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
             return KeepAliveWrapper(
               child: Container(
                 alignment: Alignment.center,
-                child: Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                // TODO parameterize distanceCountToPreLoad
+                child: PostFullScreenListPage(postPager: postPager, distanceCountToPreLoad: 6,),
               ),
             );
           }
-        ).toList())
+        ).toList()),
+        extendBodyBehindAppBar: true,
       ),
     );
   }

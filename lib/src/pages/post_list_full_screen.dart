@@ -51,51 +51,60 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
   @override
   void initState() {
     super.initState();
+    if (widget.firstPagePosts == null) {
+      isFirstPageLoading = true;
+      isFirstPageLoadFail = false; 
+    }
     initPageController();
+    loadFirstPage();
   }
 
   @override
   Widget build(BuildContext context) {
-    /// 使用 Listener 来监听用户手指的 up drag 事件；其目的是当用户翻到最后一页后，能够判断用户的拖拽事件以
-    /// 决定是否追加下一个分页的内容；
-    return Listener(
-      // 手机按下时候的回调
-      onPointerDown: (e) {
-        pointerDownDy = e.position.dy; // 此时手指按下的高度
-      },
-      // 手指抬起时候的回调
-      onPointerUp: (e) {
-        handleNextPageIfLastPageMet(e);
-      },      
-      child: PageView.builder(
-        itemCount: posts.length,
-        controller: pageController,
-        scrollDirection: Axis.vertical, // 滑动方向为垂直方向，默认是水瓶方向
-        // physics: const NeverScrollableScrollPhysics(),
-        allowImplicitScrolling: true, // 预加载 1 个页面
-        onPageChanged: (int index) {
-          debugPrint("$PostFullScreenListPage, onPageChanged, the current page index: $index");
-          if (index <= posts.length - 1) {
-            // 如果当前 post 是 preload post 那么则执行预加载；
-            preloadPostMet(index, () {
-              nextPage().then((posts) {
-                // 因为这里不更新页面，因此应该将其缓存到 cached posts 中；
-                cachedNextPagePosts = [];  // reset
-                cachedNextPagePosts!.addAll(posts); 
+    return 
+    isFirstPageLoadFail 
+    ? FailRetrier(callback: _doGetFirstPage) 
+    : isFirstPageLoading 
+      ? const Center(child: CircularProgressIndicator())
+      /// 使用 Listener 来监听用户手指的 up drag 事件；其目的是当用户翻到最后一页后，能够判断用户的拖拽事件以决定是否追加下一个分页的内容；
+      : Listener(
+        // 手机按下时候的回调
+        onPointerDown: (e) {
+          pointerDownDy = e.position.dy; // 此时手指按下的高度
+        },
+        // 手指抬起时候的回调
+        onPointerUp: (e) {
+          handleNextPageIfLastPageMet(e);
+        },      
+        child: PageView.builder(
+          itemCount: posts.length,
+          controller: pageController,
+          scrollDirection: Axis.vertical, // 滑动方向为垂直方向，默认是水瓶方向
+          // physics: const NeverScrollableScrollPhysics(),
+          allowImplicitScrolling: true, // 预加载 1 个页面
+          onPageChanged: (int index) {
+            debugPrint("$PostFullScreenListPage, onPageChanged, the current page index: $index");
+            if (index <= posts.length - 1) {
+              // 如果当前 post 是 preload post 那么则执行预加载；
+              preloadPostMet(index, () {
+                nextPage().then((posts) {
+                  // 因为这里不更新页面，因此应该将其缓存到 cached posts 中；
+                  cachedNextPagePosts = [];  // reset
+                  cachedNextPagePosts!.addAll(posts); 
+                });
               });
-            });
-          } else  {
-            debugPrint('$index is overflow, _posts not ready yet');
-          }
-        },
-        /// 注意由于预加载的原因，这里的 index 可能是下一页的 post 的了，因此它不能作为 current page post.
-        /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
-        itemBuilder: (BuildContext context, int index) {
-          var post = posts[index];
-          return DefaultCenterSlotPage(post: post);
-        },
-      ),
-    );
+            } else  {
+              debugPrint('$index is overflow, _posts not ready yet');
+            }
+          },
+          /// 注意由于预加载的原因，这里的 index 可能是下一页的 post 的了，因此它不能作为 current page post.
+          /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
+          itemBuilder: (BuildContext context, int index) {
+            var post = posts[index];
+            return DefaultCenterSlotPage(post: post);
+          },
+        ),
+      );
   }
 
   Future<List<Post>> nextPage() async {
@@ -155,19 +164,14 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
 
   /// 单独提取出这个方法的初衷是，失败重试也可以重用该句柄
   void _doGetFirstPage() {
-    // do state reset;
-    setState(() {
-      isFirstPageLoading = true;
-      isFirstPageLoadFail = false; 
-    });
-    nextPage().then((posts) {
+    nextPage().then((posts_) {
       // 如果加载时间过长，用户退出该页面后该请求返回，然后调用 setState 会因为该组件已经从 tree 中移除而报错；错误描述如下，
       // flutter: Error: setState() called after dispose(): _PostPageFullScreenListState#7161c(lifecycle state: defunct, not mounted)
       // flutter: This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree
       // 因此为了避免这样的情况，使用 mounted 来判断该组件是否依然被挂载在 tree 中
       if (mounted) {
         setState((){
-          posts.addAll(posts);
+          posts.addAll(posts_);
           isFirstPageLoading = false;
           isFirstPageLoadFail = false;
           debugPrint('posts.length: ${posts.length}');
@@ -290,7 +294,7 @@ class DefaultCenterSlotPage extends StatelessWidget {
   const DefaultCenterSlotPage({
     super.key, 
     required this.post,
-    this.alignment = Alignment.center
+    this.alignment = Alignment.topCenter
   });
 
   @override
