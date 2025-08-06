@@ -1101,10 +1101,10 @@ packages:
     dependency: "direct main"
     description:
       name: sycomponents
-      sha256: "33ad64e23bc141411c453840f76c6bf73a6081a67955329135e2d06a1d03765b"
+      sha256: "5f1f043ca4824ae01d459ff64e88b67edef052efcb504fbaac3bf4471d8ce4a8"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.3+4"
+    version: "2.0.3+6"
   synchronized:
     dependency: transitive
     description:

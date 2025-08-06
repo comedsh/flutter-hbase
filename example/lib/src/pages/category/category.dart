@@ -39,7 +39,7 @@ class CategoryPage extends StatelessWidget {
         body: TabBarView(
           children: tabs.map((tab) {
             /// TODO parameterize the chnCodes,
-            var postPager = ChannelPostGridPager(chnCodes: ['hanbeauti'], isReelOnly:  true);
+            var postPager = ChannelPostGridPager(chnCodes: ['hanbeauti'], isReelOnly: false);
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
             return KeepAliveWrapper(
               child: Container(

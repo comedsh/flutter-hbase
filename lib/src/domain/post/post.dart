@@ -3,6 +3,8 @@ import 'package:hbase/hbase.dart';
 enum PostType {
   photo,
   album,
+  /// 实际测试有这种类型，并且时间不再是 1 分钟，比如最抓取的 PXqdWnFzEhR，其实更像是 video
+  igtv, 
   video,
   reel
 }

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -101,7 +103,7 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return DefaultCenterSlotPage(post: post);
+            return FullScreenPostPage(post: post);
           },
         ),
       );
@@ -287,26 +289,34 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
 
 }
 
-class DefaultCenterSlotPage extends StatelessWidget {
+/// 首先模仿抖音，让出 status bar 的空间；然后调整 [Alignment]，如果是 reel 则使用 topCenter，否则使用 center
+class FullScreenPostPage extends StatelessWidget {
   final Post post;
-  final AlignmentGeometry alignment;
 
-  const DefaultCenterSlotPage({
+  const FullScreenPostPage({
     super.key, 
     required this.post,
-    this.alignment = Alignment.topCenter
   });
 
   @override
   Widget build(BuildContext context) {
+    var alignment = post.type == PostType.reel ? Alignment.topCenter : Alignment.center;
     // convert post slots to carousel slots
     List<Slot> slots = [];  // Carousel slots
     for (var slot in post.slots) {
       slots.add(Slot(width: post.width, height: post.height, picUrl: slot.pic, videoUrl: slot.video));
     }
-    return Container(
-      alignment: alignment,
-      child: AutoKnockDoorShowCaseCarousel(slots: slots)
+    return Column(
+      children: [
+        /// 模仿抖音，除了直播以外其它的图片、视频的播放都会让开 status bar 的空间；
+        SizedBox(height: Screen.statusBarHeight(context)),
+        Expanded(
+          child: Container(
+            alignment: alignment,
+            child: AutoKnockDoorShowCaseCarousel(slots: slots)
+          ),
+        ),
+      ],
     );
   }
 }
