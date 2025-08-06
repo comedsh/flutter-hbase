@@ -56,7 +56,8 @@ dependencies:
   # #0      RenderViewportBase.debugThrowIfNotCheckingIntrinsics.<anonymous closure> (package:flutter/src/rendering/viewport.dart:491:9)
   # #1      RenderViewportBase.debugThrowIfNotCheckingIntrinsics (package:flutter/src/rendering/viewport.dart:505:6)
   # #2      RenderViewportBase.computeMaxIntrinsicHeight (package:flutter/src/rendering/viewport.dart:529:12)
-  infinite_scroll_pagination: 4.0.0  
+  infinite_scroll_pagination: 4.0.0
+  easy_debounce: ^2.0.3  
   sycomponents:
     version: ^2.0.0
     hosted:

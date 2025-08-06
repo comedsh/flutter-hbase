@@ -2,13 +2,13 @@ import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 
+/// 最终还是沿用 [PostPager] 最主要的原因是因为可以满足这样的一种场景，即是从 PostGridList 页面点击某个
+/// 帖子进入 [PostList] 的场景，这样这两个组件可以共同使用同一个 [PostPager] 实例进行分页
 abstract class PostPager {
   int pageNum;
   int pageSize;
   bool isLastPage = false;
 
-  /// 最终还是沿用 [PostPager] 最主要的原因是因为可以满足这样的一种场景，即是从 PostGridList 页面点击某个
-  /// 帖子进入 [PostList] 的场景，这样这两个组件可以共同使用同一个 [PostPager] 实例进行分页
   PostPager({
     this.pageNum = 1,
     this.pageSize = 12,
