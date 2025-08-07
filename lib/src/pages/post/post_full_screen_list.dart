@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-class PostFullScreenListPage extends StatefulWidget {
+/// 之所以将其定义为抽象类是为了能够让子系统拥有最大的自定义的灵活性，相关的实现嘞参考 [DemoPostFullScreenListPage]
+abstract class PostFullScreenListPage extends StatefulWidget {
   /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用
   final List<Post>? firstPagePosts;
   /// 通常从 [PostGridList] 点击进入到指定 [chosedPost]，作为第一个展示的 Post；
@@ -13,8 +14,7 @@ class PostFullScreenListPage extends StatefulWidget {
   final PostPager postPager;
   /// 设置滑动到距离最后多少个 posts 的时候开始加载下一个分页
   final int distanceCountToPreLoad;
-
-  /// throttle id 可以限制多个相同的 throttle
+   /// throttle id 可以限制多个相同的 throttle
   static const String loadNextThrottleName = 'load-next-page'; 
   /// 时间尽量设置长一些，避免 preload 与 final page load 争用，试想，如果用户滑动非常快，在 preload
   /// 还没有返回的时候，已经触达了最后一页，那么如果没有 Throttle 设置的话，两者会并发加载分页，造成争用；
@@ -26,24 +26,19 @@ class PostFullScreenListPage extends StatefulWidget {
     this.firstPagePosts, 
     this.chosedPost, 
     required this.postPager,
-    required this.distanceCountToPreLoad
+    required this.distanceCountToPreLoad,
   });
 
-  @override
-  State<PostFullScreenListPage> createState() => _PostFullScreenListPageState();
 }
 
-class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
+abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> extends State<T> {
   /// 只有异步加载第一分页需要 loading
   bool isFirstPageLoading = false;  
   /// 如果第一分页加载失败，会使用 FailRetrier 进行重试
   bool isFirstPageLoadFail = false; 
-
   final List<Post> posts = [];
   List<Post>? cachedNextPagePosts;  // 因为分页是提前加载好的，因此先缓存，在触发分页的时候再添加给 _posts  
-
   late PageController pageController;
-
   double pointerDownDy = 0.0;
   /// 用来识别用户向上发生了拖拽的距离
   final dragRecognizedDistance = sp(80.0);
@@ -101,7 +96,7 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return FullScreenPostPage(post: post);
+            return createFullScreenPostPage(post);
           },
         ),
       );
@@ -285,36 +280,7 @@ class _PostFullScreenListPageState extends State<PostFullScreenListPage> {
     }
   }
 
-}
+  /// 子系统需要实现该方法以提供 fullscreen post 页面
+  FullScreenPostPage createFullScreenPostPage(Post post); 
 
-/// 首先模仿抖音，让出 status bar 的空间；然后调整 [Alignment]，如果是 reel 则使用 topCenter，否则使用 center
-class FullScreenPostPage extends StatelessWidget {
-  final Post post;
-
-  const FullScreenPostPage({
-    super.key, 
-    required this.post,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var alignment = post.type == PostType.reel ? Alignment.topCenter : Alignment.center;
-    // convert post slots to carousel slots
-    List<Slot> slots = [];  // Carousel slots
-    for (var slot in post.slots) {
-      slots.add(Slot(width: post.width, height: post.height, picUrl: slot.pic, videoUrl: slot.video));
-    }
-    return Column(
-      children: [
-        /// 模仿抖音，除了直播以外其它的图片、视频的播放都会让开 status bar 的空间；
-        SizedBox(height: Screen.statusBarHeight(context)),
-        Expanded(
-          child: Container(
-            alignment: alignment,
-            child: AutoKnockDoorShowCaseCarousel(slots: slots)
-          ),
-        ),
-      ],
-    );
-  }
 }

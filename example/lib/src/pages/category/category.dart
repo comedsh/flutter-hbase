@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
+import '../post/demo_post_full_screen_list.dart';
+
 class CategoryPage extends StatelessWidget {
   final List<TabData> tabs;
 
@@ -42,7 +44,6 @@ class CategoryPage extends StatelessWidget {
           children: tabs.map((TabData tab) {
             var chnCodes = ['hanbeauti'];
             var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
-
             /// TODO parameterize the chnCodes,
             var postPager = ChannelTagPostGridPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true);
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
@@ -50,7 +51,7 @@ class CategoryPage extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 // TODO parameterize distanceCountToPreLoad according with the pageSize settings
-                child: PostFullScreenListPage(postPager: postPager, distanceCountToPreLoad: 6,),
+                child: DemoPostFullScreenListPage(postPager: postPager, distanceCountToPreLoad: 6,),
               ),
             );
           }
