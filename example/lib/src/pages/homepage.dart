@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     return CategoryPage(tabs: [
       TabData(id: 'rcmd', name: '推荐'),
       TabData(id: 'omei', name: '欧美'),
-      TabData(id: 'rihan', name: '日韩'),
+      TabData(id: 'rhan', name: '日韩'),
       TabData(id: 'xmt', name: '新马泰'),
       TabData(id: 'qita', name: '其它'),
     ]);

@@ -56,23 +56,30 @@ abstract class PostPager {
 }
 
 
-class ChannelPostGridPager extends PostPager {
+class ChannelTagPostGridPager extends PostPager {
   final List<String> chnCodes;
+  List<String>? tagCodes;
   final bool isReelOnly;
 
   /// 获取一个或者多个 channel 中的 posts，分页按照一个 profile 一个 post 的方式返回
-  ChannelPostGridPager({
+  ChannelTagPostGridPager({
     super.pageNum, 
     super.pageSize, 
     required this.chnCodes, 
+    this.tagCodes,
     required this.isReelOnly
   });
 
-  /// 约定相对路径为 /posts/cpgp/
   @override
   Future<List<Post>> fetchNextPage() async {
     var chnCodesStr = chnCodes.join(',');
-    var r = await dio.get('/posts/cpgp/$pageNum/$pageSize/$chnCodesStr/$isReelOnly');
+    var tagCodesStr = tagCodes?.join(',');
+
+    /// 注意 cpgp 是 channel post grid page 的简写，ctpgp 是 channel tag post grip page 的简写
+    var r = tagCodesStr == null
+      ? await dio.get('/posts/cpgp/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
+      : await dio.get('/posts/ctpgp/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
+
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
 

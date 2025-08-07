@@ -15,10 +15,12 @@ class CategoryPage extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           /// 设置透明 appbar 开始；下面的属性是设置透明 appbar 的必要属性
-          elevation: 0,  // 相当于设置 z-index 值为 0，必填
+          elevation: 0.0,  // 相当于设置 z-index 值为 0，必填
           shadowColor: Colors.transparent,  // 透明 appbar 必填
           backgroundColor: Colors.transparent, // 透明 appbar 必填
           scrolledUnderElevation: 0,  // 如果不设置，拽动页面 appbar 会出现阴影；
+          // 在透明的 appbar 上添加一层蒙版，避免某些浅色字体无法看清
+          flexibleSpace: MyAppBar.appbarMask(context),          
           /// 设置透明 appbar 结束
           /// TabBar 必须嵌入到 title 中否则布局会留白
           title:
@@ -37,14 +39,17 @@ class CategoryPage extends StatelessWidget {
             ),
         ),
         body: TabBarView(
-          children: tabs.map((tab) {
+          children: tabs.map((TabData tab) {
+            var chnCodes = ['hanbeauti'];
+            var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
+
             /// TODO parameterize the chnCodes,
-            var postPager = ChannelPostGridPager(chnCodes: ['hanbeauti'], isReelOnly: false);
+            var postPager = ChannelTagPostGridPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true);
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
             return KeepAliveWrapper(
               child: Container(
                 alignment: Alignment.center,
-                // TODO parameterize distanceCountToPreLoad
+                // TODO parameterize distanceCountToPreLoad according with the pageSize settings
                 child: PostFullScreenListPage(postPager: postPager, distanceCountToPreLoad: 6,),
               ),
             );

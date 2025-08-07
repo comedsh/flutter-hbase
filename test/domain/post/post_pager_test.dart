@@ -22,10 +22,20 @@ void main() {
 
 
   test('next ChannelPostGridPager', () async {
-    var pager = ChannelPostGridPager(chnCodes: ['hanbeauti'], isReelOnly: true);
+    var pager = ChannelTagPostGridPager(chnCodes: ['hanbeauti'], isReelOnly: true);
     List<Post> posts = await pager.nextPage();
     for(var post in posts) {
       debugPrint(post.toJson().toString());
     }
+    
+    debugPrint('===========================================================');
+
+    pager = ChannelTagPostGridPager(chnCodes: ['hanbeauti', 'star'], tagCodes: ['omei'], isReelOnly: true);
+    posts = await pager.nextPage();
+    for(var post in posts) {
+      debugPrint(post.toJson().toString());
+    }
   });
+
+
 }
