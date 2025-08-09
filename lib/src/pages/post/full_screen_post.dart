@@ -118,9 +118,9 @@ abstract class FullScreenPostPage extends StatelessWidget{
     return Column(
       children: [
         likesIconButton(post),
-        SizedBox(height: sp(22)),
+        SizedBox(height: sp(26)),
         favorIconButton(post),
-        SizedBox(height: sp(22)),
+        SizedBox(height: sp(26)),
         downloadButton(post)
       ],
     );
@@ -129,7 +129,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
   likesIconButton(Post post) {
     return Column(
       children: [
-        Icon(Ionicons.heart_outline, size: sp(32),),
+        Icon(Ionicons.heart_outline, size: sp(30),),
         SizedBox(height: sp(4)),
         Text(compactFormat.format(123456)),
       ],
@@ -139,7 +139,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
   favorIconButton(Post post) {
     return Column(
       children: [
-        Icon(Ionicons.star_outline, size: sp(32),),
+        Icon(Ionicons.star_outline, size: sp(30),),
         SizedBox(height: sp(4)),
         Text(compactFormat.format(1234)),
       ],
@@ -149,7 +149,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
   downloadButton(Post post) {
     return Column(
       children: [
-        Icon(Ionicons.cloud_download_outline, size: sp(32),),
+        Icon(Ionicons.cloud_download_outline, size: sp(30),),
         SizedBox(height: sp(4)),
         const Text('下载'),
       ],
