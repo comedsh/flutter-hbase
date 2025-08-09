@@ -26,7 +26,10 @@
             "name": "example",
             "cwd": "example",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--dart-define=APP_ENV=dev"
+            ]
         },
         {
             "name": "example (profile mode)",
