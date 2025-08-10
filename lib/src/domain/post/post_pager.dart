@@ -77,8 +77,8 @@ class ChannelTagPostGridPager extends PostPager {
 
     /// 注意 cpgp 是 channel post grid page 的简写，ctpgp 是 channel tag post grip page 的简写
     var r = tagCodesStr == null
-      ? await dio.get('/posts/cpgp/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
-      : await dio.get('/posts/ctpgp/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
+      ? await dio.get('/posts/chn/ppg/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
+      : await dio.get('/posts/chn/tag/ppg/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
 
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
