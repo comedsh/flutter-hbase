@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
+
+/// [TabBar] 可放入 body 中
 class TabbarViewBodyPage extends StatelessWidget {
   final List<TabData> tabs;
+  final int? initialIndex;
 
   /// [TabBar] 是嵌入 body 中的
-  const TabbarViewBodyPage({super.key, required this.tabs});
+  const TabbarViewBodyPage({super.key, required this.tabs, this.initialIndex});
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: initialIndex ?? 0,
       length: tabs.length,
       child: Column(
         children: [

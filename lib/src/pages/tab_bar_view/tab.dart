@@ -5,8 +5,10 @@ import 'package:quiver/core.dart';
 class TabData {
   final String id;
   final String name;
+  /// 是否默认展示
+  final bool? isDefault;
 
-  TabData({required this.id, required this.name});
+  TabData({required this.id, required this.name, this.isDefault});
 
   /// 重载 == 方法
   /// 
@@ -26,4 +28,18 @@ class TabData {
   @override
   int get hashCode => hash2(name.hashCode, id.hashCode);
 
+}
+
+class TabService {
+
+  /// 从 [tabs] 中找到第一个 default 的 tab index，但要注意下面两种情况
+  /// 1. 如果无意中设置了多个 default 则选择第一个，但是日志中会输出 warning msg
+  /// 2. 如果没有任何一个设置 default，那么默认输出 0
+  static getDefaultIndex(List<TabData> tabs) {
+    // 如果没有找 isDefault 则通过 orElse 分支返回第一个 tab
+    int index = tabs.indexWhere((tab) => tab.isDefault ?? false == true);
+    // indexWhere 如果没有找到的话会返回 -1，这种情况下我们需要的是 0，转换！
+    index = index == -1 ? 0 : index;
+    return index;
+  }
 }

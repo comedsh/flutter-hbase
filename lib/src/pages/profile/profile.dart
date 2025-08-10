@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:hbase/src/pages/profile/components/profile_intro_panel.dart';
-import 'package:sycomponents/components.dart';
 
 class ProfilePage extends StatelessWidget {
   final Profile profile;
@@ -9,6 +8,10 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var tabDatas = [ 
+      TabData(id: 'hot', name: '热门'), 
+      TabData(id: 'new', name: "最新", isDefault: true)
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(profile.name)
@@ -19,7 +22,10 @@ class ProfilePage extends StatelessWidget {
             SliverToBoxAdapter(child: ProfileIntroPanel(profile: profile))
           ];
         }, 
-        body: TabbarViewBodyPage(tabs: [TabData(id: '01', name: '热门'), TabData(id: '02', name: "最近更新")],)
+        body: TabbarViewBodyPage(
+          tabs: tabDatas,
+          initialIndex: TabService.getDefaultIndex(tabDatas),
+        )
       )
     );
   }
