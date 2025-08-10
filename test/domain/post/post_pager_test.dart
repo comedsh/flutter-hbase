@@ -21,21 +21,35 @@ void main() {
   });  
 
 
-  test('next ChannelPostGridPager', () async {
-    var pager = ChannelTagPostGridPager(chnCodes: ['hanbeauti'], isReelOnly: true);
+  test('next ChannelPostPager', () async {
+    var pager = ChannelTagPostPager(chnCodes: ['hanbeauti'], isReelOnly: true);
     List<Post> posts = await pager.nextPage();
     for(var post in posts) {
       debugPrint(post.toJson().toString());
     }
-    
     debugPrint('===========================================================');
-
-    pager = ChannelTagPostGridPager(chnCodes: ['hanbeauti', 'star'], tagCodes: ['omei'], isReelOnly: true);
+    pager = ChannelTagPostPager(chnCodes: ['hanbeauti', 'star'], tagCodes: ['omei'], isReelOnly: true);
     posts = await pager.nextPage();
     for(var post in posts) {
       debugPrint(post.toJson().toString());
     }
   });
 
-
+  test('next ProfilePostPager', () async {
+    var pager = ProfilePostPager(profileCode: 'johnalaska', sortBy: 'new');
+    List<Post> posts = await pager.nextPage();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((p) => debugPrint('${p.shortcode}, ${p.profileCode}, ${p.uploadTs}'));
+    posts = await pager.nextPage();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((p) => debugPrint('${p.shortcode}, ${p.profileCode}, ${p.uploadTs}'));
+    debugPrint('===========================================================');
+    pager = ProfilePostPager(profileCode: 'johnalaska', sortBy: 'hot');
+    posts = await pager.nextPage();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((p) => debugPrint('${p.shortcode}, ${p.profileCode}, ${p.uploadTs}'));
+    posts = await pager.nextPage();
+    // ignore: avoid_function_literals_in_foreach_calls
+    posts.forEach((p) => debugPrint('${p.shortcode}, ${p.profileCode}, ${p.uploadTs}'));
+  });
 }

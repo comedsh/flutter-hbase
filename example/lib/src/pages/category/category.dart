@@ -46,7 +46,7 @@ class CategoryPage extends StatelessWidget {
             var chnCodes = ['hanbeauti'];
             var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
             /// TODO parameterize the chnCodes,
-            var postPager = ChannelTagPostGridPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true);
+            var postPager = ChannelTagPostPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true);
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
             return KeepAliveWrapper(
               child: Container(
