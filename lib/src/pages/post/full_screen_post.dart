@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+import 'package:hbase/src/pages/profile/profile.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
@@ -71,9 +73,12 @@ abstract class FullScreenPostPage extends StatelessWidget{
                 height: sp(44),
                 failTextFontSize: sp(9.0),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: sp(8.0)),
-                child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+              GestureDetector(
+                onTap: () => Get.to(() => ProfilePage(profile: post.profile)),
+                child: Padding(
+                  padding: EdgeInsets.only(left: sp(8.0)),
+                  child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                ),
               ),
               Padding(
                 padding: EdgeInsets.only(left: sp(8.0)),
@@ -93,11 +98,8 @@ abstract class FullScreenPostPage extends StatelessWidget{
                         width: 1.0, // Width of the border
                       ),
                     ),
-                    // You can also customize other properties like foregroundColor, backgroundColor, etc.
-                    // foregroundColor: Colors.blue, // Text color
-                    // backgroundColor: Colors.transparent, // Background color
                     backgroundColor: Colors.black12.withOpacity(0.1)
-                  ),           
+                  ),
                   child: const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ),        
@@ -105,8 +107,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
           ),
           SizedBox(height: sp(26)),
           /// 思路是这样的，如果用户点击展开，则 toggle 替换组件
-          captionWidget(post),
-          // captionWithScrollTextField(post)
+          Caption(post: post, maxLines: 7,)
         ],
       ),
     );
@@ -152,10 +153,6 @@ abstract class FullScreenPostPage extends StatelessWidget{
         const Text('下载'),
       ],
     );
-  }
-
-  captionWidget(Post post) {
-    return Caption(post: post, maxLines: 7,);
   }
 
 }

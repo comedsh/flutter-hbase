@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /// TODO configure the categories from backend and loaded to frontend
       body: CategoryPage(tabs: [
         TabData(id: 'rcmd', name: '推荐'),
         TabData(id: 'omei', name: '欧美'),

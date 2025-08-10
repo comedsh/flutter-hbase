@@ -54,7 +54,30 @@ class TabbarViewBodyPage extends StatelessWidget {
                 return KeepAliveWrapper(
                   child: Container(
                     alignment: Alignment.center,
-                    child: Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+                          
+                        ],
+                      ),
+                    ),
                   ),
                 );
               }
