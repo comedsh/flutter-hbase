@@ -131,7 +131,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
       children: [
         Icon(Ionicons.heart_outline, size: sp(30),),
         SizedBox(height: sp(4)),
-        Text(compactFormat.format(123456)),
+        Text(compactFormat.format(post.likes)),
       ],
     );
   }
@@ -141,7 +141,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
       children: [
         Icon(Ionicons.star_outline, size: sp(30),),
         SizedBox(height: sp(4)),
-        Text(compactFormat.format(1234)),
+        Text(compactFormat.format(post.favorites)),
       ],
     );
   }
