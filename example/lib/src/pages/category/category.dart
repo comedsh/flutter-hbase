@@ -5,6 +5,7 @@ import 'package:sycomponents/components.dart';
 
 import '../post/demo_post_full_screen_list.dart';
 
+/// TODO rename it to CategoryPostFullScreenListPage and move this to HBase.
 class CategoryPage extends StatelessWidget {
   final List<TabData> tabs;
 
@@ -24,7 +25,7 @@ class CategoryPage extends StatelessWidget {
           // 在透明的 appbar 上添加一层蒙版，避免某些浅色字体无法看清
           flexibleSpace: MyAppBar.appbarMask(context),          
           /// 设置透明 appbar 结束
-          /// TabBar 必须嵌入到 title 中否则布局会留白
+          /// TabBar 必须嵌入到 title 中否则 tabbar 会在 body 中展示，顶部就是空白的 appbar
           title:
             TabBar(
               isScrollable: true,

@@ -28,8 +28,6 @@ abstract class FullScreenPostPage extends StatelessWidget{
     }
     return Column(
       children: [
-        /// 模仿抖音，除了直播以外其它的图片、视频的播放都会让开 status bar 的空间；
-        // SizedBox(height: Screen.statusBarHeight(context)),
         Expanded(
           child: Container(
             alignment: Alignment.center,
