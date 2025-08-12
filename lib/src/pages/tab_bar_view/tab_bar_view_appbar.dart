@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-class TabbarViewAppBarPage extends StatelessWidget {
+class TabBarViewAppBarPage extends StatelessWidget {
   final List<TabData> tabs;
 
   /// [TabBar] 是嵌入 appbar 中的
-  const TabbarViewAppBarPage({super.key, required this.tabs});
+  const TabBarViewAppBarPage({super.key, required this.tabs});
 
   @override
   Widget build(BuildContext context) {

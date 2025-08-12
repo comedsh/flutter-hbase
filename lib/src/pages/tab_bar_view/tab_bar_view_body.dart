@@ -3,14 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
+typedef TabBarViewContentBuilder = Widget Function(BuildContext context, TabData tab);
+
 
 /// [TabBar] 可放入 body 中
-class TabbarViewBodyPage extends StatelessWidget {
+class TabBarViewBodyPage extends StatelessWidget {
   final List<TabData> tabs;
+  final TabBarViewContentBuilder tabBarViewContentBuilder;
   final int? initialIndex;
 
   /// [TabBar] 是嵌入 body 中的
-  const TabbarViewBodyPage({super.key, required this.tabs, this.initialIndex});
+  const TabBarViewBodyPage({
+    super.key,
+    required this.tabs,
+    required this.tabBarViewContentBuilder, 
+    this.initialIndex, 
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -56,38 +64,41 @@ class TabbarViewBodyPage extends StatelessWidget {
               children: tabs.map((tab) {
                 /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
                 return KeepAliveWrapper(
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-                          
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: tabBarViewContentBuilder(context, tab)
                 );
               }
             ).toList()),
           )
         ]
+      ),
+    );
+  }
+
+  mockScrollableContent(TabData tab) {
+    return Container(
+      alignment: Alignment.center,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
+            Text(tab.name, textScaler: const TextScaler.linear(5.0)),                          
+          ],
+        ),
       ),
     );
   }

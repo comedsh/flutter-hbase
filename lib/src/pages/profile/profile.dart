@@ -22,9 +22,13 @@ class ProfilePage extends StatelessWidget {
             SliverToBoxAdapter(child: ProfileIntroPanel(profile: profile))
           ];
         }, 
-        body: TabbarViewBodyPage(
+        body: TabBarViewBodyPage(
           tabs: tabDatas,
           initialIndex: TabService.getDefaultIndex(tabDatas),
+          tabBarViewContentBuilder: (BuildContext context, TabData tab) {
+            var postPager = ProfilePostPager(profileCode: profile.code, sortBy: tab.id, pageSize: 24);
+            return PostAlbumList(postPager: postPager);
+          },
         )
       )
     );
