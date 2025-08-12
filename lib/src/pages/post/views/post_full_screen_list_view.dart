@@ -14,7 +14,9 @@ abstract class PostFullScreenListView extends StatefulWidget {
   final PostPager postPager;
   /// 设置滑动到距离最后多少个 posts 的时候开始加载下一个分页
   final int distanceCountToPreLoad;
-   /// throttle id 可以限制多个相同的 throttle
+  /// 当滑动到新的分页所执行的回调方法
+  final ValueChanged<int>? onPageChanged;
+  /// throttle id 可以限制多个相同的 throttle
   static const String loadNextThrottleName = 'load-next-page'; 
   /// 时间尽量设置长一些，避免 preload 与 final page load 争用，试想，如果用户滑动非常快，在 preload
   /// 还没有返回的时候，已经触达了最后一页，那么如果没有 Throttle 设置的话，两者会并发加载分页，造成争用；
@@ -27,6 +29,7 @@ abstract class PostFullScreenListView extends StatefulWidget {
     this.chosedPost, 
     required this.postPager,
     required this.distanceCountToPreLoad,
+    this.onPageChanged
   });
 
 }
@@ -52,6 +55,14 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
     }
     initPageController();
     loadFirstPage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      /// 因为 onPageChanged 事件不会在第一个页面被触发，从而导致 PostPageChangedNotification 在第一个页面的时候被
+      /// dispatch，但是 PostPageChangedNotification 又需要，因此只能在 initState 中再发送一次了
+      var index = widget.chosedPost == null 
+        ? 0 
+        : widget.firstPagePosts!.indexWhere((p) => p.shortcode == widget.chosedPost!.shortcode);
+      PostPageChangedNotification(index).dispatch(context);
+    });
   }
 
   @override
@@ -77,10 +88,11 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
           scrollDirection: Axis.vertical, // 滑动方向为垂直方向，默认是水瓶方向
           // physics: const NeverScrollableScrollPhysics(),
           allowImplicitScrolling: true, // 预加载 1 个页面
+          /// 注意第一个页面是不会触发该回调的，
           onPageChanged: (int index) {
             debugPrint("$PostFullScreenListView, onPageChanged, the current page index: $index");
             if (index <= posts.length - 1) {
-              // 如果当前 post 是 preload post 那么则执行预加载；
+              // 如果滑动到了预加载的位置，那么则执行预加载；
               preloadPostMet(index, () {
                 nextPage().then((posts) {
                   // 因为这里不更新页面，因此应该将其缓存到 cached posts 中；
@@ -88,6 +100,10 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
                   cachedNextPagePosts!.addAll(posts); 
                 });
               });
+              /// 特别注意，[onPageChanged] 方法不会在第一个页面显示的时候回调，但是 PostPageChangedNotification 需要
+              /// 因此，该 notification 还在 initState 方法中 dispatch 了一次
+              PostPageChangedNotification(index).dispatch(context);
+              if (widget.onPageChanged != null) widget.onPageChanged!(index);
             } else  {
               debugPrint('$index is overflow, _posts not ready yet');
             }

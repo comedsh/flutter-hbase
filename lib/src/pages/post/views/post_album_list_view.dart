@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hbase/hbase.dart';
@@ -5,18 +7,23 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sycomponents/components.dart';
 
-typedef CellClickCallback = 
-  Future<Post> Function(List<Post> posts, Post post, PostPager postPager);
+typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, PostPager postPager);
 
 /// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可
 class PostAlbumListView extends StatefulWidget {
   final PostPager postPager;
-  final CellClickCallback cellClickCallback;
+  /// 点击 Cell 后的执行逻辑由该回调函数提供；该回调函数可以返回一个 post 用于 scrollTo
+  final OnCellClicked onCellClicked;
+  /// 如果父组件使用的是 [NestedScrollView] 那么就不能使用 [AutoScrollController] 否则无法和 [NestedScrollView]
+  /// 中的其它组件一同滚动；比如在 [ProfilePage] 中因为其使用了 [NestedScrollView] 这里的 [isEnableAutoScroll]
+  /// 就应该被设置为 false 即不要启用 [AutoScrollController]
+  final bool isEnableAutoScroll;
 
   const PostAlbumListView({
     super.key, 
     required this.postPager, 
-    required this.cellClickCallback
+    required this.onCellClicked,
+    this.isEnableAutoScroll = false,
   });
 
   @override
@@ -28,12 +35,14 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   /// 注意，后台是从 1 开始分页的，因此这里务必设置为 1
   PagingController<int, Post> pagingController = PagingController(firstPageKey: 1);
 
-  late AutoScrollController scrollController;
+  late AutoScrollController autoScrollController;
 
   @override
   void initState() {
     super.initState();
-    scrollController = AutoScrollController(
+
+    /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
+    autoScrollController = AutoScrollController(
       viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
       axis: Axis.vertical
     ); // 核心到底使用什么样的 scrollController 由实现类提供
@@ -56,7 +65,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   @override
   void dispose() {
     pagingController.dispose();
-    scrollController.dispose();
+    autoScrollController.dispose();
     super.dispose();
   }
 
@@ -72,6 +81,8 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
         // https://stackoverflow.com/questions/57519765/refresh-indicator-doesnt-work-when-list-doesnt-fill-the-whole-page
         physics: const AlwaysScrollableScrollPhysics(),
         pagingController: pagingController,
+        // 备注，如果这里设置为 null，那么会从上找到最近的一个 ScrollController
+        scrollController: widget.isEnableAutoScroll ? autoScrollController : null,
         // 定义一行多少个元素
         crossAxisCount: 3,  
         // 纵轴两两元素之间的 gap
@@ -79,12 +90,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
         // 横轴两两元素之间的 gap
         crossAxisSpacing: 1,  
         builderDelegate: PagedChildBuilderDelegate<Post>(
-          itemBuilder: (context, post, index) => 
-            AutoScrollTag(
-              key: ValueKey(index),
-              controller: scrollController,
-              index: index,
-              child: cellCreator(post)),
+          itemBuilder: (context, post, index) => cellCreator(post, index),
           // 经过测试该回调只会被处罚一次
           firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
           firstPageErrorIndicatorBuilder: (context) => 
@@ -99,7 +105,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     );
   }
 
-  /// 从 [widget.next]
+  /// 这个方法的重点是同步 [PostPager] 与 [PagingController] 之间的分页状态；
   nextPage(pageNum) async {
     try {
       debugPrint('$PostAlbumListView.nextPage calls, with param nextPage: $pageNum');
@@ -139,17 +145,26 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   pullRefresh() {
     widget.postPager.reset();
     pagingController.refresh();
-    // if (widget.pullRefreshCallback != null) widget.pullRefreshCallback!();
   }  
 
-  Widget cellCreator(Post post) {
+  /// 只有当 [isEnableAutoScroll] 被激活的情况下才需要处理返回时 scrollTo 相关逻辑
+  Widget cellCreator(Post post, int index) {   
     return GestureDetector(
       onTap: () async {
-        Post returnPost = await widget.cellClickCallback(pagingController.itemList!, post, widget.postPager);
-        scrollTo(returnPost);
-      },
-      child: getCell(post)
+        int? i = await widget.onCellClicked(pagingController.itemList!, post, widget.postPager);
+        if (i != null && widget.isEnableAutoScroll) {
+          scrollTo(i);
+        }
+      },              
+      child: widget.isEnableAutoScroll 
+      ? AutoScrollTag(
+          key: ValueKey(post.shortcode),
+          controller: autoScrollController,
+          index: index,
+          child: getCell(post))
+      : getCell(post),
     );
+
   }
 
   /// this should be abstract, but here we provide the default impl
@@ -157,12 +172,12 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     return CachedImage(imgUrl: post.thumbnail);
   }
 
-  scrollTo(Post post) {
-    if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty) {
-      int currentIndex = pagingController.itemList!.indexWhere((p) => p.shortcode == post.shortcode);
-      // debugPrint('navback, currentIndex: $currentIndex');
-      scrollController.scrollToIndex(currentIndex, preferPosition: AutoScrollPosition.begin);
-      scrollController.highlight(currentIndex);    
+  scrollTo(index) {
+    if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty && mounted) {
+      debugPrint('navback, scrollTo: $index');
+      // scrollController.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+      autoScrollController.scrollToIndex(index);
+      autoScrollController.highlight(index);
     }
   }  
 

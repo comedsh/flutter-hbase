@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 
