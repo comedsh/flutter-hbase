@@ -78,6 +78,16 @@ class Post {
       'uploadTs': uploadTs.toIso8601String()
     };  
 
+  /// 重载 == 方法
+  /// 只需要比较 ID 即可 
+  @override
+  bool operator ==(Object other) =>
+      other is Post &&
+      other.runtimeType == runtimeType &&
+      other.shortcode == shortcode;
+
+  @override
+  int get hashCode => shortcode.hashCode;
 
 }
 

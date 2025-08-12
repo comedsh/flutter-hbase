@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:hbase/src/pages/profile/components/profile_intro_panel.dart';
 
-class ProfilePage extends StatelessWidget {
+typedef PostAlbumListCreator = PostAlbumListView Function({required PostPager post, required CellClickCallback cellClickCallback});
+
+abstract class ProfilePage extends StatelessWidget {
   final Profile profile;
+  
   const ProfilePage({super.key, required this.profile});
 
   @override
@@ -27,11 +31,14 @@ class ProfilePage extends StatelessWidget {
           initialIndex: TabService.getDefaultIndex(tabDatas),
           tabBarViewContentBuilder: (BuildContext context, TabData tab) {
             var postPager = ProfilePostPager(profileCode: profile.code, sortBy: tab.id, pageSize: 24);
-            return PostAlbumList(postPager: postPager);
+            return getPostAlbumListView(postPager);
           },
         )
       )
     );
   }
+
+  PostAlbumListView getPostAlbumListView(PostPager postPager);
+
 
 }

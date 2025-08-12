@@ -5,7 +5,7 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
 /// 之所以将其定义为抽象类是为了能够让子系统拥有最大的自定义的灵活性，相关的实现嘞参考 [DemoPostFullScreenListPage]
-abstract class PostFullScreenListPage extends StatefulWidget {
+abstract class PostFullScreenListView extends StatefulWidget {
   /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用
   final List<Post>? firstPagePosts;
   /// 通常从 [PostGridList] 点击进入到指定 [chosedPost]，作为第一个展示的 Post；
@@ -21,7 +21,7 @@ abstract class PostFullScreenListPage extends StatefulWidget {
   /// 因此为了避免这种情况发生，throttle 时长应该尽量长；
   static const int loadNextPageThrottleMilseconds = 3000;
 
-  const PostFullScreenListPage({
+  const PostFullScreenListView({
     super.key, 
     this.firstPagePosts, 
     this.chosedPost, 
@@ -31,7 +31,7 @@ abstract class PostFullScreenListPage extends StatefulWidget {
 
 }
 
-abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> extends State<T> {
+abstract class PostFullScreenListViewState<T extends PostFullScreenListView> extends State<T> {
   /// 只有异步加载第一分页需要 loading
   bool isFirstPageLoading = false;  
   /// 如果第一分页加载失败，会使用 FailRetrier 进行重试
@@ -78,7 +78,7 @@ abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> ext
           // physics: const NeverScrollableScrollPhysics(),
           allowImplicitScrolling: true, // 预加载 1 个页面
           onPageChanged: (int index) {
-            debugPrint("$PostFullScreenListPage, onPageChanged, the current page index: $index");
+            debugPrint("$PostFullScreenListView, onPageChanged, the current page index: $index");
             if (index <= posts.length - 1) {
               // 如果当前 post 是 preload post 那么则执行预加载；
               preloadPostMet(index, () {
@@ -193,8 +193,8 @@ abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> ext
       /// 使用 throttle 限流，即第一次调用 target method，然后 duration ms 内不再调用；
       /// 使用它的场景是为了避免用户快速下滑很快触底的时候又再次进行了一次 load，即保证在该时间段内不会再次发起 nextpage 请求；
       EasyThrottle.throttle(
-        PostFullScreenListPage.loadNextThrottleName,   // <-- An ID for this particular throttler
-        const Duration(milliseconds: PostFullScreenListPage.loadNextPageThrottleMilseconds),   // <-- The throttle duration
+        PostFullScreenListView.loadNextThrottleName,   // <-- An ID for this particular throttler
+        const Duration(milliseconds: PostFullScreenListView.loadNextPageThrottleMilseconds),   // <-- The throttle duration
         () => loadNextPageCallback()
       );
     }
@@ -224,8 +224,8 @@ abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> ext
             // 如果预加载分页失败，那么这里需要继续加载分页；
             // 使用 throttle 限流，即第一次调用 target method，然后 duration ms 内不再调用
             EasyThrottle.throttle(
-              PostFullScreenListPage.loadNextThrottleName,   // <-- An ID for this particular throttler
-              const Duration(milliseconds: PostFullScreenListPage.loadNextPageThrottleMilseconds),   // <-- The throttle duration
+              PostFullScreenListView.loadNextThrottleName,   // <-- An ID for this particular throttler
+              const Duration(milliseconds: PostFullScreenListView.loadNextPageThrottleMilseconds),   // <-- The throttle duration
               () { 
                 // 加载新的分页
                 nextPage().then((posts){
@@ -281,6 +281,6 @@ abstract class PostFullScreenListPageState<T extends PostFullScreenListPage> ext
   }
 
   /// 子系统需要实现该方法以提供 fullscreen post 页面
-  FullScreenPostPage createFullScreenPostPage(Post post); 
+  FullScreenPostView createFullScreenPostPage(Post post); 
 
 }

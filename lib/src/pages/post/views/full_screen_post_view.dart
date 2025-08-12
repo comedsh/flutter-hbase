@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/profile/profile.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
@@ -13,10 +12,10 @@ final compactFormat = NumberFormat.compact(locale: 'zh_CN');
 
 /// 这是一个满屏展示的 post 页面，实现主要是参考 ins 页面的设计；然而之所以将其定义为抽象类
 /// 是让子系统可以按照自己的需求对其进行定制
-abstract class FullScreenPostPage extends StatelessWidget{
+abstract class FullScreenPostView extends StatelessWidget{
   final Post post;
 
-  const FullScreenPostPage({
+  const FullScreenPostView({
     super.key, 
     required this.post,
   });
@@ -74,7 +73,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
                 failTextFontSize: sp(9.0),
               ),
               GestureDetector(
-                onTap: () => Get.to(() => ProfilePage(profile: post.profile)),
+                onTap: () => Get.to(() => getProfilePage(post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
                   child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
@@ -154,5 +153,7 @@ abstract class FullScreenPostPage extends StatelessWidget{
       ],
     );
   }
+
+  ProfilePage getProfilePage(Profile profile);
 
 }

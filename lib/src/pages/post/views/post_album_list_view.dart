@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sycomponents/components.dart';
 
-class PostAlbumList extends StatefulWidget {
+typedef CellClickCallback = 
+  Future<Post> Function(List<Post> posts, Post post, PostPager postPager);
+
+/// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可
+class PostAlbumListView extends StatefulWidget {
   final PostPager postPager;
-  const PostAlbumList({super.key, required this.postPager});
+  final CellClickCallback cellClickCallback;
+
+  const PostAlbumListView({
+    super.key, 
+    required this.postPager, 
+    required this.cellClickCallback
+  });
 
   @override
-  State<PostAlbumList> createState() => _PostAlbumListState();
+  State<PostAlbumListView> createState() => _PostAlbumListViewState();
 }
 
-class _PostAlbumListState extends State<PostAlbumList> {
+class _PostAlbumListViewState extends State<PostAlbumListView> {
 
   /// 注意，后台是从 1 开始分页的，因此这里务必设置为 1
   PagingController<int, Post> pagingController = PagingController(firstPageKey: 1);
@@ -33,12 +44,13 @@ class _PostAlbumListState extends State<PostAlbumList> {
       await nextPage(pageNum);
     });
 
-    WidgetsBinding.instance.addPostFrameCallback( (_) async {
-      if (mounted) {
-        debugPrint('$PostAlbumList, after cached posts added, then fetch the first page immediatelly');
-        await nextPage(1);  // 注意这里才开始正式加载远程第 1 页面
-      }
-    });
+    /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
+    // WidgetsBinding.instance.addPostFrameCallback( (_) async {
+    //   if (mounted) {
+    //     debugPrint('$PostAlbumList, after cached posts added, then fetch the first page immediatelly');
+    //     await nextPage(1);  // 注意这里才开始正式加载远程第 1 页面
+    //   }
+    // });
   }
   
   @override
@@ -50,39 +62,50 @@ class _PostAlbumListState extends State<PostAlbumList> {
 
   @override
   Widget build(BuildContext context) {
-    return PagedMasonryGridView.count(
-      // 解决 [PostGridListView] 的 items 太少导致 Pull Refresh（下拉更新）不会被触发的问题，参考
-      // https://stackoverflow.com/questions/57519765/refresh-indicator-doesnt-work-when-list-doesnt-fill-the-whole-page
-      physics: const AlwaysScrollableScrollPhysics(),
-      pagingController: pagingController,
-      crossAxisCount: 3,
-      builderDelegate: PagedChildBuilderDelegate<Post>(
-        itemBuilder: (context, post, index) => 
-          AutoScrollTag(
-            key: ValueKey(index),
-            controller: scrollController,
-            index: index,
-            child: getCell(post)),
-        // 经过测试该回调只会被处罚一次
-        firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
-        firstPageErrorIndicatorBuilder: (context) => 
-          DefaultMasonryIndicatorProvider.firstPageErrorIndicator(context, pagingController),
-        newPageErrorIndicatorBuilder: (context) => 
-          NewPageErrorIndicator(
-            errMsg: '网络异常，点击重试',
-            onTap: () => pagingController.retryLastFailedRequest()),
-        noItemsFoundIndicatorBuilder: (context) => DefaultMasonryIndicatorProvider.noItemsFoundIndicatorBuilder(context)
-      )
+    return RefreshIndicator(
+      onRefresh: () async {
+        await HapticFeedback.heavyImpact();  // 给一个震动反馈。
+        await pullRefresh();
+      },
+      child: PagedMasonryGridView.count(
+        // 解决 [PostGridListView] 的 items 太少导致 Pull Refresh（下拉更新）不会被触发的问题，参考
+        // https://stackoverflow.com/questions/57519765/refresh-indicator-doesnt-work-when-list-doesnt-fill-the-whole-page
+        physics: const AlwaysScrollableScrollPhysics(),
+        pagingController: pagingController,
+        // 定义一行多少个元素
+        crossAxisCount: 3,  
+        // 纵轴两两元素之间的 gap
+        mainAxisSpacing: 1,   
+        // 横轴两两元素之间的 gap
+        crossAxisSpacing: 1,  
+        builderDelegate: PagedChildBuilderDelegate<Post>(
+          itemBuilder: (context, post, index) => 
+            AutoScrollTag(
+              key: ValueKey(index),
+              controller: scrollController,
+              index: index,
+              child: cellCreator(post)),
+          // 经过测试该回调只会被处罚一次
+          firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
+          firstPageErrorIndicatorBuilder: (context) => 
+            DefaultMasonryIndicatorProvider.firstPageErrorIndicator(context, pagingController),
+          newPageErrorIndicatorBuilder: (context) => 
+            NewPageErrorIndicator(
+              errMsg: '网络异常，点击重试',
+              onTap: () => pagingController.retryLastFailedRequest()),
+          noItemsFoundIndicatorBuilder: (context) => DefaultMasonryIndicatorProvider.noItemsFoundIndicatorBuilder(context)
+        )
+      ),
     );
   }
 
   /// 从 [widget.next]
   nextPage(pageNum) async {
     try {
-      debugPrint('$PostAlbumList.nextPage calls, with param nextPage: $pageNum');
+      debugPrint('$PostAlbumListView.nextPage calls, with param nextPage: $pageNum');
       final stopwatch = Stopwatch()..start();
       List<Post> incomingPosts = await widget.postPager.nextPage();
-      debugPrint('$PostAlbumList.nextPage, get totally ${incomingPosts.length} remote posts, execution time: ${stopwatch.elapsed}');
+      debugPrint('$PostAlbumListView.nextPage, get totally ${incomingPosts.length} remote posts, execution time: ${stopwatch.elapsed}');
       List<Post> filteredPosts = await __filterPosts(incomingPosts);
       /// 下面的步骤是同步 pagingController 于 postPager 的分页状态，因为滑动分页目前是通过 pagingController 控制的，比如是否是最后一页等状态逻辑
       // 如果获取到的数据与分页数据相等，则证明还有更多分页数据可被获取
@@ -101,7 +124,7 @@ class _PostAlbumListState extends State<PostAlbumList> {
       }      
     } catch (e, stacktrace) {
       // No specified type, handles all
-      debugPrint('Something really unknown throw from $PostAlbumList.nextPage: $e, statcktrace below: $stacktrace');
+      debugPrint('Something really unknown throw from $PostAlbumListView.nextPage: $e, statcktrace below: $stacktrace');
       /// 如果发生错误记得一定要交给 pagingController 由它负责处理        
       /// 但是必须确保 pagingController 没有被销毁才能这么做，否则会报错；使用 mounted state 参数即可保证没有被销毁
       if (mounted) {
@@ -119,12 +142,29 @@ class _PostAlbumListState extends State<PostAlbumList> {
     // if (widget.pullRefreshCallback != null) widget.pullRefreshCallback!();
   }  
 
+  Widget cellCreator(Post post) {
+    return GestureDetector(
+      onTap: () async {
+        Post returnPost = await widget.cellClickCallback(pagingController.itemList!, post, widget.postPager);
+        scrollTo(returnPost);
+      },
+      child: getCell(post)
+    );
+  }
+
   /// this should be abstract, but here we provide the default impl
   Widget getCell(Post post) {
-    double width = Math.round(Screen.width(context) / 3, fractionDigits: 2);  // 保留两位小数
-    double height = width;
-    return CachedImage(imgUrl: post.thumbnail, width: width, height: height,);
+    return CachedImage(imgUrl: post.thumbnail);
   }
+
+  scrollTo(Post post) {
+    if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty) {
+      int currentIndex = pagingController.itemList!.indexWhere((p) => p.shortcode == post.shortcode);
+      // debugPrint('navback, currentIndex: $currentIndex');
+      scrollController.scrollToIndex(currentIndex, preferPosition: AutoScrollPosition.begin);
+      scrollController.highlight(currentIndex);    
+    }
+  }  
 
   /// 过滤掉已经加载的元素
   /// 
@@ -134,14 +174,12 @@ class _PostAlbumListState extends State<PostAlbumList> {
   __filterPosts(List<Post> posts) {
     if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty) {
       posts = posts.where((icmPost) => pagingController.itemList!.contains(icmPost) == false).toList();
-      debugPrint('$PostAlbumList.__filterPosts, after filter duplicates, get totally ${posts.length} remote posts');
+      debugPrint('$PostAlbumListView.__filterPosts, after filter duplicates, get totally ${posts.length} remote posts');
     }
     return posts;
   }  
 
 }
-
-
 
 /// 直接 copy [infinite_scroll_pagination] 的 [NewPageErrorIndicator] 组件
 class NewPageErrorIndicator extends StatelessWidget {

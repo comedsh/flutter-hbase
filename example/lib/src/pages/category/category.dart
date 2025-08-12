@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-import '../post/demo_post_full_screen_list.dart';
+import '../post/demo_post_full_screen_list_view.dart';
 
 /// TODO rename it to CategoryPostFullScreenListPage and move this to HBase.
 class CategoryPage extends StatelessWidget {
@@ -52,7 +52,7 @@ class CategoryPage extends StatelessWidget {
               child: Container(
                 alignment: Alignment.center,
                 // TODO parameterize distanceCountToPreLoad according with the pageSize settings
-                child: DemoPostFullScreenListPage(postPager: postPager, distanceCountToPreLoad: 6,),
+                child: DemoPostFullScreenListView(postPager: postPager, distanceCountToPreLoad: 6,),
               ),
             );
           }
