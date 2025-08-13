@@ -112,7 +112,7 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return createFullScreenPostPage(post);
+            return createFullScreenPostView(post, index);
           },
         ),
       );
@@ -296,7 +296,7 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
     }
   }
 
-  /// 子系统需要实现该方法以提供 fullscreen post 页面
-  FullScreenPostView createFullScreenPostPage(Post post); 
+  /// 子系统需要实现该方法以提供 [PostFullScreenView] 的具体实现 View
+  PostFullScreenView createFullScreenPostView(Post post, int index); 
 
 }

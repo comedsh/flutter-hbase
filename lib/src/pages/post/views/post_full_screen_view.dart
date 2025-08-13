@@ -10,14 +10,19 @@ import 'package:sycomponents/components.dart';
 final compactFormat = NumberFormat.compact(locale: 'zh_CN');
 
 
-/// 这是一个满屏展示的 post 页面，实现主要是参考 ins 页面的设计；然而之所以将其定义为抽象类
-/// 是让子系统可以按照自己的需求对其进行定制
-abstract class FullScreenPostView extends StatelessWidget{
+/// 这是一个满屏展示的 post 页面，实现主要是参考 ins 页面的设计；且因为该组件只是提供给 HBase 系统使用，
+/// 因此它的实现粒度范围就围绕着 HBase 系统的需要展开，比如包含喜欢、收藏、关注、下载逻辑等等；然而之所以
+/// 将其定义为抽象类是让子系统可以按照自己的需求对某些功能进行定制，比如下载行为等等；
+/// 
+abstract class PostFullScreenView extends StatelessWidget{
   final Post post;
+  /// 通常 [PostFullScreenView] 是在列表中展示，这里的 [postIndex] 即表示该 post 在此列表中的下标
+  final int postIndex;
 
-  const FullScreenPostView({
+  const PostFullScreenView({
     super.key, 
     required this.post,
+    required this.postIndex
   });
 
   @override
@@ -46,18 +51,18 @@ abstract class FullScreenPostView extends StatelessWidget{
         Positioned(
           bottom: sp(42),
           left: sp(20),
-          child: profileAvatarFollowsPanel(post)
+          child: leftPanel(post)
         ),
         Positioned(
           bottom: sp(42),
           right: sp(20),
-          child: favLikesAndDownloadsPanel(post)
+          child: rightPanel(post)
         )
       ],
     );
   }
 
-  profileAvatarFollowsPanel(Post post) {
+  leftPanel(Post post) {
     /// 使用 SizedBox 限定宽度，这样 text 的 ellipsis overflow 也才会生效
     return SizedBox(
       width: Screen.widthWithoutContext() * 0.7,
@@ -66,19 +71,33 @@ abstract class FullScreenPostView extends StatelessWidget{
         children: [
           Row(
             children: [
-              SyCircleAvatar(
-                imgUrl: post.profile.avatar,
-                width: sp(44),
-                height: sp(44),
-                failTextFontSize: sp(9.0),
-              ),
+              // profile avatar
               GestureDetector(
-                onTap: () => Get.to(() => getProfilePage(post.profile)),
+                /// 如果本身就是从 [ProfilePage] 进入的，那么再次点击该用户头像则直接返回即可；
+                /// 注意：[Get.previousRoute] 返回的是路径名，因此名字前会有 '/' 符号需要注意
+                /// 备注：返回当前 index 的原因是让父组件的 albumList 有能力可以 scrollTo
+                onTap: () => Get.previousRoute == "/$ProfilePage"
+                  ? Get.back<int>(result: postIndex)
+                  : Get.to(() => getProfilePage(post.profile)),
+                child: SyCircleAvatar(
+                  imgUrl: post.profile.avatar,
+                  width: sp(44),
+                  height: sp(44),
+                  failTextFontSize: sp(9.0),
+                ),
+              ),
+              // profile name
+              GestureDetector(
+                /// 注释同上
+                onTap: () => Get.previousRoute == "/$ProfilePage"
+                  ? Get.back<int>(result: postIndex)
+                  : Get.to(() => getProfilePage(post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
                   child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
               ),
+              // follow button
               Padding(
                 padding: EdgeInsets.only(left: sp(8.0)),
                 child: TextButton(
@@ -88,7 +107,7 @@ abstract class FullScreenPostView extends StatelessWidget{
                     /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: EdgeInsets.zero,
-                    minimumSize: Size(sp(50), sp(30)),
+                    minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
                     /// 设置 text button 的 border                          
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
@@ -112,19 +131,19 @@ abstract class FullScreenPostView extends StatelessWidget{
     );
   }
 
-  favLikesAndDownloadsPanel(Post post) {
+  rightPanel(Post post) {
     return Column(
       children: [
-        likesIconButton(post),
+        _likesIconButton(post),
         SizedBox(height: sp(26)),
-        favorIconButton(post),
+        _favorIconButton(post),
         SizedBox(height: sp(26)),
-        downloadButton(post)
+        _downloadButton(post)
       ],
     );
   }
 
-  likesIconButton(Post post) {
+  _likesIconButton(Post post) {
     return Column(
       children: [
         Icon(Ionicons.heart_outline, size: sp(30),),
@@ -134,7 +153,7 @@ abstract class FullScreenPostView extends StatelessWidget{
     );
   }
 
-  favorIconButton(Post post) {
+  _favorIconButton(Post post) {
     return Column(
       children: [
         Icon(Ionicons.star_outline, size: sp(30),),
@@ -144,7 +163,8 @@ abstract class FullScreenPostView extends StatelessWidget{
     );
   }
 
-  downloadButton(Post post) {
+  /// 将下载后的具体行为抽象出来由子类自行实现
+  _downloadButton(Post post) {
     return Column(
       children: [
         Icon(Ionicons.cloud_download_outline, size: sp(30),),

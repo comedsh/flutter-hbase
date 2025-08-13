@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 
-import 'category/category.dart';
+import 'category/category_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /// TODO configure the categories from backend and loaded to frontend
       body: CategoryPage(tabs: [
         TabData(id: 'rcmd', name: '推荐'),
         TabData(id: 'omei', name: '欧美'),
@@ -48,17 +47,17 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.play_circle),
             icon: Icon(Ionicons.play_circle_outline),
-            label: '视频',
+            label: '热榜',
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.play_circle),
             icon: Icon(Ionicons.play_circle_outline),
-            label: '视频',
+            label: '分类',
           ),
           BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.play_circle),
             icon: Icon(Ionicons.play_circle_outline),
-            label: '视频',
+            label: '我',
           ),                              
         ]
       ),

@@ -18,7 +18,7 @@ class DemoPostFullScreenListView extends PostFullScreenListView {
 class DemoPostFullScreenListPageState extends PostFullScreenListViewState<DemoPostFullScreenListView> {
   
   @override
-  FullScreenPostView createFullScreenPostPage(Post post) {
-    return DemoFullScreenPostView(post: post);
+  PostFullScreenView createFullScreenPostView(Post post, int postIndex) {
+    return DemoFullScreenPostView(post: post, postIndex: postIndex,);
   }
 }

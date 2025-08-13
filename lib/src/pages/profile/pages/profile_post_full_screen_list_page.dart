@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
+/// 封装 [PostAlbumListView] 为 Page，且该 Page 是某位博主专属的 PostAlbumListView
 /// 目前该页面的应用场景仅是通过 [ProfilePage] 中的 [PostAlbumListView] 中的 cell 点击后进入；因此目前仅考虑
 /// 这种场景来快速实现的，将来如果有更多的场景的话，再考虑如何扩展
 abstract class ProfilePostFullScreenListPage extends StatelessWidget {
