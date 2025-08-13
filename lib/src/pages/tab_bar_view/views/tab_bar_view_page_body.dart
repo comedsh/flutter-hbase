@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-typedef TabBarViewContentBuilder = Widget Function(BuildContext context, TabData tab);
-
-
 /// [TabBar] 可放入 body 中
 class TabBarViewBodyPage extends StatelessWidget {
   final List<TabData> tabs;
@@ -70,35 +67,6 @@ class TabBarViewBodyPage extends StatelessWidget {
             ).toList()),
           )
         ]
-      ),
-    );
-  }
-
-  mockScrollableContent(TabData tab) {
-    return Container(
-      alignment: Alignment.center,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-            Text(tab.name, textScaler: const TextScaler.linear(5.0)),                          
-          ],
-        ),
       ),
     );
   }

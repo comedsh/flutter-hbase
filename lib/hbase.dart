@@ -1,8 +1,9 @@
 library hbase;
 
 export 'src/pages/tab_bar_view/model/tab.dart';
-export 'src/pages/tab_bar_view/views/tab_bar_view_body.dart';
-export 'src/pages/tab_bar_view/views/tab_bar_view_appbar.dart';
+export 'src/pages/tab_bar_view/model/type.dart';
+export 'src/pages/tab_bar_view/views/tab_bar_view_page_body.dart';
+export 'src/pages/tab_bar_view/views/tab_bar_view_page_appbar_title.dart';
 export 'src/pages/post/views/post_list_view.dart';
 export 'src/pages/post/views/post_album_list_view.dart';
 export 'src/pages/post/views/post_full_screen_list_view.dart';

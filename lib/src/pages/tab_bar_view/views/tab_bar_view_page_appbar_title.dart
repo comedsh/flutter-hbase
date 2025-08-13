@@ -3,15 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-class TabBarViewAppBarPage extends StatelessWidget {
+class TabBarViewAppBarTitlePage extends StatelessWidget {
   final List<TabData> tabs;
+  final TabBarViewContentBuilder tabBarViewContentBuilder;
+  final int? initialIndex;
 
   /// [TabBar] 是嵌入 appbar 中的
-  const TabBarViewAppBarPage({super.key, required this.tabs});
+  const TabBarViewAppBarTitlePage({
+    super.key, 
+    required this.tabs, 
+    required this.tabBarViewContentBuilder, 
+    this.initialIndex
+  });
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: initialIndex ?? 0,
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
@@ -53,10 +61,7 @@ class TabBarViewAppBarPage extends StatelessWidget {
           children: tabs.map((tab) {
             /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
             return KeepAliveWrapper(
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(tab.name, textScaler: const TextScaler.linear(5.0)),
-              ),
+              child: tabBarViewContentBuilder(context, tab)
             );
           }
         ).toList())
