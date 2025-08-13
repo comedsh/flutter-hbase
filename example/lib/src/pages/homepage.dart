@@ -77,6 +77,8 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.black54,
         // 如果超过 3 个 bar items 则必须添加
         type: BottomNavigationBarType.fixed,
+        onTap: (int index) => setState(() => _current = index),
+        currentIndex: _current,
         items: const [
           BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.play_circle),
@@ -98,8 +100,7 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Ionicons.play_circle_outline),
             label: '我',
           ),
-        ],
-        onTap: (int index) => setState(() => _current = index),
+        ]
       ),
     );
   }

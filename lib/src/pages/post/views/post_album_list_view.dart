@@ -9,7 +9,15 @@ import 'package:sycomponents/components.dart';
 
 typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, PostPager postPager);
 
-/// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可
+/// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可；
+/// 
+/// 有关 scrollTo 的说明：默认 [PostAlbumListView] 是通过 [AutoScrollController] 封装的，使得返回此页面的时候，
+/// 可以通过 return index 进行 [_PostAlbumListViewState.scrollTo]；但是如果父组件使用的是 [NestedScrollView]
+/// 那么就不能使用 [AutoScrollController] 否则无法和 [NestedScrollView] 中的其它组件一同滚动；
+/// 
+/// 另外一个比较奇怪的是，在 Swapface 项目中 scrollTo 是将目标 cell 定位到当前页面中 album 的顶部，但是现在却在底部？
+/// 还不清楚具体原因，因为代码都是一样的呀；
+/// 
 class PostAlbumListView extends StatefulWidget {
   final PostPager postPager;
   /// 点击 Cell 后的执行逻辑由该回调函数提供；该回调函数可以返回一个 post 用于 scrollTo
@@ -43,7 +51,11 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
 
     /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
     autoScrollController = AutoScrollController(
-      viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
+      /// 这里设置的是当返回此页面后，窗口的边界位置；比如如果内容已经延伸到 bottom appbar 的位置了，那么可以
+      /// 通过设置 viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, Screen.bottomAppBarHeight(context)
+      /// 的方式设置底部偏移即可绕过 bottom appbar 的高度；但是目前我的 Hbase 系统都没有延伸到 bottom appbar
+      /// 的应用场景，因此这里就全部都 hard code 为 0 了，因为不想把一个简单的组件搞得那么复杂什么都要考虑；
+      viewportBoundaryGetter: () => const Rect.fromLTRB(0, 0, 0, 0),
       axis: Axis.vertical
     ); // 核心到底使用什么样的 scrollController 由实现类提供
     
@@ -152,6 +164,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     return GestureDetector(
       onTap: () async {
         int? i = await widget.onCellClicked(pagingController.itemList!, post, widget.postPager);
+        debugPrint("$PostAlbumListView, navback with return index: $i, and isEnableAutoScroll: ${widget.isEnableAutoScroll}");
         if (i != null && widget.isEnableAutoScroll) {
           scrollTo(i);
         }
