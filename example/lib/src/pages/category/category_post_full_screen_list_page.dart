@@ -5,11 +5,11 @@ import 'package:sycomponents/components.dart';
 
 import '../post/views/demo_post_full_screen_list_view.dart';
 
-/// TODO rename it to CategoryPostFullScreenListPage and move this to HBase.
-class CategoryPage extends StatelessWidget {
+
+class CategoryPostFullScreenListPage extends StatelessWidget {
   final List<TabData> tabs;
 
-  const CategoryPage({super.key, required this.tabs});
+  const CategoryPostFullScreenListPage({super.key, required this.tabs});
 
   @override
   Widget build(BuildContext context) {

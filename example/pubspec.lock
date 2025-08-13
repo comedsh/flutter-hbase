@@ -908,6 +908,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.3"
+  proste_indexed_stack:
+    dependency: "direct main"
+    description:
+      name: proste_indexed_stack
+      sha256: "12ea6665d12be110afe0ee13232b5f612ff76c6c465296cc53cba3790548bcf8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.4"
   pub_semver:
     dependency: transitive
     description:
