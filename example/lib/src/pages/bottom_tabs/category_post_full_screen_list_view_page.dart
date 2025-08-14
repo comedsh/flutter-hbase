@@ -14,6 +14,7 @@ class CategoryPostFullScreenListViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabBarViewAppBarTitlePage(
+      isExtendBodyBehindAppBar: true,
       tabs: tabs,
       tabBarViewContentBuilder: (context, tab) {
         var chnCodes = ['hanbeauti'];
@@ -21,7 +22,7 @@ class CategoryPostFullScreenListViewPage extends StatelessWidget {
         var postPager = ChannelTagPostPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true, pageSize: 24);
         return DemoPostFullScreenListView(postPager: postPager, distanceCountToPreLoad: postPager.pageSize - 6,);
       },
-    );    
+    );
   }
 
 }

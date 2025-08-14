@@ -58,7 +58,7 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
     loadFirstPage();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       /// 因为 onPageChanged 事件不会在第一个页面被触发，从而导致 PostPageChangedNotification 在第一个页面的时候被
-      /// dispatch，但是 PostPageChangedNotification 又需要，因此只能在 initState 中再发送一次了
+      /// dispatch，但是 PostPageChangedNotification 又需要监听改事件，因此只能在 initState 中再发送一次了
       var index = widget.chosedPost == null 
         ? 0 
         : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
@@ -101,8 +101,8 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
                   cachedNextPagePosts!.addAll(posts); 
                 });
               });
-              /// 特别注意，[onPageChanged] 方法不会在第一个页面显示的时候回调，但是 PostPageChangedNotification 需要
-              /// 因此，该 notification 还在 initState 方法中 dispatch 了一次
+              /// 特别注意，[onPageChanged] 方法不会在第一个页面显示的时候回调，但是 PostPageChangedNotification 在
+              /// 首页就需要监听 [onPageChanged] 事件，因此该 notification 在 initState 方法中又 dispatch 了一次
               PostPageChangedNotification(index).dispatch(context);
               if (widget.onPageChanged != null) widget.onPageChanged!(index);
             } else  {

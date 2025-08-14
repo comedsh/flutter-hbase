@@ -7,13 +7,16 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
   final List<TabData> tabs;
   final TabBarViewContentBuilder tabBarViewContentBuilder;
   final int? initialIndex;
+  /// 是否让 body 延伸到 appbar 中，如果要延伸那么需要设置透明 appbar 并且外加 appbarMask
+  final bool isExtendBodyBehindAppBar;
 
   /// [TabBar] 是嵌入 appbar 中的
   const TabBarViewAppBarTitlePage({
     super.key, 
     required this.tabs, 
     required this.tabBarViewContentBuilder, 
-    this.initialIndex
+    this.initialIndex,
+    this.isExtendBodyBehindAppBar = false
   });
 
   @override
@@ -23,6 +26,13 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
       length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
+          /** 设置透明 appbar */
+          elevation: isExtendBodyBehindAppBar ? 0 : null,  // 相当于设置 z-index 值为 0，必填
+          shadowColor: isExtendBodyBehindAppBar ? Colors.transparent : null,  // 透明 appbar 必填
+          backgroundColor: isExtendBodyBehindAppBar ? Colors.transparent : null, // 透明 appbar 必填
+          scrolledUnderElevation: isExtendBodyBehindAppBar ? 0 : null,  // 如果不设置，拽动页面 appbar 会出现阴影；
+          flexibleSpace: isExtendBodyBehindAppBar ? MyAppBar.appbarMask(context) : null,
+          
           title:
             /*
             * (重要文档)
@@ -64,7 +74,8 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
               child: tabBarViewContentBuilder(context, tab)
             );
           }
-        ).toList())
+        ).toList()),
+        extendBodyBehindAppBar: true,
       ),
     );
   }

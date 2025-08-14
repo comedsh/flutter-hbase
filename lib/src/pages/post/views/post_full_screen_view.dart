@@ -71,20 +71,12 @@ abstract class PostFullScreenView extends StatelessWidget{
         children: [
           Row(
             children: [
-              // profile avatar
-              GestureDetector(
-                /// 如果本身就是从 [ProfilePage] 进入的，那么再次点击该用户头像则直接返回即可；
-                /// 注意：[Get.previousRoute] 返回的是路径名，因此名字前会有 '/' 符号需要注意
-                /// 备注：返回当前 index 的原因是让父组件的 albumList 有能力可以 scrollTo
+              ProfileAvatar(
+                profile: post.profile, 
+                size: sp(44), 
                 onTap: () => Get.previousRoute == "/$ProfilePage"
-                  ? Get.back<int>(result: postIndex)
-                  : Get.to(() => getProfilePage(post.profile)),
-                child: SyCircleAvatar(
-                  imgUrl: post.profile.avatar,
-                  width: sp(44),
-                  height: sp(44),
-                  failTextFontSize: sp(9.0),
-                ),
+                ? Get.back<int>(result: postIndex)
+                : Get.to(() => getProfilePage(post.profile)),
               ),
               // profile name
               GestureDetector(
