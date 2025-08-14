@@ -6,7 +6,8 @@ import 'package:sycomponents/components.dart';
 
 /// 之所以将其定义为抽象类是为了能够让子系统拥有最大的自定义的灵活性，相关的实现嘞参考 [DemoPostFullScreenListPage]
 abstract class PostFullScreenListView extends StatefulWidget {
-  /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用
+  /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用；当然，这里的第一页并不局限于一页 12/24 的数据，而是指
+  /// 初始化 [PostFullScreenListView] 时候传入的第一页数据，可能上百条；
   final List<Post>? firstPagePosts;
   /// 通常从 [PostGridList] 点击进入到指定 [chosedPost]，作为第一个展示的 Post；
   /// 如果指定了，那么 [firstPagePosts] 必须不能为空
@@ -60,7 +61,7 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
       /// dispatch，但是 PostPageChangedNotification 又需要，因此只能在 initState 中再发送一次了
       var index = widget.chosedPost == null 
         ? 0 
-        : widget.firstPagePosts!.indexWhere((p) => p.shortcode == widget.chosedPost!.shortcode);
+        : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
       PostPageChangedNotification(index).dispatch(context);
     });
   }
