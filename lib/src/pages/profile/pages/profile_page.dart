@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/profile/components/profile_intro_panel.dart';
+import 'package:hbase/src/pages/profile/components/profile_statistics_intro_panel.dart';
 
 typedef PostAlbumListCreator = PostAlbumListView Function({required PostPager post, required OnCellClicked cellClickCallback});
 
@@ -21,7 +21,7 @@ abstract class ProfilePage extends StatelessWidget {
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget> [
-            SliverToBoxAdapter(child: ProfileIntroPanel(profile: profile))
+            SliverToBoxAdapter(child: ProfileStatisticsIntroPanel(profile: profile))
           ];
         }, 
         body: TabBarViewBodyPage(

@@ -5,10 +5,10 @@ import 'package:sycomponents/components.dart';
 
 
 /// 就是 Profile 页面的上半部分
-class ProfileIntroPanel extends StatelessWidget {
+class ProfileStatisticsIntroPanel extends StatelessWidget {
   final Profile profile;
   
-  const ProfileIntroPanel({super.key, required this.profile});
+  const ProfileStatisticsIntroPanel({super.key, required this.profile});
 
   @override
   Widget build(BuildContext context) {
@@ -92,13 +92,16 @@ class ProfileIntroPanel extends StatelessWidget {
   }
 
   description(BuildContext context, Profile profile, double paddingSize) {
-    return ExpandableText(
-      minLines: 3,
-      maxLines: 5, 
-      maxWidth: Screen.width(context) - 2 * paddingSize,
-      text:"To display a scrollbar for a SingleChildScrollView in Flutter, you need to wrap the SingleChildScrollView widget within a Scrollbar widget."
-        "To display a scrollbar for a SingleChildScrollView in Flutter, you need to wrap the SingleChildScrollView widget within a Scrollbar widget.",
-      style: TextStyle(fontSize: sp(16.0), height: 1.5)
+    return Center(
+      child: ExpandableText(
+        minLines: 3,
+        maxLines: 5, 
+        maxWidth: Screen.width(context) - 2 * paddingSize,
+        // text:"To display a scrollbar for a SingleChildScrollView in Flutter, you need to wrap the SingleChildScrollView widget within a Scrollbar widget."
+        //  "To display a scrollbar for a SingleChildScrollView in Flutter, you need to wrap the SingleChildScrollView widget within a Scrollbar widget.",
+        text: profile.description ?? "",
+        style: TextStyle(fontSize: sp(16.0), height: 1.5)
+      ),
     );
   }
 
