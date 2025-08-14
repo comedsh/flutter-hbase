@@ -1,10 +1,10 @@
-import 'package:example/src/pages/category/category_post_list_page.dart';
+import 'package:example/src/pages/bottom_nav_tabs/category_post_album_list_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 
-import 'category/category_post_full_screen_list_page.dart';
+import 'bottom_nav_tabs/category_post_full_screen_list_view_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         index: _current,
         children: [
           IndexedStackChild(
-            child: CategoryPostFullScreenListPage(tabs: [
+            child: CategoryPostFullScreenListViewPage(tabs: [
               TabData(id: 'rcmd', name: '推荐'),
               TabData(id: 'omei', name: '欧美'),
               TabData(id: 'rhan', name: '日韩'),
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           IndexedStackChild(
             child: Scaffold(
               appBar: AppBar(title: const Text('分类')),
-              body: CategoryPostListPage(tabs: [
+              body: CategoryPostAlbumListViewPage(tabs: [
                 TabData(id: 'rcmd', name: '推荐'),
                 TabData(id: 'omei', name: '欧美'),
                 TabData(id: 'rhan', name: '日韩'),

@@ -4,9 +4,10 @@ import 'package:hbase/hbase.dart';
 
 import '../post/pages/demo_post_full_screen_list_view_page.dart';
 
-class CategoryPostListPage extends StatelessWidget {
+/// 用来构建分页 bottom tab page
+class CategoryPostAlbumListViewPage extends StatelessWidget {
   final List<TabData> tabs;
-  const CategoryPostListPage({super.key, required this.tabs});
+  const CategoryPostAlbumListViewPage({super.key, required this.tabs});
 
   @override
   Widget build(BuildContext context) {
