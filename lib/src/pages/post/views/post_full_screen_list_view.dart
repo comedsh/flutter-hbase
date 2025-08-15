@@ -12,7 +12,7 @@ abstract class PostFullScreenListView extends StatefulWidget {
   /// 通常从 [PostGridList] 点击进入到指定 [chosedPost]，作为第一个展示的 Post；
   /// 如果指定了，那么 [firstPagePosts] 必须不能为空
   final Post? chosedPost;
-  final PostPager postPager;
+  final Pager<Post> postPager;
   /// 设置滑动到距离最后多少个 posts 的时候开始加载下一个分页
   final int distanceCountToPreLoad;
   /// 当滑动到新的分页所执行的回调方法

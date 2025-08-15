@@ -13,7 +13,7 @@ class DemoPostFullScreenListViewPage extends PostFullScreenListViewPage {
   });
 
   @override
-  getPostFullScreenListView({List<Post>? posts, Post? post, required PostPager postPager}) {
+  getPostFullScreenListView({List<Post>? posts, Post? post, required Pager<Post> postPager}) {
     return DemoPostFullScreenListView(
       firstPagePosts: posts,
       chosedPost: post,

@@ -10,7 +10,7 @@ abstract class ProfilePostFullScreenListPage extends StatelessWidget {
   final List<Post> posts;
   /// 跳转进入的 post
   final Post post;  
-  final PostPager postPager;
+  final Pager<Post> postPager;
   const ProfilePostFullScreenListPage({
     super.key, 
     required this.posts, 
@@ -41,5 +41,5 @@ abstract class ProfilePostFullScreenListPage extends StatelessWidget {
     );
   }
 
-  getPostFullScreenListView(List<Post> posts, Post post, PostPager postPager);
+  getPostFullScreenListView(List<Post> posts, Post post, Pager<Post> postPager);
 }

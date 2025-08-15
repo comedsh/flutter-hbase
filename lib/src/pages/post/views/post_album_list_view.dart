@@ -7,7 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sycomponents/components.dart';
 
-typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, PostPager postPager);
+typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, Pager<Post> postPager);
 
 /// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可；
 /// 
@@ -19,7 +19,7 @@ typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, PostP
 /// 还不清楚具体原因，因为代码都是一样的呀；
 /// 
 class PostAlbumListView extends StatefulWidget {
-  final PostPager postPager;
+  final Pager<Post> postPager;
   /// 点击 Cell 后的执行逻辑由该回调函数提供；该回调函数可以返回一个 post 用于 scrollTo
   final OnCellClicked onCellClicked;
   /// 如果父组件使用的是 [NestedScrollView] 那么就不能使用 [AutoScrollController] 否则无法和 [NestedScrollView]

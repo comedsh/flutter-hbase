@@ -44,24 +44,16 @@ class _HomePageState extends State<HomePage> {
             ]),
           ),
           IndexedStackChild(
-            child: Scaffold(
-              appBar: AppBar(title: const Text('热榜')),
-              body: const Center(
-                child: Text('热榜 Demo Page', 
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
-            )
+            child: const HotspotPage()
           ),
           IndexedStackChild(
-            child: Scaffold(
-              appBar: AppBar(title: const Text('分类')),
-              body: CategoryPostAlbumListViewPage(tabs: [
-                TabData(id: 'rcmd', name: '推荐'),
-                TabData(id: 'omei', name: '欧美'),
-                TabData(id: 'rhan', name: '日韩'),
-                TabData(id: 'xmt', name: '新马泰'),
-                TabData(id: 'qita', name: '其它')
-              ]),
-            )
+            child: CategoryPostAlbumListViewPage(tabs: [
+              TabData(id: 'rcmd', name: '推荐'),
+              TabData(id: 'omei', name: '欧美'),
+              TabData(id: 'rhan', name: '日韩'),
+              TabData(id: 'xmt', name: '新马泰'),
+              TabData(id: 'qita', name: '其它')
+            ]),
           ),
           IndexedStackChild(
             child: Scaffold(

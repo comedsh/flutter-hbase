@@ -9,7 +9,7 @@ class DemoProfilePage extends ProfilePage {
   const DemoProfilePage({super.key, required super.profile});
   
   @override
-  PostAlbumListView getPostAlbumListView(PostPager postPager) {
+  PostAlbumListView getPostAlbumListView(Pager<Post> postPager) {
     return PostAlbumListView(
       postPager: postPager, 
       onCellClicked: (posts, post, postPager) async =>

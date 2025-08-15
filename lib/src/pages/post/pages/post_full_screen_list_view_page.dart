@@ -8,7 +8,7 @@ abstract class PostFullScreenListViewPage extends StatelessWidget {
   final List<Post>? posts;
   /// 跳转进入的 post, 该 post 一定是 [posts] 中的一员
   final Post? post;  
-  final PostPager postPager;
+  final Pager<Post> postPager;
   final String? title;
   const PostFullScreenListViewPage({
     super.key, 
@@ -41,5 +41,5 @@ abstract class PostFullScreenListViewPage extends StatelessWidget {
     );
   }
 
-  getPostFullScreenListView({List<Post>? posts, Post? post, required PostPager postPager});
+  getPostFullScreenListView({List<Post>? posts, Post? post, required Pager<Post> postPager});
 }

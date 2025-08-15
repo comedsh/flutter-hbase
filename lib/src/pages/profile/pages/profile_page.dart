@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:hbase/src/pages/profile/components/profile_statistics_intro_panel.dart';
 
-typedef PostAlbumListCreator = PostAlbumListView Function({required PostPager post, required OnCellClicked cellClickCallback});
+typedef PostAlbumListCreator = PostAlbumListView Function({
+  required Pager<Post> post, 
+  required OnCellClicked cellClickCallback}
+);
 
 abstract class ProfilePage extends StatelessWidget {
   final Profile profile;
@@ -36,5 +39,5 @@ abstract class ProfilePage extends StatelessWidget {
     );
   }
 
-  PostAlbumListView getPostAlbumListView(PostPager postPager);
+  PostAlbumListView getPostAlbumListView(Pager<Post> postPager);
 }
