@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
@@ -15,7 +14,7 @@ class HotspotCardSwiperView extends StatefulWidget {
 }
 
 class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
-  final loading = true.obs;
+  var loading = true;
   late List<List<Profile>> profileGroup;
   @override
   void initState() {
@@ -23,12 +22,8 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
 
     /// 远程初始化 profile group
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      var profileGroupPager = HotestPerTagsProfileGroupPager(
-        chnCodes: widget.chnCodes,
-        tagCodes: widget.tags.map((tag) => tag.code).toList()
-      );
-      profileGroup = await profileGroupPager.nextPage();
-      loading.value = false;
+      profileGroup = await initProfileGroup();
+      setState(() => loading = false);
     });    
   }
 
@@ -38,7 +33,7 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
     final controller = PageController(viewportFraction: 0.8, keepPage: true);
 
     return SizedBox(
-      height: sp(460),
+      height: sp(500),
       child: PageView.builder(
         padEnds: false, // 关键，不用在两侧添加 padding
         controller: controller,
@@ -50,62 +45,113 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
           var tag = widget.tags[index];
           return Card(
             elevation: 5, // Controls the shadow size
-            margin: EdgeInsets.symmetric(horizontal: sp(14), vertical: sp(4)), // Adds margin around the card
-            // margin: EdgeInsets.only(left: sp(16), right: sp(8.0), top: sp(4), bottom: sp(4)),
-            child: Padding(
-              padding: EdgeInsets.all(sp(16.0)),
-              child: Column(
-                mainAxisSize: MainAxisSize.min, // Make column take minimum height
-                children: <Widget>[
-                  // title row
-                  Row(
-                    children: [
-                      Text(
-                        tag.name,
-                        style: TextStyle(fontSize: sp(20), fontWeight: FontWeight.bold),
-                      ),
-                      // 封装一个 Row 的目的是为了使用 MainAxisAlignment.end 让按钮能够右对齐
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {  },
-                              child: const Text('查看更多'),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  /// profile lists
-                  Obx(() => loading.value
-                    ? const Center(child: CircularProgressIndicator())
-                    : profileList(index)
-                  ),
-                ],
+            margin: EdgeInsets.symmetric(horizontal: sp(14)), // Adds margin between cards
+            /// 使用 SingleChildScrollView 的目的是为了避免在小尺寸屏幕上可能会越界的问题
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: sp(14.0)),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max, // Make column take minimum height
+                  children: [
+                    // title row
+                    titleRow(tag),
+                    // 注意，又学到一招，可以直接在 [] 中写 if/else；还是因为三元表达式中不支持 ...array 的写法，否则报错；示例如下，
+                    // 之前的写法是 loading ? CircularProgressIndicator : ...profileList(index)，结果 ...profileList<index>
+                    // 的位置报错，编译不过去；看来是三元表达式不支持；改成 if/else 就可以了。
+                    // 参考：https://medium.com/@mjawwadiqbal22/how-to-spread-a-list-in-dart-flutter-triple-dot-spread-operators-guide-tips-73041aa57853
+                    if (loading == false) ...profileList(index)
+                    else SizedBox(height: sp(300), child: const Center(child: CircularProgressIndicator()))
+                  ],
+                ),
               ),
             ),
           );
-
         },
       ),
     );
   }
 
+  Future<List<List<Profile>>> initProfileGroup() async {
+    var profileGroupPager = HotestPerTagsProfileGroupPager(
+      chnCodes: widget.chnCodes,
+      tagCodes: widget.tags.map((tag) => tag.code).toList(),
+      pageSize: 7
+    );
+    return await profileGroupPager.nextPage();
+  }
+
+  titleRow(ChannelTag tag) {
+    return Row(
+      children: [
+        Text(
+          tag.name,
+          style: TextStyle(fontSize: sp(20), fontWeight: FontWeight.bold),
+        ),
+        // 封装一个 Row 的目的是为了能够使用 MainAxisAlignment.end 让按钮能够右对齐
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                ),
+                onPressed: () {},
+                child: Text('查看更多', style: TextStyle(fontSize: sp(16))),
+              ),
+            ],
+          ),
+        )
+      ],
+    );    
+  }
+
   /// 注意一点就是 [HotspotCardSwiperView.tags] 和 profileGroup 是顺序上一一对应的，因此可以按照
   /// [index] 来实现一一对应
-  Widget profileList(int index) {
+  List<Widget> profileList(int index) {
     var profiles = profileGroup[index];
-    return Column(
-      children: profiles.map((p) => 
-        Row(
-          children: [
-            ProfileAvatar(profile: p, size: sp(30))
-          ],
-        )
-      ).toList()
-    );
+    return profiles.map((p) => 
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: sp(7)),
+        child: SingleChildScrollView(
+          /// 添加横向滑动是为了彻底解决小尺寸屏幕下越界的问题；备注：添加了这个横向滑动后，在模拟器上不太好
+          /// 通过滑动切换 card 了，但是在真机上问题不大，只要稍微滑动快一些即可，因此不影响使用
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              ProfileAvatar(profile: p, size: sp(50)),
+              SizedBox(width: sp(8)),
+              SizedBox(
+                width: Screen.width(context) * 0.41,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(p.name, style: TextStyle(fontWeight: FontWeight.w400, fontSize: sp(16))),
+                    Text(
+                      p.description ?? "",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(width: sp(8.0)),
+              // ElevatedButton(onPressed: (){}, child: const Text('关注'))
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                ),
+                onPressed: () {}, 
+                child: const Text('关注')
+              )
+            ],
+          ),
+        ),
+      )
+    ).toList();
   }
+
 }

@@ -110,7 +110,7 @@ abstract class PostFullScreenView extends StatelessWidget{
                     ),
                     backgroundColor: Colors.black12.withOpacity(0.1)
                   ),
-                  child: const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                  child: Text('关注', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                 ),
               ),        
             ],
