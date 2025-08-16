@@ -27,5 +27,6 @@ export 'src/domain/post/post_pager.dart';
 export 'src/domain/post/post_service.dart';
 export 'src/domain/profile/profile.dart';
 export 'src/domain/profile/profile_pager.dart';
-
+export 'src/domain/channel/channel.dart';
+export 'src/domain/channel/channel_tag.dart';
 
