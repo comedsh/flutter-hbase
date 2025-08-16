@@ -28,5 +28,16 @@ class Profile {
       'avatar': avatar,
       'description': description,
       'followerCount': followerCount
-    };  
+    };
+
+  /// 重载 == 方法
+  /// 只需要比较 ID 即可 
+  @override
+  bool operator ==(Object other) =>
+      other is Profile &&
+      other.runtimeType == runtimeType &&
+      other.code == code;
+
+  @override
+  int get hashCode => code.hashCode;    
 }

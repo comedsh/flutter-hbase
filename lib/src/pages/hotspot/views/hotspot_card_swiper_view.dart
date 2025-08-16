@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
-class HotspotCardSwiperView extends StatelessWidget {
+/// 一个卡片对应一个 tagCode
+class HotspotCardSwiperView extends StatefulWidget {
+  final List<String> chnCodes;
+  final List<String> tagCodes;
   final List<Profile> profiles;
   
   const HotspotCardSwiperView({super.key, required this.profiles});
 
   @override
+  State<HotspotCardSwiperView> createState() => _HotspotCardSwiperViewState();
+}
+
+class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
+  final loading = true.obs;
+
+
+  @override
   Widget build(BuildContext context) {
+    /// viewportFraction 是指该 page 最多能够占用的屏幕的宽度
     final controller = PageController(viewportFraction: 0.8, keepPage: true);
-    final pages_ = List.generate(
-      6,
-      (index) => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          color: Colors.grey.shade300,
-        ),
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-        child: SizedBox(
-          height: 280,
-          child: Center(
-            child: Text(
-              "Page $index",
-              style: const TextStyle(color: Colors.indigo),
-          )),
-        ),
-      ));
 
     final pages = List.generate(
       6, 
@@ -61,6 +57,9 @@ class HotspotCardSwiperView extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
+
+
+
               const Text('You can place various widgets here.'),
               Row(
                 children: [
