@@ -1,8 +1,11 @@
+import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
 /// 一个卡片对应一个 tagCode
+/// 改页面借用了 [PageView] 来进行构建，其中通过 [PageController.viewportFraction] 来控制每一个 [PageView] 的大小
+/// 并且一个 PageView 中就是一个 Card
 class HotspotCardSwiperView extends StatefulWidget {
   final List<String> chnCodes;
   final List<ChannelTag> tags;
@@ -31,7 +34,7 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
   Widget build(BuildContext context) {
     /// viewportFraction 是指该 page 最多能够占用的屏幕的宽度
     final controller = PageController(viewportFraction: 0.8, keepPage: true);
-
+    
     return SizedBox(
       height: sp(500),
       child: PageView.builder(
@@ -98,13 +101,19 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
                   minimumSize: Size.zero,
                 ),
                 onPressed: () {},
-                child: Text('查看更多', style: TextStyle(fontSize: sp(16))),
+                child: Text('查看更多', style: TextStyle(
+                  fontSize: sp(16), 
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.underline, 
+                  decorationThickness: 0.5,
+                  decorationStyle: TextDecorationStyle.wavy
+                ),),
               ),
             ],
           ),
         )
       ],
-    );    
+    );
   }
 
   /// 注意一点就是 [HotspotCardSwiperView.tags] 和 profileGroup 是顺序上一一对应的，因此可以按照
@@ -127,26 +136,30 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(p.name, style: TextStyle(fontWeight: FontWeight.w400, fontSize: sp(16))),
+                    Text(p.name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: sp(16))),
                     Text(
                       p.description ?? "",
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      softWrap: false,
+                      style: TextStyle(fontSize: sp(13))
                     )
                   ],
                 ),
               ),
               SizedBox(width: sp(8.0)),
-              // ElevatedButton(onPressed: (){}, child: const Text('关注'))
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size.zero,
-                ),
-                onPressed: () {}, 
-                child: const Text('关注')
-              )
+              GradientElevatedButton(
+                gradient: LinearGradient(colors: [
+                  AppServiceManager.appConfig.appTheme.fillGradientEndColor,
+                  AppServiceManager.appConfig.appTheme.fillGradientEndColor
+                ]),
+                width: sp(48),
+                height: sp(25.0),
+                borderRadius: BorderRadius.circular(13.0),
+                onPressed: () {
+                },
+                dense: true,
+                child: Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(12), fontWeight: FontWeight.bold))
+              ),
             ],
           ),
         ),

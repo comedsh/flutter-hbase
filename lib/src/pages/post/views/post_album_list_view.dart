@@ -41,14 +41,17 @@ class PostAlbumListView extends StatefulWidget {
 class _PostAlbumListViewState extends State<PostAlbumListView> {
 
   /// 注意，后台是从 1 开始分页的，因此这里务必设置为 1
-  PagingController<int, Post> pagingController = PagingController(firstPageKey: 1);
-
+  late PagingController<int, Post> pagingController;
   late AutoScrollController autoScrollController;
 
   @override
   void initState() {
     super.initState();
-
+     pagingController = PagingController(
+      firstPageKey: 1, 
+      /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个，这里重载一下
+      invisibleItemsThreshold: widget.postPager.pageSize - 6
+    );
     /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
     autoScrollController = AutoScrollController(
       /// 这里设置的是当返回此页面后，窗口的边界位置；比如如果内容已经延伸到 bottom appbar 的位置了，那么可以
