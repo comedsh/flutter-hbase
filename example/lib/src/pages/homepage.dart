@@ -66,8 +66,10 @@ class _HomePageState extends State<HomePage> {
             child: Scaffold(
               appBar: AppBar(title: const Text('我')),
               body: const Center(
-                child: Text('我 Demo Page', 
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)),
+                child: Text(
+                  '我 Demo Page', 
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),)
+                ),
             )
           ),          
         ]
