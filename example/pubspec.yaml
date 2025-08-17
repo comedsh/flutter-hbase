@@ -48,6 +48,7 @@ dependencies:
     hosted:
       url: http://localhost:4000/
   proste_indexed_stack: ^0.2.4
+  community_material_icon: ^5.9.55
 
 dev_dependencies:
   flutter_test:

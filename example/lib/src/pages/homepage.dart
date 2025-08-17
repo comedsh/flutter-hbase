@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
-
 import 'bottom_tabs/category_post_full_screen_list_view_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,18 +78,18 @@ class _HomePageState extends State<HomePage> {
             label: '视频',
           ),
           BottomNavigationBarItem(
-            activeIcon: Icon(Ionicons.play_circle),
-            icon: Icon(Ionicons.play_circle_outline),
+            activeIcon: Icon(Icons.local_fire_department),
+            icon: Icon(Icons.local_fire_department_outlined),
             label: '热榜',
           ),
           BottomNavigationBarItem(
-            activeIcon: Icon(Ionicons.play_circle),
-            icon: Icon(Ionicons.play_circle_outline),
+            activeIcon: Icon(Ionicons.apps),
+            icon: Icon(Ionicons.apps_outline),
             label: '分类',
           ),
           BottomNavigationBarItem(
-            activeIcon: Icon(Ionicons.play_circle),
-            icon: Icon(Ionicons.play_circle_outline),
+            activeIcon: Icon(Ionicons.person),
+            icon: Icon(Ionicons.person_outline),
             label: '我',
           ),
         ]
