@@ -69,6 +69,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     });
 
     /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
+    /// 因此这里就没有必要自己手动的去触发加载第一页了；
     // WidgetsBinding.instance.addPostFrameCallback( (_) async {
     //   if (mounted) {
     //     debugPrint('$PostAlbumList, after cached posts added, then fetch the first page immediatelly');
@@ -108,8 +109,8 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
           itemBuilder: (context, post, index) => cellCreator(post, index),
           // 经过测试该回调只会被处罚一次
           firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
-          firstPageErrorIndicatorBuilder: (context) => 
-            DefaultMasonryIndicatorProvider.firstPageErrorIndicator(context, pagingController),
+          // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
+          firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),           
           newPageErrorIndicatorBuilder: (context) => 
             NewPageErrorIndicator(
               errMsg: '网络异常，点击重试',
@@ -214,60 +215,6 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     return posts;
   }  
 
-}
-
-/// 直接 copy [infinite_scroll_pagination] 的 [NewPageErrorIndicator] 组件
-class NewPageErrorIndicator extends StatelessWidget {
-  
-  final String errMsg;
-
-  const NewPageErrorIndicator({
-    super.key,
-    this.errMsg = 'Something went wrong. Tap to try again.',
-    this.onTap, 
-  });
-
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: onTap,
-    child: __FooterTile(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            errMsg,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          const Icon(
-            Icons.refresh,
-            size: 16,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-class __FooterTile extends StatelessWidget {
-  const __FooterTile({
-    required this.child,
-  });
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(
-      top: 16,
-      bottom: 16,
-    ),
-    child: Center(child: child),
-  );
 }
 
 class DefaultMasonryIndicatorProvider {

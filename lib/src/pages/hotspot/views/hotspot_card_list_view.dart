@@ -15,7 +15,6 @@ class HotspotCardListView extends StatefulWidget {
 }
 
 class _HotspotCardListViewState extends State<HotspotCardListView> {
-  var loading = true;
   late Pager<Profile> pager;
   final PagingController<int, Profile> pagingController = PagingController(firstPageKey: 1);
 
@@ -24,12 +23,8 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
     super.initState();
     pager = HotestProfilePager(chnCodes: widget.chnCodes, tagCodes: widget.tagCodes);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await nextPage(1);  // 加载第一页
-      setState(() => loading = false);
-    });
-
-    // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
+    /// 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
+    /// 唯一需要特别注意的是 PagingController 会自动触发第一页的加载，因此无需手动的去触发第一页加载；
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await nextPage(pageNum);
@@ -41,8 +36,17 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
     return PagedListView<int, Profile>(
       pagingController: pagingController,
       builderDelegate: PagedChildBuilderDelegate<Profile>(
+        // 加载第一页时候的使用的 loading 组件
         firstPageProgressIndicatorBuilder: (context) => const Center(child: CircularProgressIndicator()),
-        firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: nextPage),
+        // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
+        firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
+        // 如果加载下一页失败后使用的 reloading 组件
+        newPageErrorIndicatorBuilder: (context) => 
+          NewPageErrorIndicator(
+            errMsg: '网络异常，点击重试',
+            onTap: () => pagingController.retryLastFailedRequest()),
+        // 第一页就没有数据时候所使用的组件
+        noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),),
         itemBuilder: (context, profile, index) => 
           Padding(
             padding: EdgeInsets.symmetric(vertical: sp(7), horizontal: sp(22)),
@@ -82,7 +86,6 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
               ],
             ),
           )
-
       ),
     );
   }

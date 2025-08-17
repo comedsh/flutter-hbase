@@ -1,5 +1,7 @@
 library hbase;
 
+export 'src/pages/_core/paging.dart';
+
 export 'src/pages/tab_bar_view/model/tab.dart';
 export 'src/pages/tab_bar_view/model/type.dart';
 export 'src/pages/tab_bar_view/views/tab_bar_view_page_body.dart';
