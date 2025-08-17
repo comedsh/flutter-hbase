@@ -27,7 +27,7 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
     /// 唯一需要特别注意的是 PagingController 会自动触发第一页的加载，因此无需手动的去触发第一页加载；
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
-      await nextPage(pageNum);
+      await Paging.nextPage(pageNum, pager, pagingController, context);
     });
   }
 
@@ -91,7 +91,7 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
   }
 
   /// 这个方法的重点是同步 [PostPager] 与 [PagingController] 之间的分页状态；
-  /// TODO 将这个方法抽象出去
+  @Deprecated('已经被 Paging.nextPage 方法替代了')
   nextPage(pageNum) async {
     try {
       debugPrint('$HotspotCardListView.nextPage calls, with param nextPage: $pageNum');
@@ -117,7 +117,7 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
       // No specified type, handles all
       debugPrint('Something really unknown throw from $HotspotCardListView.nextPage: $e, statcktrace below: $stacktrace');
       /// 如果发生错误记得一定要交给 pagingController 由它负责处理        
-      /// 但是必须确保 pagingController 没有被销毁才能这么做，否则会报错；使用 mounted state 参数即可保证没有被销毁
+      /// 但是必须确保 pagingController 没有被销毁才能这么做，否则会报错；使用 if(mounted) 即可保证没有被销毁
       if (mounted) {
         pagingController.error = e;
       }

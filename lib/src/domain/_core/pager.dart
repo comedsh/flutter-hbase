@@ -21,10 +21,10 @@ abstract class Pager<T> {
   /// [pageNum] 获取下一分页的页号
   /// 该方法往往需要通过网络异步获取，因此是 async/await 的异步写法
   Future<List<T>> nextPage() async {
-    debugPrint('$Pager.nextPage calls with pageNum: $pageNum, pageSize: $pageSize');
+    debugPrint('$Pager<$T>.nextPage calls with pageNum: $pageNum, pageSize: $pageSize');
 
     if (isLastPage){
-      debugPrint('$Pager.nextPage, the last page met, directy return []');
+      debugPrint('$Pager<$T>.nextPage, the last page met, directy return []');
       return [];  // 如果已经没有更多内容了则直接返回 []
     }
 
@@ -35,12 +35,12 @@ abstract class Pager<T> {
       isLastPage = true;
     }
 
-    debugPrint('$Pager.nextPage calls returns with pageNum: $pageNum totally get ${posts.length} posts');
+    debugPrint('$Pager<$T>.nextPage calls returns with pageNum: $pageNum totally get ${posts.length} posts');
     
     // 只有当真正获取到了分页数据才能增 1
     if (posts.isNotEmpty) {
       pageNum = pageNum + 1;
-      debugPrint('$Pager.nextPage, the pageNum has been increased to $pageNum because the returned remote posts length > 0');
+      debugPrint('$Pager<$T>.nextPage, the pageNum has been increased to $pageNum because the returned remote posts length > 0');
     }
     
     return posts;

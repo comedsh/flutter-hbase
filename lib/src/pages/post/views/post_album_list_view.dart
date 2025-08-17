@@ -65,7 +65,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
-      await nextPage(pageNum);
+      Paging.nextPage(pageNum, widget.postPager, pagingController, context);
     });
 
     /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
@@ -122,6 +122,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   }
 
   /// 这个方法的重点是同步 [PostPager] 与 [PagingController] 之间的分页状态；
+  @Deprecated('已经被 Paging.nextPage 方法替代了')
   nextPage(pageNum) async {
     try {
       debugPrint('$PostAlbumListView.nextPage calls, with param nextPage: $pageNum');
