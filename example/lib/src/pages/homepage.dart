@@ -1,9 +1,9 @@
-import 'package:example/src/pages/bottom_tabs/category_post_album_list_view_page.dart';
+import 'package:example/src/pages/bottom_tab_pages/category_post_album_list_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
-import 'bottom_tabs/category_post_full_screen_list_view_page.dart';
+import 'bottom_tab_pages/category_post_full_screen_list_view_page.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -44,7 +44,17 @@ class _HomePageState extends State<HomePage> {
             ]),
           ),
           IndexedStackChild(
-            child: const HotspotProfilePage()
+            child: HotspotProfilePage(
+              chnCodes: const ['hanbeauti', 'life'],
+              tags: [
+                ChannelTag(code: 'omei', name: '欧美'),
+                ChannelTag(code: 'korea', name: '韩国'),
+                ChannelTag(code: 'xmt',  name: '新马泰'),
+                ChannelTag(code: 'twan', name: '台湾'),
+                ChannelTag(code: 'japan', name: '日本'),
+                ChannelTag(code: 'dalu', name: '其它'), // 把内地的命名为其它保险一些 
+              ],              
+            )
           ),
           IndexedStackChild(
             child: CategoryPostAlbumListViewPage(tabs: [
@@ -78,8 +88,8 @@ class _HomePageState extends State<HomePage> {
             label: '视频',
           ),
           BottomNavigationBarItem(
-            activeIcon: Icon(Icons.local_fire_department),
-            icon: Icon(Icons.local_fire_department_outlined),
+            activeIcon: Icon(Icons.local_fire_department, size: 26,),
+            icon: Icon(Icons.local_fire_department_outlined, size: 26),
             label: '热榜',
           ),
           BottomNavigationBarItem(

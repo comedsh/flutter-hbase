@@ -4,8 +4,8 @@ import 'package:hbase/src/pages/profile/components/profile_statistics_intro_pane
 
 typedef PostAlbumListCreator = PostAlbumListView Function({
   required Pager<Post> post, 
-  required OnCellClicked cellClickCallback}
-);
+  required OnCellClicked cellClickCallback
+});
 
 abstract class ProfilePage extends StatelessWidget {
   final Profile profile;

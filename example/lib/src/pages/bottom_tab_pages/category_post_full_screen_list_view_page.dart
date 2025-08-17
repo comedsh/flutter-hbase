@@ -19,7 +19,7 @@ class CategoryPostFullScreenListViewPage extends StatelessWidget {
       tabBarViewContentBuilder: (context, tab) {
         var chnCodes = ['hanbeauti'];
         var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
-        var postPager = ChannelTagPostPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true, pageSize: 24);
+        var postPager = ChannelTagPostPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true, pageSize: 12);
         return DemoPostFullScreenListView(postPager: postPager, distanceCountToPreLoad: postPager.pageSize - 6,);
       },
     );
