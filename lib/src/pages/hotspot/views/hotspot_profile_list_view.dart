@@ -4,17 +4,17 @@ import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sycomponents/components.dart';
 
-class HotspotCardListView extends StatefulWidget {
+class HotspotProfileListView extends StatefulWidget {
   final List<String>? chnCodes;
   final List<String>? tagCodes;
 
-  const HotspotCardListView({super.key, this.chnCodes, this.tagCodes});
+  const HotspotProfileListView({super.key, this.chnCodes, this.tagCodes});
 
   @override
-  State<HotspotCardListView> createState() => _HotspotCardListViewState();
+  State<HotspotProfileListView> createState() => _HotspotProfileListViewState();
 }
 
-class _HotspotCardListViewState extends State<HotspotCardListView> {
+class _HotspotProfileListViewState extends State<HotspotProfileListView> {
   late Pager<Profile> pager;
   final PagingController<int, Profile> pagingController = PagingController(firstPageKey: 1);
 
@@ -94,10 +94,10 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
   @Deprecated('已经被 Paging.nextPage 方法替代了')
   nextPage(pageNum) async {
     try {
-      debugPrint('$HotspotCardListView.nextPage calls, with param nextPage: $pageNum');
+      debugPrint('$HotspotProfileListView.nextPage calls, with param nextPage: $pageNum');
       final stopwatch = Stopwatch()..start();
       List<Profile> incomingProfiles = await pager.nextPage();
-      debugPrint('$HotspotCardListView.nextPage, get totally ${incomingProfiles.length} remote profiles, execution time: ${stopwatch.elapsed}');
+      debugPrint('$HotspotProfileListView.nextPage, get totally ${incomingProfiles.length} remote profiles, execution time: ${stopwatch.elapsed}');
       /// 下面的步骤是同步 pagingController 于 postPager 的分页状态，因为滑动分页目前是通过 pagingController 控制的，比如是否是最后一页等状态逻辑
       // 如果获取到的数据与分页数据相等，则证明还有更多分页数据可被获取
       if (incomingProfiles.length == pager.pageSize) {
@@ -115,7 +115,7 @@ class _HotspotCardListViewState extends State<HotspotCardListView> {
       }      
     } catch (e, stacktrace) {
       // No specified type, handles all
-      debugPrint('Something really unknown throw from $HotspotCardListView.nextPage: $e, statcktrace below: $stacktrace');
+      debugPrint('Something really unknown throw from $HotspotProfileListView.nextPage: $e, statcktrace below: $stacktrace');
       /// 如果发生错误记得一定要交给 pagingController 由它负责处理        
       /// 但是必须确保 pagingController 没有被销毁才能这么做，否则会报错；使用 if(mounted) 即可保证没有被销毁
       if (mounted) {

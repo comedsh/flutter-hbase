@@ -1,22 +1,24 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+import 'package:hbase/src/pages/hotspot/pages/hotspot_profile_list_view_page.dart';
 import 'package:sycomponents/components.dart';
 
 /// 一个卡片对应一个 tagCode
 /// 改页面借用了 [PageView] 来进行构建，其中通过 [PageController.viewportFraction] 来控制每一个 [PageView] 的大小
 /// 并且一个 PageView 中就是一个 Card
-class HotspotCardSwiperView extends StatefulWidget {
+class HotspotProfileCardSwiperView extends StatefulWidget {
   final List<String> chnCodes;
   final List<ChannelTag> tags;
   
-  const HotspotCardSwiperView({super.key, required this.chnCodes, required this.tags, });
+  const HotspotProfileCardSwiperView({super.key, required this.chnCodes, required this.tags, });
 
   @override
-  State<HotspotCardSwiperView> createState() => _HotspotCardSwiperViewState();
+  State<HotspotProfileCardSwiperView> createState() => _HotspotProfileCardSwiperViewState();
 }
 
-class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
+class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperView> {
   var loading = true;
   var hasError = false;
   late List<List<Profile>> profileGroup;
@@ -38,7 +40,8 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
     return SizedBox(
       height: sp(500),
       child: PageView.builder(
-        padEnds: false, // 关键，不用在两侧添加 padding
+        // 关键，不用在 Card 的两侧额外添加 padding；如果不设置为 false，第一张 Card 会居中展示；
+        padEnds: false, 
         controller: controller,
         /// 一个 tag 一个卡片，因此 item 的总长度就是 tags 的总长度
         itemCount: widget.tags.length,  
@@ -103,7 +106,7 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
       });
     } catch (e, stacktrace) {
       // No specified type, handles all
-      debugPrint('Something really unknown throw from $HotspotCardSwiperView.nextPage: $e, statcktrace below: $stacktrace');
+      debugPrint('Something really unknown throw from $HotspotProfileCardSwiperView.nextPage: $e, statcktrace below: $stacktrace');
       setState(() {
         loading = false;
         hasError = true;
@@ -128,7 +131,11 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
                   padding: EdgeInsets.zero,
                   minimumSize: Size.zero,
                 ),
-                onPressed: () {},
+                onPressed: () => Get.to(() => HotspotProfileListViewPage(
+                  title: tag.name,
+                  chnCodes: widget.chnCodes,
+                  tagCodes: [tag.code],
+                )),
                 child: Text('查看更多', style: TextStyle(
                   fontSize: sp(16), 
                   fontWeight: FontWeight.w500,
@@ -144,7 +151,7 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
     );
   }
 
-  /// 注意一点就是 [HotspotCardSwiperView.tags] 和 profileGroup 是顺序上一一对应的，因此可以按照
+  /// 注意一点就是 [HotspotProfileCardSwiperView.tags] 和 profileGroup 是顺序上一一对应的，因此可以按照
   /// [index] 来实现一一对应
   List<Widget> profileList(int index) {
     var profiles = profileGroup[index];

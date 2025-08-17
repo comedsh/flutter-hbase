@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
             ]),
           ),
           IndexedStackChild(
-            child: const HotspotPage()
+            child: const HotspotProfilePage()
           ),
           IndexedStackChild(
             child: CategoryPostAlbumListViewPage(tabs: [

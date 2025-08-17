@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/hotspot/views/hotspot_card_list_view.dart';
+import 'package:hbase/src/pages/hotspot/views/hotspot_profile_list_view.dart';
 import 'package:sycomponents/components.dart';
 
-class HotspotPage extends StatelessWidget {
-  const HotspotPage({super.key});
+class HotspotProfilePage extends StatelessWidget {
+  const HotspotProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class HotspotPage extends StatelessWidget {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget> [
             SliverToBoxAdapter(
-              child: HotspotCardSwiperView(
+              child: HotspotProfileCardSwiperView(
                 chnCodes: const ['hanbeauti', 'life'],
                 tags: [
                   ChannelTag(code: 'omei', name: '欧美'),
@@ -48,7 +48,7 @@ class HotspotPage extends StatelessWidget {
                   children: [
                     /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
                     KeepAliveWrapper(
-                      child: HotspotCardListView(
+                      child: HotspotProfileListView(
                         chnCodes: ['hanbeauti', 'life'],
                       )
                     )

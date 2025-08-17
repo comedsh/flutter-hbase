@@ -21,8 +21,10 @@ export 'src/pages/profile/widgets/profile_avatar.dart';
 export 'src/pages/profile/pages/profile_page.dart';
 export 'src/pages/profile/pages/profile_post_full_screen_list_page.dart';
 
-export 'src/pages/hotspot/views/hotspot_card_swiper_view.dart';
-export 'src/pages/hotspot/pages/hotspot_page.dart';
+export 'src/pages/hotspot/views/hotspot_profile_card_swiper_view.dart';
+export 'src/pages/hotspot/views/hotspot_profile_list_view.dart';
+export 'src/pages/hotspot/pages/hotspot_profile_page.dart';
+export 'src/pages/hotspot/pages/hotspot_profile_list_view_page.dart';
 
 export 'src/domain/_core/pager.dart';
 export 'src/domain/post/post.dart';
