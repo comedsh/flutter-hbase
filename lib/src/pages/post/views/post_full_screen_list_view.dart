@@ -5,7 +5,7 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
 /// 之所以将其定义为抽象类是为了能够让子系统拥有最大的自定义的灵活性，相关的实现嘞参考 [DemoPostFullScreenListPage]
-abstract class PostFullScreenListView extends StatefulWidget {
+class PostFullScreenListView extends StatefulWidget {
   /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用；当然，这里的第一页并不局限于一页 12/24 的数据，而是指
   /// 初始化 [PostFullScreenListView] 时候传入的第一页数据，可能上百条；
   final List<Post>? firstPagePosts;
@@ -33,9 +33,11 @@ abstract class PostFullScreenListView extends StatefulWidget {
     this.onPageChanged
   });
 
+  @override
+  State<PostFullScreenListView> createState() => _PostFullScreenListViewState();
 }
 
-abstract class PostFullScreenListViewState<T extends PostFullScreenListView> extends State<T> {
+class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   /// 只有异步加载第一分页需要 loading
   bool isFirstPageLoading = false;  
   /// 如果第一分页加载失败，会使用 FailRetrier 进行重试
@@ -113,7 +115,7 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return createFullScreenPostView(post, index);
+            return PostFullScreenView(post: post, postIndex: index);
           },
         ),
       );
@@ -296,8 +298,5 @@ abstract class PostFullScreenListViewState<T extends PostFullScreenListView> ext
       failCallback();
     }
   }
-
-  /// 子系统需要实现该方法以提供 [PostFullScreenView] 的具体实现 View
-  PostFullScreenView createFullScreenPostView(Post post, int index); 
 
 }

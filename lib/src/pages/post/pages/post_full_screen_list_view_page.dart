@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
 
-abstract class PostFullScreenListViewPage extends StatelessWidget {
+class PostFullScreenListViewPage extends StatelessWidget {
   /// 初始化的 posts
   final List<Post>? posts;
   /// 跳转进入的 post, 该 post 一定是 [posts] 中的一员
@@ -36,10 +36,13 @@ abstract class PostFullScreenListViewPage extends StatelessWidget {
             Get.back<int>(result: pageChangedIndex);
           }),
         ),
-        body: getPostFullScreenListView(posts: posts, post: post, postPager: postPager)
+        body: PostFullScreenListView(
+          firstPagePosts: posts, 
+          chosedPost: post, 
+          postPager: postPager, 
+          distanceCountToPreLoad: postPager.pageSize - 6,
+        )
       ),
     );
   }
-
-  getPostFullScreenListView({List<Post>? posts, Post? post, required Pager<Post> postPager});
 }

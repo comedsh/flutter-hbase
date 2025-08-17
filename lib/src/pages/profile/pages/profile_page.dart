@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:hbase/src/pages/profile/components/profile_statistics_intro_panel.dart';
 
@@ -7,7 +8,7 @@ typedef PostAlbumListCreator = PostAlbumListView Function({
   required OnCellClicked cellClickCallback
 });
 
-abstract class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatelessWidget {
   final Profile profile;
   const ProfilePage({super.key, required this.profile});
 
@@ -32,12 +33,22 @@ abstract class ProfilePage extends StatelessWidget {
           initialIndex: TabService.getDefaultIndex(tabDatas),
           tabBarViewContentBuilder: (BuildContext context, TabData tab) {
             var postPager = ProfilePostPager(profileCode: profile.code, sortBy: tab.id, pageSize: 24);
-            return getPostAlbumListView(postPager);
+            return PostAlbumListView(
+              postPager: postPager, 
+              onCellClicked: (posts, post, postPager) async =>
+                /// 当点击 cell 后会跳转到第三方页面，这里的返回值 index 是从第三方页面返回时的 post index，
+                /// 这样 PostAlbumListView 根据这个值就可以进行 scrollTo 操作了
+                await Get.to<int>(() => 
+                  PostFullScreenListViewPage(
+                    posts: posts, 
+                    post: post, 
+                    postPager: postPager,
+                    title: post.profile.name
+                  ))
+            );
           },
         )
       )
     );
   }
-
-  PostAlbumListView getPostAlbumListView(Pager<Post> postPager);
 }

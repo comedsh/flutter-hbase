@@ -1,10 +1,7 @@
-import 'package:example/src/pages/bottom_tab_pages/category_post_album_list_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
-import 'bottom_tab_pages/category_post_full_screen_list_view_page.dart';
-
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

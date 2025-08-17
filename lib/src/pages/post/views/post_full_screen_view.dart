@@ -14,7 +14,7 @@ final compactFormat = NumberFormat.compact(locale: 'zh_CN');
 /// 因此它的实现粒度范围就围绕着 HBase 系统的需要展开，比如包含喜欢、收藏、关注、下载逻辑等等；然而之所以
 /// 将其定义为抽象类是让子系统可以按照自己的需求对某些功能进行定制，比如下载行为等等；
 /// 
-abstract class PostFullScreenView extends StatelessWidget{
+class PostFullScreenView extends StatelessWidget{
   final Post post;
   /// 通常 [PostFullScreenView] 是在列表中展示，这里的 [postIndex] 即表示该 post 在此列表中的下标
   final int postIndex;
@@ -76,14 +76,14 @@ abstract class PostFullScreenView extends StatelessWidget{
                 size: sp(44), 
                 onTap: () => Get.previousRoute == "/$ProfilePage"
                 ? Get.back<int>(result: postIndex)
-                : Get.to(() => getProfilePage(post.profile)),
+                : Get.to(() => ProfilePage(profile: post.profile)),
               ),
               // profile name
               GestureDetector(
                 /// 注释同上
                 onTap: () => Get.previousRoute == "/$ProfilePage"
                   ? Get.back<int>(result: postIndex)
-                  : Get.to(() => getProfilePage(post.profile)),
+                  : Get.to(() => ProfilePage(profile: post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
                   child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
@@ -165,7 +165,5 @@ abstract class PostFullScreenView extends StatelessWidget{
       ],
     );
   }
-
-  ProfilePage getProfilePage(Profile profile);
 
 }

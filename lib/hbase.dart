@@ -14,6 +14,8 @@ export 'src/pages/post/views/post_album_list_view.dart';
 export 'src/pages/post/views/post_full_screen_view.dart';
 export 'src/pages/post/views/post_full_screen_list_view.dart';
 export 'src/pages/post/pages/post_full_screen_list_view_page.dart';
+export 'src/pages/post/pages/category_post_album_list_view_page.dart';
+export 'src/pages/post/pages/category_post_full_screen_list_view_page.dart';
 export 'src/pages/post/model/post_page_changed_notification.dart';
 export 'src/pages/post/service/post_page_service.dart';
 

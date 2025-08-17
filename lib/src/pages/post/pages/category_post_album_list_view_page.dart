@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
-import '../post/pages/demo_post_full_screen_list_view_page.dart';
-
 /// 用来构建分页 bottom tab page
 class CategoryPostAlbumListViewPage extends StatelessWidget {
   final List<TabData> tabs;
@@ -16,7 +14,12 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
       tabBarViewContentBuilder: (context, tab) {
         var chnCodes = ['hanbeauti'];
         var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
-        var postPager = ChannelTagPostPager(chnCodes: chnCodes, tagCodes: tagCodes, isReelOnly: true, pageSize: 24);
+        var postPager = ChannelTagPostPager(
+          chnCodes: chnCodes, 
+          tagCodes: tagCodes, 
+          isReelOnly: true, 
+          pageSize: 24
+        );
         return PostAlbumListView(
           postPager: postPager, 
           isEnableAutoScroll: true,
@@ -24,7 +27,7 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
             /// 当点击 cell 后会跳转到第三方页面，这里的返回值 index 是从第三方页面返回时的 post index，
             /// 这样 PostAlbumListView 根据这个值就可以进行 scrollTo 操作了
             await Get.to<int>(() => 
-              DemoPostFullScreenListViewPage(
+              PostFullScreenListViewPage(
                 posts: posts, 
                 post: post, 
                 postPager: postPager,
