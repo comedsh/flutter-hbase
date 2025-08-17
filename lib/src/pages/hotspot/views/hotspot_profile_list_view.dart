@@ -1,5 +1,6 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sycomponents/components.dart';
@@ -52,21 +53,29 @@ class _HotspotProfileListViewState extends State<HotspotProfileListView> {
             padding: EdgeInsets.symmetric(vertical: sp(7), horizontal: sp(22)),
             child: Row(
               children: [
-                ProfileAvatar(profile: profile, size: sp(66)),
+                // 头像
+                GestureDetector(
+                  onTap: () => Get.to(() => ProfilePage(profile: profile)),
+                  child: ProfileAvatar(profile: profile, size: sp(66))
+                ),
                 SizedBox(width: sp(8)),
-                SizedBox(
-                  width: Screen.width(context) * 0.53,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(profile.name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: sp(16))),
-                      Text(
-                        profile.description ?? "",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: sp(13))
-                      )
-                    ],
+                // 名字和描述
+                GestureDetector(
+                  onTap: () => Get.to(() => ProfilePage(profile: profile)),
+                  child: SizedBox(
+                    width: Screen.width(context) * 0.53,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(profile.name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: sp(16))),
+                        Text(
+                          profile.description ?? "",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: sp(13))
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(width: sp(8.0)),
@@ -81,7 +90,11 @@ class _HotspotProfileListViewState extends State<HotspotProfileListView> {
                   onPressed: () {
                   },
                   dense: true,
-                  child: Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(14), fontWeight: FontWeight.bold))
+                  child: Text('关注', style: TextStyle(
+                    color: Colors.white, 
+                    fontSize: sp(14), 
+                    fontWeight: FontWeight.bold
+                  ))
                 ),
               ],
             ),

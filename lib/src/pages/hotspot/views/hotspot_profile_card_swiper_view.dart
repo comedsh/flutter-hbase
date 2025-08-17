@@ -164,21 +164,28 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              ProfileAvatar(profile: p, size: sp(50)),
+              GestureDetector(
+                onTap: () => Get.to(() => ProfilePage(profile: p)),
+                child: ProfileAvatar(profile: p, size: sp(50))
+              ),
               SizedBox(width: sp(8)),
-              SizedBox(
-                width: Screen.width(context) * 0.41,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(p.name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: sp(16))),
-                    Text(
-                      p.description ?? "",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: sp(13))
-                    )
-                  ],
+              // 名字和描述
+              GestureDetector(
+                onTap: () => Get.to(() => ProfilePage(profile: p)),
+                child: SizedBox(
+                  width: Screen.width(context) * 0.41,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(p.name, style: TextStyle(fontWeight: FontWeight.w500, fontSize: sp(16))),
+                      Text(
+                        p.description ?? "",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: sp(13))
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(width: sp(8.0)),
