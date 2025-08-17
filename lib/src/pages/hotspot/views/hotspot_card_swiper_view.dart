@@ -18,6 +18,7 @@ class HotspotCardSwiperView extends StatefulWidget {
 
 class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
   var loading = true;
+  var hasError = false;
   late List<List<Profile>> profileGroup;
   @override
   void initState() {
@@ -25,8 +26,7 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
 
     /// 远程初始化 profile group
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      profileGroup = await initProfileGroup();
-      setState(() => loading = false);
+      await initProfileGroup();
     });    
   }
 
@@ -62,8 +62,23 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
                     // 之前的写法是 loading ? CircularProgressIndicator : ...profileList(index)，结果 ...profileList<index>
                     // 的位置报错，编译不过去；看来是三元表达式不支持；改成 if/else 就可以了。
                     // 参考：https://medium.com/@mjawwadiqbal22/how-to-spread-a-list-in-dart-flutter-triple-dot-spread-operators-guide-tips-73041aa57853
-                    if (loading == false) ...profileList(index)
-                    else SizedBox(height: sp(300), child: const Center(child: CircularProgressIndicator()))
+                    if (loading == false && hasError == false) 
+                      ...profileList(index)
+                    else if (loading == true) 
+                      SizedBox(height: sp(300), child: const Center(child: CircularProgressIndicator()))
+                    else if (loading == false && hasError == true)
+                      SizedBox(
+                        height: sp(300),
+                        child: NewPageErrorIndicator(
+                          errMsg: '网络异常，点击重试',
+                          onTap: () async {
+                            setState((){
+                              loading = true;
+                              hasError = false;
+                            });
+                            await initProfileGroup();                                
+                          }),
+                      )
                   ],
                 ),
               ),
@@ -74,13 +89,26 @@ class _HotspotCardSwiperViewState extends State<HotspotCardSwiperView> {
     );
   }
 
-  Future<List<List<Profile>>> initProfileGroup() async {
-    var profileGroupPager = HotestPerTagsProfileGroupPager(
-      chnCodes: widget.chnCodes,
-      tagCodes: widget.tags.map((tag) => tag.code).toList(),
-      pageSize: 7
-    );
-    return await profileGroupPager.nextPage();
+  initProfileGroup() async {
+    try {
+      var profileGroupPager = HotestPerTagsProfileGroupPager(
+        chnCodes: widget.chnCodes,
+        tagCodes: widget.tags.map((tag) => tag.code).toList(),
+        pageSize: 7
+      );
+      profileGroup = await profileGroupPager.nextPage();
+      setState(() {
+        loading = false;
+        hasError = false;
+      });
+    } catch (e, stacktrace) {
+      // No specified type, handles all
+      debugPrint('Something really unknown throw from $HotspotCardSwiperView.nextPage: $e, statcktrace below: $stacktrace');
+      setState(() {
+        loading = false;
+        hasError = true;
+      });
+    }    
   }
 
   titleRow(ChannelTag tag) {
