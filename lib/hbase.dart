@@ -3,10 +3,10 @@ library hbase;
 export 'src/pages/_core/paging.dart';
 export 'src/pages/_core/paging_indicators.dart';
 
-export 'src/pages/tab_bar_view/model/tab.dart';
-export 'src/pages/tab_bar_view/model/type.dart';
-export 'src/pages/tab_bar_view/views/tab_bar_view_page_body.dart';
-export 'src/pages/tab_bar_view/views/tab_bar_view_page_appbar_title.dart';
+export 'src/pages/_common/views/tab_bar_view/model/tab.dart';
+export 'src/pages/_common/views/tab_bar_view/model/type.dart';
+export 'src/pages/_common/views/tab_bar_view/views/tab_bar_view_page_body.dart';
+export 'src/pages/_common/views/tab_bar_view/views/tab_bar_view_page_appbar_title.dart';
 
 export 'src/pages/post/widgets/caption.dart';
 export 'src/pages/post/views/post_list_view.dart';
@@ -21,7 +21,6 @@ export 'src/pages/post/service/post_page_service.dart';
 
 export 'src/pages/profile/widgets/profile_avatar.dart';
 export 'src/pages/profile/pages/profile_page.dart';
-export 'src/pages/profile/pages/profile_post_full_screen_list_page.dart';
 
 export 'src/pages/hotspot/views/hotspot_profile_card_swiper_view.dart';
 export 'src/pages/hotspot/views/hotspot_profile_list_view.dart';
