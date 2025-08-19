@@ -2,7 +2,7 @@ import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/hotspot/pages/hotspot_profile_list_view_page.dart';
+import 'package:hbase/src/pages/nav_pages/hotspot/pages/hotspot_profile_list_view_page.dart';
 import 'package:sycomponents/components.dart';
 
 /// 一个卡片对应一个 tagCode
