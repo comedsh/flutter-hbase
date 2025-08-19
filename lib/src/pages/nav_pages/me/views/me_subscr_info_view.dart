@@ -39,7 +39,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
             children: [
               Row(
                 children: [
-                  Text('VIP', style: TextStyle(color: Colors.amber[200], fontSize: sp(18), fontWeight: FontWeight.bold),),
+                  Text('VIP', style: TextStyle(color: Colors.amber[200], fontSize: sp(22), fontWeight: FontWeight.bold),),
                 ],
               ),
               Row(
