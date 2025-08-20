@@ -31,7 +31,7 @@ export 'src/pages/nav_pages/me/pages/me_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_favorite_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_like_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_follow_page.dart';
-export 'src/pages/nav_pages/me/widgets/card_list_tiles.dart';
+export 'src/pages/nav_pages/me/views/card_list_tiles.dart';
 
 export 'src/domain/_core/pager.dart';
 export 'src/domain/post/post.dart';

@@ -1,19 +1,37 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:hbase/src/pages/nav_pages/me/views/me_subscr_info_view.dart';
+import 'package:hbase/src/pages/nav_pages/me/widgets/clear_cache_list_tile.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
 
-class MePage extends StatelessWidget {
+class MePage extends StatefulWidget {
   final String? title;
   const MePage({super.key, this.title});
+
+  @override
+  State<MePage> createState() => _MePageState();
+}
+
+class _MePageState extends State<MePage> {
+
+  final version = ''.obs;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      version.value = await AppServiceManager.appConfig.version;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title ?? '我的'),
+        title: Text(widget.title ?? '我的'),
       ),
       body: SingleChildScrollView(
         child: Column(children: [
@@ -39,24 +57,8 @@ class MePage extends StatelessWidget {
               ),
             ]),
             CardListTiles(listTiles: [
-              ListTile(
-                // leading: const Icon(Ionicons.trash_bin_outline),
-                leading: const Icon(Icons.cleaning_services_outlined),
-                title: Text('清空缓存', style: TextStyle(fontSize: sp(18))),
-                trailing: const Icon(Ionicons.chevron_forward_outline),                
-                onTap: () async {
-                  // bool choice = await showConfirmDialog(context, content: '确定清除缓存？', confirmBtnTxt: '是', cancelBtnTxt: '否');
-                  // if (choice) {
-                  //   GlobalLoading.show();
-                  //   await cachePurgeService.purge();
-                  //   GlobalLoading.close();
-                  //   if (context.mounted) {
-                  //     await showAlertDialog(context, content: '已为您清除缓存 $size', confirmBtnTxt: '好的');
-                  //     await doUpdate();
-                  //   }
-                  // }
-                },
-              ),
+              // TODO 审核模式下才展示，为了尽量的节省流量，正式版不能清空
+              const ClearCacheListTile(),
               ListTile(
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),
@@ -99,7 +101,7 @@ class MePage extends StatelessWidget {
               ),
             ]),
             SizedBox(height: sp(20),),
-            Center(child: Text('软件版本：${AppServiceManager.appConfig.version}')),
+            Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: sp(20),),
             const Center(child: Text('备案号：1234566')),
           ],

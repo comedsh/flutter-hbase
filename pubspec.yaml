@@ -71,6 +71,9 @@ dependencies:
   intl: ^0.19.0
   proste_indexed_stack: ^0.2.4
   community_material_icon: ^5.9.55
+  # 注意版本最好与 sycomponents 中的保持一致
+  visibility_detector: ^0.4.0+2
+
 
 
 dev_dependencies:

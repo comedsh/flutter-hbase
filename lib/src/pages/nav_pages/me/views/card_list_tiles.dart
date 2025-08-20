@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CardListTiles extends StatelessWidget {
-  final List<ListTile> listTiles;
+  /// 为什么最终将类型改为了 Widget，在封装 [ClearCacheListTile] 的时候返回的是被 [VisibilityDetector] 
+  /// 所包装后的 ListTile
+  // final List<ListTile> listTiles;
+  final List<Widget> listTiles;
   const CardListTiles({super.key, required this.listTiles});
 
   @override
