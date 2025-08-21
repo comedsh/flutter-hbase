@@ -126,21 +126,11 @@ class PostFullScreenView extends StatelessWidget{
   rightPanel(Post post) {
     return Column(
       children: [
-        StatefulLikeIcon(post: post),
+        StatefulLikeButton(post: post),
         SizedBox(height: sp(26)),
-        _favorIconButton(post),
+        StatefulFavoriteButton(post: post),
         SizedBox(height: sp(26)),
         _downloadButton(post)
-      ],
-    );
-  }
-
-  _favorIconButton(Post post) {
-    return Column(
-      children: [
-        Icon(Ionicons.star_outline, size: sp(30),),
-        SizedBox(height: sp(4)),
-        Text(compactFormat.format(post.favorites)),
       ],
     );
   }

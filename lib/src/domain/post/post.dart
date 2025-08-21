@@ -15,8 +15,8 @@ class Post {
   final String? caption; // 翻译后的贴文
   final String? captionRaw; // 原始未翻译的贴文
   final String? location;
-  final int favorites;
-  final int likes;
+  int favorites;
+  int likes;
   final double height;
   final double width;  
   final String thumbnail;
