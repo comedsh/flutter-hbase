@@ -23,6 +23,8 @@ class Post {
   final PostType type;
   final DateTime uploadTs;
   final bool isPinned;
+  bool isLiked;
+  bool isFavorited;
   final List<PostSlot> slots;
   final Profile profile;
 
@@ -40,6 +42,8 @@ class Post {
     required this.type, 
     required this.uploadTs, 
     required this.isPinned, 
+    required this.isLiked, 
+    required this.isFavorited,
     required this.slots,
     required this.profile
   });
@@ -58,10 +62,11 @@ class Post {
       type = PostType.values.byName(json['type']),
       uploadTs = DateTime.parse(json['uploadTs']),
       isPinned = json['isPinned'],
+      isLiked = json['isLiked'],
+      isFavorited = json['isFavorited'],
       slots = json['slots'].map<PostSlot>((s) => PostSlot.fromJson(s)).toList(),
       profile = Profile.fromJson(json['profile']);
 
-  /// 注意 save [User] 到本地存储会用到该方法进行序列化
   Map<String, dynamic> toJson() => 
     <String, dynamic> {
       'shortcode': shortcode,
@@ -75,7 +80,10 @@ class Post {
       'width': width,
       'thumbnail': thumbnail,
       'type': type.name,
-      'uploadTs': uploadTs.toIso8601String()
+      'uploadTs': uploadTs.toIso8601String(),
+      'isPinned': isPinned,
+      'isLiked': isLiked,
+      'isFavorited': isFavorited
     };  
 
   /// 重载 == 方法

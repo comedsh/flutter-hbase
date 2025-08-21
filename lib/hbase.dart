@@ -9,6 +9,8 @@ export 'src/pages/common/views/tab_bar_view/views/tab_bar_view_page_body.dart';
 export 'src/pages/common/views/tab_bar_view/views/tab_bar_view_page_appbar_title.dart';
 
 export 'src/pages/domain/post/widgets/caption.dart';
+export 'src/pages/domain/post/widgets/like.dart';
+export 'src/pages/domain/post/widgets/favorite.dart';
 export 'src/pages/domain/post/views/post_list_view.dart';
 export 'src/pages/domain/post/views/post_album_list_view.dart';
 export 'src/pages/domain/post/views/post_full_screen_view.dart';
@@ -41,4 +43,4 @@ export 'src/domain/profile/profile.dart';
 export 'src/domain/profile/profile_pager.dart';
 export 'src/domain/channel/channel.dart';
 export 'src/domain/channel/channel_tag.dart';
-
+export 'src/domain/user/user_service.dart';

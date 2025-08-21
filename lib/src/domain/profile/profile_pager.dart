@@ -27,7 +27,8 @@ class HotestPerTagsProfileGroupPager extends Pager<List<Profile>> {
 
 }
 
-/// TODO 这个没有必要，因为它就是 [HotestProfilePager] 的一个特列
+/// 这个没有必要，因为它就是 [HotestProfilePager] 的一个特列
+@Deprecated('没有必要，因为它就是 [HotestProfilePager] 的一个特列')
 class HotestProfilePagerPerTag extends Pager<Profile> {
   final List<String> chnCodes;
   final String tagCode;
