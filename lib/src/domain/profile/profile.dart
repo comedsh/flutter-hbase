@@ -3,14 +3,18 @@ class Profile {
   final String name;
   final String avatar;
   final String? description;
-  final int followerCount;
-
+  int followerCount;  // 粉丝数量
+  final int followedCount;  // 关注数量
+  final int postCount;
+  
   Profile({
     required this.code, 
     required this.name, 
     required this.avatar, 
     this.description, 
-    required this.followerCount
+    required this.followerCount,
+    required this.followedCount,
+    required this.postCount
   });
 
   Profile.fromJson(Map<String, dynamic> json)
@@ -18,7 +22,9 @@ class Profile {
       name = json['name'],
       avatar = json['avatar'],
       description = json['description'],
-      followerCount = json['followerCount'];
+      followerCount = json['followerCount'],
+      followedCount = json['followedCount'],
+      postCount = json['postCount'];
 
   /// 注意 save [User] 到本地存储会用到该方法进行序列化
   Map<String, dynamic> toJson() => 
@@ -27,7 +33,9 @@ class Profile {
       'name': name,
       'avatar': avatar,
       'description': description,
-      'followerCount': followerCount
+      'followerCount': followerCount,
+      'followedCount': followedCount,
+      'postCount': postCount
     };
 
   /// 重载 == 方法

@@ -57,20 +57,20 @@ class ProfileStatisticsIntroPanel extends StatelessWidget {
   }
 
   statisticPanel(BuildContext context, Profile profile) {
-    return const Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Column(children: [
-          Text('帖子数'),
-          Text('300')
+          const Text('帖子'),
+          Text(compactFormat.format(profile.postCount))
         ]),
         Column(children: [
-          Text('帖子数'),
-          Text('300')
+          const Text('粉丝'),
+          Text(compactFormat.format(profile.followerCount))
         ]),
         Column(children: [
-          Text('帖子数'),
-          Text('300')
+          const Text('关注'),
+          Text(compactFormat.format(profile.followedCount))
         ]),
       ],
     );
