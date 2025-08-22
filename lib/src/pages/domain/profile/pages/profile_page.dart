@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/domain/profile/components/profile_statistics_intro_panel.dart';
+import 'package:hbase/src/pages/domain/profile/views/profile_statistics_intro_panel.dart';
 
 typedef PostAlbumListCreator = PostAlbumListView Function({
   required Pager<Post> post, 

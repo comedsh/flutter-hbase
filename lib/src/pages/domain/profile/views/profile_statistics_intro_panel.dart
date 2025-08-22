@@ -1,5 +1,6 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
@@ -77,17 +78,36 @@ class ProfileStatisticsIntroPanel extends StatelessWidget {
   }
 
   followButton(BuildContext context, Profile profile) {
-    return GradientElevatedButton(
-      gradient: LinearGradient(colors: [
-        AppServiceManager.appConfig.appTheme.fillGradientStartColor,
-        AppServiceManager.appConfig.appTheme.fillGradientEndColor
-      ]),
-      width: Screen.width(context) * 0.56,
-      height: sp(42.0),
-      borderRadius: BorderRadius.circular(30.0),
-      onPressed: () {
-      },
-      child: Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(18), fontWeight: FontWeight.bold),)
+    return StatefulFollowButton(
+      profile: profile, 
+      followButtonCreator: ({required bool loading, required onTap}) => 
+        GradientElevatedButton(
+          gradient: LinearGradient(colors: [
+            AppServiceManager.appConfig.appTheme.fillGradientStartColor,
+            AppServiceManager.appConfig.appTheme.fillGradientEndColor
+          ]),
+          width: Screen.width(context) * 0.56,
+          height: sp(42.0),
+          borderRadius: BorderRadius.circular(30.0),
+          onPressed: () => onTap(context),
+          child: loading
+            ? SizedBox(width: sp(18), height: sp(18), child: const CircularProgressIndicator(strokeWidth: 2.0,))
+            : Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(18), fontWeight: FontWeight.bold),)
+        ),       
+      cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
+        GradientElevatedButton(
+          gradient: const LinearGradient(colors: [
+            Colors.grey,
+            Colors.grey,
+          ]),
+          width: Screen.width(context) * 0.56,
+          height: sp(42.0),
+          borderRadius: BorderRadius.circular(30.0),
+          onPressed: () => onTap(context),
+          child: loading
+            ? SizedBox(width: sp(18), height: sp(18), child: const CircularProgressIndicator(strokeWidth: 2.0, color: Colors.white))
+            : Text('已关注', style: TextStyle(color: Colors.black87, fontSize: sp(14), fontWeight: FontWeight.bold),)
+        ), 
     );
   }
 

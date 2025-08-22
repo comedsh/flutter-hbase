@@ -9,7 +9,7 @@ class HbaseUserService {
     });
   } 
 
-  static unFollow(String profileCode) async {
+  static disFollow(String profileCode) async {
     await dio.post('/u/follow/unset', data: {
       'profileCode': profileCode
     });

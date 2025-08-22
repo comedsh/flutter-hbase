@@ -3,11 +3,12 @@ class Profile {
   final String name;
   final String avatar;
   final String? description;
-  int followerCount;  // 粉丝数量
+  final int followerCount;  // 粉丝数量
   final int followedCount;  // 关注数量
   final int postCount;
+  bool isFollowed;  // 是否被该用户关注
   
-  Profile({
+  Profile(this.isFollowed, {
     required this.code, 
     required this.name, 
     required this.avatar, 
@@ -24,7 +25,8 @@ class Profile {
       description = json['description'],
       followerCount = json['followerCount'],
       followedCount = json['followedCount'],
-      postCount = json['postCount'];
+      postCount = json['postCount'],
+      isFollowed = json['isFollowed'];
 
   /// 注意 save [User] 到本地存储会用到该方法进行序列化
   Map<String, dynamic> toJson() => 
@@ -35,7 +37,8 @@ class Profile {
       'description': description,
       'followerCount': followerCount,
       'followedCount': followedCount,
-      'postCount': postCount
+      'postCount': postCount,
+      'isFollowed': isFollowed
     };
 
   /// 重载 == 方法

@@ -22,6 +22,7 @@ export 'src/pages/domain/post/model/post_page_changed_notification.dart';
 export 'src/pages/domain/post/service/post_page_service.dart';
 
 export 'src/pages/domain/profile/widgets/profile_avatar.dart';
+export 'src/pages/domain/profile/widgets/follow.dart';
 export 'src/pages/domain/profile/pages/profile_page.dart';
 
 export 'src/pages/nav_pages/hotspot/views/hotspot_profile_card_swiper_view.dart';
