@@ -53,7 +53,7 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Ionicons.bookmark_outline),
                 title: Text('我的关注', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () {}
+                onTap: () => Get.to(() => const MeFollowPage())
               ),
             ]),
             CardListTiles(listTiles: [
