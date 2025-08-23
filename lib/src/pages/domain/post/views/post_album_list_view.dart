@@ -157,7 +157,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   }
 
   /// 核心就是 [pagingController.refresh] 会触发 [pagingController.addPageRequestListener] 然后立刻调用 [nextPage]
-  /// 后去第一页数据；其背后逻辑是，[pagingController.refresh] 中会调用语句 `pagingController.itemList = null` 导致
+  /// 后去加载第一页数据；其背后逻辑是，[pagingController.refresh] 中会调用语句 `pagingController.itemList = null` 导致
   /// [pagingController.addPageRequestListener] 被触发
   pullRefresh() {
     widget.postPager.reset();
