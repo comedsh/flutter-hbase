@@ -54,10 +54,7 @@ class _HotspotProfileListViewState extends State<HotspotProfileListView> {
             child: Row(
               children: [
                 /// 头像
-                GestureDetector(
-                  onTap: () => Get.to(() => ProfilePage(profile: profile)),
-                  child: ProfileAvatar(profile: profile, size: sp(66))
-                ),
+                ProfileAvatar(profile: profile, size: sp(66), onTap: () => Get.to(() => ProfilePage(profile: profile)),),
                 SizedBox(width: sp(8)),
                 /// 名字和描述
                 GestureDetector(

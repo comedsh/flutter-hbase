@@ -104,6 +104,7 @@ class _MePageState extends State<MePage> {
             Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: sp(20),),
             const Center(child: Text('备案号：1234566')),
+            SizedBox(height: sp(20),),
           ],
         ),
       ),
