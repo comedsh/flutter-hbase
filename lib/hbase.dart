@@ -45,3 +45,4 @@ export 'src/domain/profile/profile_pager.dart';
 export 'src/domain/channel/channel.dart';
 export 'src/domain/channel/channel_tag.dart';
 export 'src/domain/user/user_service.dart';
+export 'src/domain/user/user_pager.dart';

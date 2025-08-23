@@ -41,19 +41,19 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Ionicons.heart_outline),
                 title: Text('我的喜欢', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => {}
+                onTap: () => Get.to(() => const MeLikePage())
               ),
               ListTile(
                 leading: const Icon(Ionicons.star_outline),
                 title: Text('我的收藏', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => {}
+                onTap: () => Get.to(() => const MeFavoritePage())
               ),
               ListTile(
                 leading: const Icon(Ionicons.bookmark_outline),
                 title: Text('我的关注', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title: '服务条款', url: '')
+                onTap: () {}
               ),
             ]),
             CardListTiles(listTiles: [
