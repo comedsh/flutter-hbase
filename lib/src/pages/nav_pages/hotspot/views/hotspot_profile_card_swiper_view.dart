@@ -164,12 +164,13 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
+              /// avatar
               GestureDetector(
                 onTap: () => Get.to(() => ProfilePage(profile: p)),
                 child: ProfileAvatar(profile: p, size: sp(50))
               ),
               SizedBox(width: sp(8)),
-              // 名字和描述
+              /// 名字和描述
               GestureDetector(
                 onTap: () => Get.to(() => ProfilePage(profile: p)),
                 child: SizedBox(
@@ -189,18 +190,40 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
                 ),
               ),
               SizedBox(width: sp(8.0)),
-              GradientElevatedButton(
-                gradient: LinearGradient(colors: [
-                  AppServiceManager.appConfig.appTheme.fillGradientEndColor,
-                  AppServiceManager.appConfig.appTheme.fillGradientEndColor
-                ]),
-                width: sp(48),
-                height: sp(25.0),
-                borderRadius: BorderRadius.circular(13.0),
-                onPressed: () {
-                },
-                dense: true,
-                child: Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(12), fontWeight: FontWeight.bold))
+              /// follow button
+              StatefulFollowButton(
+                profile: p, 
+                followButtonCreator: ({required bool loading, required onTap}) => 
+                  GradientElevatedButton(
+                    gradient: LinearGradient(colors: [
+                      AppServiceManager.appConfig.appTheme.fillGradientEndColor,
+                      AppServiceManager.appConfig.appTheme.fillGradientEndColor
+                    ]),
+                    width: sp(48),
+                    height: sp(25.0),
+                    borderRadius: BorderRadius.circular(13.0),
+                    onPressed: () => onTap(context),
+                    dense: true,
+                    child: loading
+                    ? SizedBox(width: sp(12), height: sp(12), child: const CircularProgressIndicator(strokeWidth: 1.0, color: Colors.white))
+                    : Text('关注', style: TextStyle(color: Colors.white, fontSize: sp(12), fontWeight: FontWeight.bold))
+                  ),
+                cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
+                  TextButton(
+                    onPressed: () => onTap(context), 
+                    style: TextButton.styleFrom(
+                      /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+                      /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+                      /// 设置 text button 的 border                          
+                      backgroundColor: Colors.black12.withOpacity(0.1)
+                    ),
+                    child: loading 
+                      ? SizedBox(width: sp(12), height: sp(12), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
+                      : Text('已关注', style: TextStyle(fontSize: sp(12), color: Colors.white54)),
+                  ),                  
               ),
             ],
           ),

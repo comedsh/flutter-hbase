@@ -89,7 +89,7 @@ class PostFullScreenView extends StatelessWidget{
                   : Get.to(() => ProfilePage(profile: post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
-                  child: Text(post.profile.name, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                  child: Text(post.profile.name, style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
               ),
               // follow button
@@ -125,7 +125,7 @@ class PostFullScreenView extends StatelessWidget{
       children: [
         Icon(Ionicons.cloud_download_outline, size: sp(30),),
         SizedBox(height: sp(4)),
-        const Text('下载'),
+        Text('下载', style: TextStyle(fontSize: sp(14))),
       ],
     );
   }
@@ -154,7 +154,7 @@ class PostFullScreenView extends StatelessWidget{
           ),
           child: loading 
             ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+            : Text('关注', style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white)),
         ),
       cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
         TextButton(
@@ -170,8 +170,8 @@ class PostFullScreenView extends StatelessWidget{
           ),
           child: loading 
             ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : const Text('已关注', style: TextStyle(color: Colors.white54)),
-        ),      
+            : Text('已关注', style: TextStyle(fontSize: sp(14), color: Colors.white54)),
+        ),
     );
   }
 

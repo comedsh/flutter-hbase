@@ -27,7 +27,8 @@ class _CaptionState extends State<Caption> {
           text: !isTranslated.value 
             ? widget.post.captionRaw ?? ""
             : widget.post.caption ?? "", 
-          maxWidth: Screen.widthWithoutContext() * 0.7
+          maxWidth: Screen.widthWithoutContext() * 0.7,
+          style: TextStyle(fontSize: sp(14))
         ),
         // 一个小优化，只有有内容的前提下才会显示翻译按钮
         widget.post.captionRaw != null
@@ -36,8 +37,8 @@ class _CaptionState extends State<Caption> {
             child: Padding(
               padding: const EdgeInsets.only(top: 6.0),
               child: !isTranslated.value
-                ? const Text('点击翻译')
-                : const Text('查看原文')
+                ? Text('点击翻译', style: TextStyle(fontSize: sp(14)))
+                : Text('查看原文', style: TextStyle(fontSize: sp(14)))
             ),
           )
         : Container()  

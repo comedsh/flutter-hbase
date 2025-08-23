@@ -52,7 +52,7 @@ class _StatefulFavoriteButtonState extends State<StatefulFavoriteButton> {
         children: [
           Icon(isFavorited.value ? Ionicons.star : Ionicons.star_outline, size: sp(30),),
           SizedBox(height: sp(4)),
-          Text(compactFormat.format(widget.post.favorites)),
+          Text(compactFormat.format(widget.post.favorites), style: TextStyle(fontSize: sp(14))),
         ],
       )),
     );

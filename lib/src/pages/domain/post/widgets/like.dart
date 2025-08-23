@@ -55,7 +55,7 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
             size: sp(30),
           )),
           SizedBox(height: sp(4)),
-          Text(compactFormat.format(widget.post.likes)),
+          Text(compactFormat.format(widget.post.likes), style: TextStyle(fontSize: sp(14))),
         ],
       ),
     );
