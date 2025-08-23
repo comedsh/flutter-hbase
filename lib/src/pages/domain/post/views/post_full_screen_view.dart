@@ -37,32 +37,32 @@ class PostFullScreenView extends StatelessWidget{
         Expanded(
           child: Container(
             alignment: Alignment.center,
-            child: createPostPage(slots)
+            child: createPostPage(slots, context)
           ),
         ),
       ],
     );
   }
 
-  createPostPage(List<Slot> slots) {
+  createPostPage(List<Slot> slots, BuildContext context) {
     return Stack(
       children: [
         AutoKnockDoorShowCaseCarousel(slots: slots),
         Positioned(
           bottom: sp(42),
           left: sp(20),
-          child: leftPanel(post)
+          child: leftPanel(post, context)
         ),
         Positioned(
           bottom: sp(42),
           right: sp(20),
-          child: rightPanel(post)
+          child: rightPanel(post, context)
         )
       ],
     );
   }
 
-  leftPanel(Post post) {
+  leftPanel(Post post, BuildContext context) {
     /// 使用 SizedBox 限定宽度，这样 text 的 ellipsis overflow 也才会生效
     return SizedBox(
       width: Screen.widthWithoutContext() * 0.7,
@@ -74,6 +74,9 @@ class PostFullScreenView extends StatelessWidget{
               ProfileAvatar(
                 profile: post.profile, 
                 size: sp(44), 
+                /// 为了避免陷入无限的 profile -> post page -> profile -> post page ... 这样的链条中，
+                /// 如果当前是从 ProfilePage 中跳转的，那么当点击头像的时候，是回退操作即回退到 profile page，
+                /// 这样就可以有效的阻断上述的无限链条... 
                 onTap: () => Get.previousRoute == "/$ProfilePage"
                 ? Get.back<int>(result: postIndex)
                 : Get.to(() => ProfilePage(profile: post.profile)),
@@ -92,26 +95,7 @@ class PostFullScreenView extends StatelessWidget{
               // follow button
               Padding(
                 padding: EdgeInsets.only(left: sp(8.0)),
-                child: TextButton(
-                  onPressed: () {}, 
-                  style: TextButton.styleFrom(
-                    /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
-                    /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    padding: EdgeInsets.zero,
-                    minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
-                    /// 设置 text button 的 border                          
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
-                      side: const BorderSide(
-                        color: Colors.white, // Color of the border
-                        width: 1.0, // Width of the border
-                      ),
-                    ),
-                    backgroundColor: Colors.black12.withOpacity(0.1)
-                  ),
-                  child: const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                ),
+                child: _followButton(post, context),
               ),
             ],
           ),
@@ -123,7 +107,7 @@ class PostFullScreenView extends StatelessWidget{
     );
   }
 
-  rightPanel(Post post) {
+  rightPanel(Post post, BuildContext context) {
     return Column(
       children: [
         StatefulLikeButton(post: post),
@@ -143,6 +127,36 @@ class PostFullScreenView extends StatelessWidget{
         SizedBox(height: sp(4)),
         const Text('下载'),
       ],
+    );
+  }
+
+  _followButton(Post post, BuildContext context) {
+    return StatefulFollowButton(
+      profile: post.profile,
+      followButtonCreator: ({required bool loading, required onTap}) =>
+        TextButton(
+          onPressed: () => onTap(context), 
+          style: TextButton.styleFrom(
+            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.zero,
+            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+            /// 设置 text button 的 border                          
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
+              side: const BorderSide(
+                color: Colors.white, // Color of the border
+                width: 1.0, // Width of the border
+              ),
+            ),
+            backgroundColor: Colors.black12.withOpacity(0.1)
+          ),
+          child: loading 
+            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
+            : const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        ),
+      cancelFollowButtonCreator: ({required bool loading, required onTap}) => Container()
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
@@ -65,6 +64,7 @@ class ProfileStatisticsIntroPanel extends StatelessWidget {
           const Text('帖子'),
           Text(compactFormat.format(profile.postCount))
         ]),
+        /// 关注后粉丝数应该同步 +1，但是因为现在粉丝数并不会精确到个位，因此没有必要
         Column(children: [
           const Text('粉丝'),
           Text(compactFormat.format(profile.followerCount))
