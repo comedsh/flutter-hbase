@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
+
 class MeLikePage extends StatelessWidget {
+
+  /// 取消喜欢如何同步？之前有想过，当用户从 [PostFullScreenListViewPage] 将取消喜欢的 posts 缓存起来，
+  /// 在返回给 [MeLikePage] 的时候，将删除的 posts 从 [PostAlbumListView] 中删除，当然没那么简单，最终
+  /// 是需要从 pagingController 中删除，但是问题来了，如果这样硬删除的话，会导致分页状态不同步，会导致 BUG；
+  /// 因此最终放弃这样做，即不在用户返回 [MeLikePage] 的时候立刻硬同步，而是让用户自己去下拉一下更新即可。
+  /// 
   const MeLikePage({super.key});
 
   @override

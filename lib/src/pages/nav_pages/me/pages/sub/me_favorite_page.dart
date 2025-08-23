@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
 class MeFavoritePage extends StatelessWidget {
+
+  /// [MeFavoritePage] 不在前端页面上直接同步用户的取消收藏状态，而是让用户自己主动下拉更新即可；
+  /// 为什么这样设计详情参考 [MeLikePage]
   const MeFavoritePage({super.key});
 
   @override
