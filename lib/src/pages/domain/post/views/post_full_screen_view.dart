@@ -156,7 +156,22 @@ class PostFullScreenView extends StatelessWidget{
             ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
             : const Text('关注', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         ),
-      cancelFollowButtonCreator: ({required bool loading, required onTap}) => Container()
+      cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
+        TextButton(
+          onPressed: () => onTap(context), 
+          style: TextButton.styleFrom(
+            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.zero,
+            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+            /// 设置 text button 的 border                          
+            backgroundColor: Colors.black12.withOpacity(0.1)
+          ),
+          child: loading 
+            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
+            : const Text('已关注', style: TextStyle(color: Colors.white54)),
+        ),      
     );
   }
 

@@ -46,7 +46,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
     );
   }
 
-  onTap(BuildContext context, [bool needsDelay = false]) async {
+  onTap(BuildContext context) async {
     // 如果当前状态是已经关注了，则取消关注
     if (widget.profile.isFollowed) {
       var isConfirmed = await showConfirmDialog(
@@ -58,7 +58,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
       if (isConfirmed) {
         try {
           loading.value = true;
-          // await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
+          await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
           await HbaseUserService.disFollow(widget.profile.code);
           widget.profile.isFollowed = false;
         } catch (e, stacktrace) {
@@ -73,7 +73,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
     else {
       try {
         loading.value = true;
-        // await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
+        await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
         await HbaseUserService.follow(widget.profile.code);
         widget.profile.isFollowed = true;
       } catch (e, stacktrace) {
