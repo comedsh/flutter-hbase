@@ -47,7 +47,7 @@ class PostFullScreenView extends StatelessWidget{
   createPostPage(List<Slot> slots, BuildContext context) {
     return Stack(
       children: [
-        AutoKnockDoorShowCaseCarousel(slots: slots),
+        AutoKnockDoorShowCaseCarousel(slots: slots, indicatorPaddingBottom: 10,),
         Positioned(
           bottom: sp(42),
           left: sp(20),
