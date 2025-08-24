@@ -115,45 +115,10 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
             NewPageErrorIndicator(
               errMsg: '网络异常，点击重试',
               onTap: () => pagingController.retryLastFailedRequest()),
-          noItemsFoundIndicatorBuilder: (context) => DefaultMasonryIndicatorProvider.noItemsFoundIndicatorBuilder(context)
+          noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),)
         )
       ),
     );
-  }
-
-  /// 这个方法的重点是同步 [PostPager] 与 [PagingController] 之间的分页状态；
-  @Deprecated('已经被 Paging.nextPage 方法替代了')
-  nextPage(pageNum) async {
-    try {
-      debugPrint('$PostAlbumListView.nextPage calls, with param nextPage: $pageNum');
-      final stopwatch = Stopwatch()..start();
-      List<Post> incomingPosts = await widget.postPager.nextPage();
-      debugPrint('$PostAlbumListView.nextPage, get totally ${incomingPosts.length} remote posts, execution time: ${stopwatch.elapsed}');
-      List<Post> filteredPosts = await __filterPosts(incomingPosts);
-      /// 下面的步骤是同步 pagingController 于 postPager 的分页状态，因为滑动分页目前是通过 pagingController 控制的，比如是否是最后一页等状态逻辑
-      // 如果获取到的数据与分页数据相等，则证明还有更多分页数据可被获取
-      if (incomingPosts.length == widget.postPager.pageSize) {
-        final nextPageNum = pageNum + 1;
-        // 特别注意，即便是 posts 经过 filter 后长度为 0，这里仍然要追加，其目的是将 nextPageNum 赋值给 pagingController
-        if (mounted) pagingController.appendPage(filteredPosts, nextPageNum);
-      }
-      // 如果获取到的数据已经小于一页的数据量了，则说明没有更多数据可被获取了
-      else if (incomingPosts.length < widget.postPager.pageSize) {
-        // 一旦调用 appendLastPage 则 pagingController 便不会再触发分页事件了
-        if (mounted) pagingController.appendLastPage(filteredPosts);
-      }
-      else {
-        throw 'posts length can not bigger than ${widget.postPager.pageSize}';
-      }      
-    } catch (e, stacktrace) {
-      // No specified type, handles all
-      debugPrint('Something really unknown throw from $PostAlbumListView.nextPage: $e, statcktrace below: $stacktrace');
-      /// 如果发生错误记得一定要交给 pagingController 由它负责处理        
-      /// 但是必须确保 pagingController 没有被销毁才能这么做，否则会报错；使用 mounted state 参数即可保证没有被销毁
-      if (mounted) {
-        pagingController.error = e;
-      }
-    }
   }
 
   /// 核心就是 [pagingController.refresh] 会触发 [pagingController.addPageRequestListener] 然后立刻调用 [nextPage]
@@ -191,7 +156,22 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   Widget getCell(Post post) {
     final width = Math.round(Screen.width(context) / 3, fractionDigits: 2);
     final height = width;
-    return CachedImage(imgUrl: post.thumbnail, width: width, height: height);
+
+    if (post.type == PostType.album) {
+      var badgeIcon = BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_images, color: Colors.white));
+      return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+    }
+    else if ([PostType.igtv, PostType.reel, PostType.video].contains(post.type)) {
+      var badgeIcon = BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_video, color: Colors.white));
+        return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+    }
+    else { 
+      return CachedImage(imgUrl: post.thumbnail, width: width, height: height);
+    }
   }
 
   scrollTo(index) {
@@ -204,10 +184,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   }  
 
   /// 过滤掉已经加载的元素
-  /// 
-  /// 特别是在需要加载 [firstCachedPage] 的场景下，因为加载完 cache 后会立刻的再次发起一次远程读取，
-  /// 而远程读取的数据很有可能和缓存中是重叠的，因此需要过滤；另外还有可能是发生了网络抖动导致一个请求被
-  /// 前后发送了两次从而导致两次结果完全一致，因此也需要去重
+  @Deprecated('') 
   __filterPosts(List<Post> posts) {
     if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty) {
       posts = posts.where((icmPost) => pagingController.itemList!.contains(icmPost) == false).toList();
@@ -216,18 +193,5 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     return posts;
   }  
 
-}
-
-class DefaultMasonryIndicatorProvider {
-  
-  static Widget firstPageErrorIndicator(BuildContext context, PagingController pagingController) {
-    return FailRetrier(callback: pagingController.refresh);
-  }
-
-  static Widget noItemsFoundIndicatorBuilder(BuildContext context) {
-    return const Center(
-      child: Text('没有数据'),
-    );
-  }
 }
 
