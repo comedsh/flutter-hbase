@@ -7,7 +7,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sycomponents/components.dart';
 
-typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, Pager<Post> postPager);
+typedef OnCellTapped = Future<int?> Function(List<Post> posts, Post post, Pager<Post> postPager);
 
 /// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可；
 /// 
@@ -21,7 +21,7 @@ typedef OnCellClicked = Future<int?> Function(List<Post> posts, Post post, Pager
 class PostAlbumListView extends StatefulWidget {
   final Pager<Post> postPager;
   /// 点击 Cell 后的执行逻辑由该回调函数提供；该回调函数可以返回一个 post 用于 scrollTo
-  final OnCellClicked onCellClicked;
+  final OnCellTapped onCellTapped;
   /// 如果父组件使用的是 [NestedScrollView] 那么就不能使用 [AutoScrollController] 否则无法和 [NestedScrollView]
   /// 中的其它组件一同滚动；比如在 [ProfilePage] 中因为其使用了 [NestedScrollView] 这里的 [isEnableAutoScroll]
   /// 就应该被设置为 false 即不要启用 [AutoScrollController]
@@ -30,7 +30,7 @@ class PostAlbumListView extends StatefulWidget {
   const PostAlbumListView({
     super.key, 
     required this.postPager, 
-    required this.onCellClicked,
+    required this.onCellTapped,
     this.isEnableAutoScroll = false,
   });
 
@@ -133,7 +133,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   Widget cellCreator(Post post, int index) {   
     return GestureDetector(
       onTap: () async {
-        int? i = await widget.onCellClicked(pagingController.itemList!, post, widget.postPager);
+        int? i = await widget.onCellTapped(pagingController.itemList!, post, widget.postPager);
         debugPrint("$PostAlbumListView, navback with return index: $i, and isEnableAutoScroll: ${widget.isEnableAutoScroll}");
         if (i != null && widget.isEnableAutoScroll) {
           scrollTo(i);

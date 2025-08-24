@@ -5,7 +5,7 @@ import 'package:hbase/src/pages/domain/profile/views/profile_statistics_intro_pa
 
 typedef PostAlbumListCreator = PostAlbumListView Function({
   required Pager<Post> post, 
-  required OnCellClicked cellClickCallback
+  required OnCellTapped cellClickCallback
 });
 
 class ProfilePage extends StatelessWidget {
@@ -35,7 +35,7 @@ class ProfilePage extends StatelessWidget {
             var postPager = ProfilePostPager(profileCode: profile.code, sortBy: tab.id, pageSize: 24);
             return PostAlbumListView(
               postPager: postPager, 
-              onCellClicked: (posts, post, postPager) async =>
+              onCellTapped: (posts, post, postPager) async =>
                 /// 当点击 cell 后会跳转到第三方页面，这里的返回值 index 是从第三方页面返回时的 post index，
                 /// 这样 PostAlbumListView 根据这个值就可以进行 scrollTo 操作了
                 await Get.to<int>(() => 
