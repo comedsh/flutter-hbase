@@ -49,8 +49,8 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     super.initState();
      pagingController = PagingController(
       firstPageKey: 1, 
-      /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个，这里重载一下
-      invisibleItemsThreshold: widget.postPager.pageSize - 6
+      /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个，这里重载一下设置得多一些
+      invisibleItemsThreshold: 6
     );
     /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
     autoScrollController = AutoScrollController(
@@ -65,7 +65,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
-      Paging.nextPage(pageNum, widget.postPager, pagingController, context);
+      await Paging.nextPage(pageNum, widget.postPager, pagingController, context);
     });
 
     /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
@@ -157,21 +157,31 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     final width = Math.round(Screen.width(context) / 3, fractionDigits: 2);
     final height = width;
 
+    var badgeIcons = <BadgeIcon>[];
+
+    if (post.isPinned == true) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.leftTop, 
+        icon: const Icon(Icons.push_pin, color: Colors.white, size: 26)));
+    }
+
     if (post.type == PostType.album) {
-      var badgeIcon = BadgeIcon(
+      badgeIcons.add(BadgeIcon(
         location: BadgeIconLocation.rightTop, 
-        icon: const Icon(IconFont.icon_sy_images, color: Colors.white));
-      return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+        icon: const Icon(IconFont.icon_sy_images, color: Colors.white)));
+      // return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
     }
     else if ([PostType.igtv, PostType.reel, PostType.video].contains(post.type)) {
-      var badgeIcon = BadgeIcon(
+      badgeIcons.add(BadgeIcon(
         location: BadgeIconLocation.rightTop, 
-        icon: const Icon(IconFont.icon_sy_video, color: Colors.white));
-        return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+        icon: const Icon(IconFont.icon_sy_video, color: Colors.white)));
     }
-    else { 
-      return CachedImage(imgUrl: post.thumbnail, width: width, height: height);
+
+    if (badgeIcons.isNotEmpty) {
+      return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: badgeIcons);
     }
+    
+    return CachedImage(imgUrl: post.thumbnail, width: width, height: height);
   }
 
   scrollTo(index) {

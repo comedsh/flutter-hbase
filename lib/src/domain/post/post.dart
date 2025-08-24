@@ -22,7 +22,7 @@ class Post {
   final String thumbnail;
   final PostType type;
   final DateTime uploadTs;
-  final bool isPinned;
+  final bool? isPinned;
   bool isLiked;
   bool isFavorited;
   final List<PostSlot> slots;
@@ -41,7 +41,7 @@ class Post {
     required this.thumbnail, 
     required this.type, 
     required this.uploadTs, 
-    required this.isPinned, 
+    this.isPinned, 
     required this.isLiked, 
     required this.isFavorited,
     required this.slots,
