@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     debugPrint('$HomePage dispose calls');
+    Colors.deepOrange;
     super.dispose();
   }
 

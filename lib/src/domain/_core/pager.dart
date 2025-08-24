@@ -31,7 +31,7 @@ abstract class Pager<T> {
     List<T> posts = await fetchNextPage();
 
     if (posts.length < pageSize) {
-      debugPrint('last page reached...');
+      debugPrint('$Pager<$T>.nextPage, last page reached, set the isLastPage to be true');
       isLastPage = true;
     }
 
