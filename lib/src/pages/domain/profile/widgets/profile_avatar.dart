@@ -23,7 +23,6 @@ class ProfileAvatar extends StatelessWidget {
       child: SyCircleAvatar(
         imgUrl: profile.avatar,
         width: size,
-        height: size,
         failTextFontSize: sp(9.0),
       ),
     );

@@ -51,8 +51,7 @@ class ProfileStatisticsIntroPanel extends StatelessWidget {
     final avatarSize = Screen.width(context) / 3 - sp(20);
     return SyCircleAvatar(
       imgUrl: profile.avatar,
-      width: avatarSize,
-      height: avatarSize,
+      width: avatarSize
     );
   }
 

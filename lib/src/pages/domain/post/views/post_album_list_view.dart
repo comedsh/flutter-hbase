@@ -155,7 +155,6 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   ///      导致图片的长宽被压缩只有文本大小而导致布局的问题，建议是加上 width/height.
   Widget getCell(Post post) {
     final width = Math.round(Screen.width(context) / 3, fractionDigits: 2);
-    final height = width;
 
     var badgeIcons = <BadgeIcon>[];
 
@@ -178,10 +177,10 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     }
 
     if (badgeIcons.isNotEmpty) {
-      return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: badgeIcons);
+      return BadgedImage(imgUrl: post.thumbnail, width: width, badgeIcons: badgeIcons);
     }
     
-    return CachedImage(imgUrl: post.thumbnail, width: width, height: height);
+    return CachedImage(imgUrl: post.thumbnail, width: width);
   }
 
   scrollTo(index) {
