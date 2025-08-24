@@ -89,7 +89,7 @@ class PostFullScreenView extends StatelessWidget{
                   : Get.to(() => ProfilePage(profile: post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
-                  child: Text(post.profile.name, style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white),),
+                  child: Text(post.profile.name, style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),),
                 ),
               ),
               // follow button
