@@ -1,4 +1,5 @@
 import 'package:hbase/hbase.dart';
+import 'package:sycomponents/components.dart';
 
 enum PostType {
   photo,
@@ -33,6 +34,7 @@ class Post {
   bool isFavorited;
   final List<PostSlot> slots;
   final BlurType blur;
+  final BlurDepth? blurDepth;
   final Profile profile;
 
   Post({
@@ -53,6 +55,7 @@ class Post {
     required this.isFavorited,
     required this.slots,
     required this.blur,
+    this.blurDepth,
     required this.profile
   });
   
@@ -74,6 +77,7 @@ class Post {
       isFavorited = json['isFavorited'],
       slots = json['slots'].map<PostSlot>((s) => PostSlot.fromJson(s)).toList(),
       blur = BlurType.values.byName(json['blur']),
+      blurDepth = json['blurDepth'] != null ? BlurDepth.values.byName(json['blurDepth']) : null,
       profile = Profile.fromJson(json['profile']);
 
   Map<String, dynamic> toJson() => 
@@ -93,7 +97,8 @@ class Post {
       'isPinned': isPinned,
       'isLiked': isLiked,
       'isFavorited': isFavorited,
-      'isBlur': blur.name
+      'blur': blur.name,
+      'blurDepth': blurDepth?.name
     };  
 
   /// 重载 == 方法
