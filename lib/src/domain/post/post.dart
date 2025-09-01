@@ -9,6 +9,12 @@ enum PostType {
   reel
 }
 
+enum BlurType {
+  blur,
+  limitPlay,
+  unBlur
+}
+
 class Post {
   final String shortcode;
   final String profileCode;    
@@ -26,6 +32,7 @@ class Post {
   bool isLiked;
   bool isFavorited;
   final List<PostSlot> slots;
+  final BlurType blur;
   final Profile profile;
 
   Post({
@@ -45,6 +52,7 @@ class Post {
     required this.isLiked, 
     required this.isFavorited,
     required this.slots,
+    required this.blur,
     required this.profile
   });
   
@@ -65,6 +73,7 @@ class Post {
       isLiked = json['isLiked'],
       isFavorited = json['isFavorited'],
       slots = json['slots'].map<PostSlot>((s) => PostSlot.fromJson(s)).toList(),
+      blur = BlurType.values.byName(json['blur']),
       profile = Profile.fromJson(json['profile']);
 
   Map<String, dynamic> toJson() => 
@@ -83,7 +92,8 @@ class Post {
       'uploadTs': uploadTs.toIso8601String(),
       'isPinned': isPinned,
       'isLiked': isLiked,
-      'isFavorited': isFavorited
+      'isFavorited': isFavorited,
+      'isBlur': blur.name
     };  
 
   /// 重载 == 方法

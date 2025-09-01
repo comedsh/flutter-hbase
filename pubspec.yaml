@@ -61,7 +61,7 @@ dependencies:
   easy_debounce: ^2.0.3  
   ionicons: ^0.2.2  
   sycomponents:
-    version: ^2.1.0
+    version: ^2.1.1
     hosted:
       url: http://localhost:4000/
   appbase:
