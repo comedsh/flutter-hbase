@@ -72,7 +72,12 @@ class _HomePageState extends State<HomePage> {
         ]
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black54,
+        /// 务必设置为 Colors.black，在真机环境下，之前设置为 Colors.black54 或者 Colors.black87，并且在 reel 使用 BoxFit.cover 
+        /// 的布局下的翻页的过程中，在 BottomNavigationBar 中可以看到 unblur 的内容，但是如果改成 BoxFit.contain 却不会；体原因未知，
+        /// 但是可以猜测是和 Blur + BoxFit.cover + BottomNavigationBar 的背景色有关，BoxFit.cover 会撑大屏幕并且超出屏幕范围，导致
+        /// BottomNavigationBar 其它颜色被覆盖？使用了 evalutaton 100 也是无效的；为了能够使用最佳的单 Reel 的翻页的体验，必须使用
+        /// BoxFit.cover，因此只能这里妥协，设置为 Colors.black；具；需要额外注意的是，在模拟器上有没有这样的问题...
+        backgroundColor: Colors.black,
         // 如果超过 3 个 bar items 则必须添加
         type: BottomNavigationBarType.fixed,
         onTap: (int index) => setState(() => _current = index),

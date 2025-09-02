@@ -113,22 +113,3 @@ class Post {
   int get hashCode => shortcode.hashCode;
 
 }
-
-class PostSlot {
-  final String pic;
-  final String? video;
-
-  PostSlot({
-    required this.pic, this.video
-  });
-
-  PostSlot.fromJson(Map<String, dynamic> json)
-    : pic = json['pic'],
-      video = json['video'];
-
-  Map<String, dynamic> toJson() =>
-    <String, dynamic> {
-      'pic': pic,
-      'video': video
-    };
-} 

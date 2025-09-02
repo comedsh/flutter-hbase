@@ -27,27 +27,54 @@ class PostFullScreenView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    // convert post slots to carousel slots
-    List<Slot> slots = [];  // Carousel slots
-    for (var slot in post.slots) {
-      slots.add(Slot(width: post.width, height: post.height, picUrl: slot.pic, videoUrl: slot.video));
-    }
     return Column(
       children: [
         Expanded(
           child: Container(
             alignment: Alignment.center,
-            child: createPostPage(slots, context)
+            child: createPostPage(context)
           ),
         ),
       ],
     );
   }
 
-  createPostPage(List<Slot> slots, BuildContext context) {
+  createPostPage(BuildContext context) {
     return Stack(
       children: [
-        AutoKnockDoorShowCaseCarousel(slots: slots, indicatorPaddingBottom: 10,),
+        AutoKnockDoorShowCaseCarousel(
+          slots: post.slots, 
+          indicatorPaddingBottom: 10, 
+          imageCreator: (String url, double width, double aspectRatio) => 
+            BlurrableImage(
+              blurDepth: post.blurDepth,
+              onTap: () => showConfirmDialogWithoutContext(
+                confirmBtnTxt: '确认',
+                cancelBtnTxt: '不了'
+              ),
+              child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
+            ),
+          videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
+            // CachedVideoPlayer(
+            //   width: width, 
+            //   aspectRatio: aspectRatio, 
+            //   videoUrl: videoUrl,
+            //   coverImgUrl: coverImgUrl,
+            //   fit: fit,
+            // ),
+            BlurrableVideoPlayer(
+              width: width, 
+              aspectRatio: aspectRatio, 
+              videoUrl: videoUrl,
+              coverImgUrl: coverImgUrl,
+              blurDepth: post.blurDepth, 
+              fit: fit,
+              onTap: () => showConfirmDialogWithoutContext(
+                confirmBtnTxt: '确认',
+                cancelBtnTxt: '不了'
+              )
+            )
+        ),
         Positioned(
           bottom: sp(42),
           left: sp(20),

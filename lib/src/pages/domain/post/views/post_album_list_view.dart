@@ -176,7 +176,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     // 然后创建 img
     dynamic img = CachedImage(imgUrl: post.thumbnail, width: width);
     img = post.blur == BlurType.blur 
-      ? BlurrableImage(img: img, unlockable: false, blurDepth: post.blurDepth,) 
+      ? BlurrableImage(child: img, unlockable: false, blurDepth: post.blurDepth,) 
       : img;    
     if (badgeIcons.isNotEmpty) img = BadgedImage(img: img, badgeIcons: badgeIcons);
     return img;
