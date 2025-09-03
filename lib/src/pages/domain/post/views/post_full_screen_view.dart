@@ -1,4 +1,5 @@
 
+import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
@@ -19,10 +20,19 @@ class PostFullScreenView extends StatelessWidget{
   /// 通常 [PostFullScreenView] 是在列表中展示，这里的 [postIndex] 即表示该 post 在此列表中的下标
   final int postIndex;
 
+  /// 解锁 blur 和 translation 逻辑的重要说明
+  /// 1. 前言：因为现在解锁逻辑只会放到 [PostFullScreenView] 中，因此将此重要说明放到这里也是合情合理的。
+  /// 2. 为了尽量简化程序的复杂性，那么约定是最好的解法，因此约定 HBase 所有的子系统的默认解锁 blur 和翻译
+  ///    的方式就是跳转购买基础会员页面；那么剩下一个问题，就是诸如 inshow 那样如果要解锁看快拍的话就需要跳
+  ///    转到购买高级会员，那么怎么兼容这种情况？答案是，不能兼容，因为鱼和熊掌不能兼得；现在想到的唯一的解法
+  ///    就是在 [ProfilePage] 中去 hard code 这种情况，如果是快拍类型的 tab，那么 hard code 跳转到高
+  ///    级订阅；这是基于约定简化程序的必然要面对的问题，否则就会陷入到各种分支各种配置的复杂漩涡中去了，结果
+  ///    面向的不是业务，而是系统本身的复杂性了！
+  /// 也因此，你可以看到无论是解锁 blur 还是 translation 都是默认跳转到 base subscr sale page.
   const PostFullScreenView({
     super.key, 
     required this.post,
-    required this.postIndex
+    required this.postIndex,
   });
 
   @override
@@ -189,10 +199,10 @@ class PostFullScreenView extends StatelessWidget{
     if (!user.isUnlockBlur && post.blur == BlurType.blur) {
         return BlurrableImage(
           blurDepth: post.blurDepth,
-          onTap: () => showConfirmDialogWithoutContext(
-            confirmBtnTxt: '确认',
-            cancelBtnTxt: '不了'
-          ),
+          onTap: () => Get.to(() => SalePage(
+            saleGroups: HBaseUserService.getAvailableSaleGroups(),
+            initialSaleGroupId: SaleGroupIdEnum.subscr,
+          )),
           child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
         );
     } else {
@@ -210,20 +220,20 @@ class PostFullScreenView extends StatelessWidget{
         coverImgUrl: coverImgUrl,
         blurDepth: post.blurDepth, 
         fit: fit,
-        onTap: () => showConfirmDialogWithoutContext(
-          confirmBtnTxt: '确认',
-          cancelBtnTxt: '不了'
-        )
-      );      
+        onTap: () => Get.to(() => SalePage(
+          saleGroups: HBaseUserService.getAvailableSaleGroups(),
+          initialSaleGroupId: SaleGroupIdEnum.subscr,
+        ))
+      );
     } else if (!user.isUnlockBlur && post.blur == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio, 
         videoUrl: videoUrl, 
-        onTap: () => showConfirmDialogWithoutContext(
-          confirmBtnTxt: '确认',
-          cancelBtnTxt: '不了'
-        )
+        onTap: () => Get.to(() => SalePage(
+          saleGroups: HBaseUserService.getAvailableSaleGroups(),
+          initialSaleGroupId: SaleGroupIdEnum.subscr,
+        ))
       );      
     } else {
       return CachedVideoPlayer(
