@@ -1,7 +1,7 @@
 
 import 'package:appbase/appbase.dart';
 
-class HbaseUserService {
+class HBaseUserService {
 
   static follow(String profileCode) async {
     await dio.post('/u/follow/set', data: {

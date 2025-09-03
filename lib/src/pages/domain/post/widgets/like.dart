@@ -36,8 +36,8 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
           /// toggledVal 是原本 favorited 反值，因此再反一次就获得的是提前转换（“提前亮”）之前的原始值，因此 !toggleVal 就
           /// 表示原始值即 isFavoriate.value 为 true，因此用户点击按钮的目的是取消收藏，因此这里调用 disFavorites
           !toggledVal 
-            ? await HbaseUserService.disLike(shortcode)
-            : await HbaseUserService.like(shortcode);
+            ? await HBaseUserService.disLike(shortcode)
+            : await HBaseUserService.like(shortcode);
           widget.post.isLiked = isLiked.value;  // 同步前端数据状态
         } catch (e, stacktrace) {
           debugPrint('Something really unknown throw from $StatefulLikeButton.onTap: $e, statcktrace below: $stacktrace');

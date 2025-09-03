@@ -1,7 +1,6 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
-
-import 'user.dart';
+import 'package:hbase/hbase.dart';
 
 
 class DemoUserService extends UserService {
@@ -18,8 +17,8 @@ class DemoUserService extends UserService {
 
   /// 覆盖父类的关键扩展方法以提供自己的 User 解析逻辑
   @override
-  Future<DemoUser> parseUser(Map<String, dynamic> userData) async {
-    var user = DemoUser.fromJson(userData);
+  Future<HBaseUser> parseUser(Map<String, dynamic> userData) async {
+    var user = HBaseUser.fromJson(userData);
     debugPrint('parseUser() get user: ${user.toJson()}');
     return user;
   }

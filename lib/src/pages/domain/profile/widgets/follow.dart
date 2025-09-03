@@ -59,7 +59,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
         try {
           loading.value = true;
           // await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
-          await HbaseUserService.disFollow(widget.profile.code);
+          await HBaseUserService.disFollow(widget.profile.code);
           widget.profile.isFollowed = false;
         } catch (e, stacktrace) {
           // No specified type, handles all
@@ -74,7 +74,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
       try {
         loading.value = true;
         // await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
-        await HbaseUserService.follow(widget.profile.code);
+        await HBaseUserService.follow(widget.profile.code);
         widget.profile.isFollowed = true;
       } catch (e, stacktrace) {
         // No specified type, handles all
