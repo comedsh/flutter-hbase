@@ -193,6 +193,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
 
   /// 过滤掉已经加载的元素
   @Deprecated('') 
+  // ignore: unused_element
   __filterPosts(List<Post> posts) {
     if (pagingController.itemList != null && pagingController.itemList!.isNotEmpty) {
       posts = posts.where((icmPost) => pagingController.itemList!.contains(icmPost) == false).toList();
