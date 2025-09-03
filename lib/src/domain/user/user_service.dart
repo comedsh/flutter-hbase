@@ -1,5 +1,6 @@
 
 import 'package:appbase/appbase.dart';
+import 'package:hbase/hbase.dart';
 
 class HBaseUserService {
 
@@ -38,5 +39,7 @@ class HBaseUserService {
       'shortcode': shortcode
     });
   }
+
+  static HBaseUser get user => UserService.user as HBaseUser;
 
 }

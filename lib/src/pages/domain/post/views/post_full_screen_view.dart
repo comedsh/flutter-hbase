@@ -46,34 +46,9 @@ class PostFullScreenView extends StatelessWidget{
           slots: post.slots, 
           indicatorPaddingBottom: 10, 
           imageCreator: (String url, double width, double aspectRatio) => 
-            BlurrableImage(
-              blurDepth: post.blurDepth,
-              onTap: () => showConfirmDialogWithoutContext(
-                confirmBtnTxt: '确认',
-                cancelBtnTxt: '不了'
-              ),
-              child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
-            ),
+            _imgCreator(url, width, aspectRatio),
           videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
-            // CachedVideoPlayer(
-            //   width: width, 
-            //   aspectRatio: aspectRatio, 
-            //   videoUrl: videoUrl,
-            //   coverImgUrl: coverImgUrl,
-            //   fit: fit,
-            // ),
-            BlurrableVideoPlayer(
-              width: width, 
-              aspectRatio: aspectRatio, 
-              videoUrl: videoUrl,
-              coverImgUrl: coverImgUrl,
-              blurDepth: post.blurDepth, 
-              fit: fit,
-              onTap: () => showConfirmDialogWithoutContext(
-                confirmBtnTxt: '确认',
-                cancelBtnTxt: '不了'
-              )
-            )
+            _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)
         ),
         Positioned(
           bottom: sp(42),
@@ -202,4 +177,55 @@ class PostFullScreenView extends StatelessWidget{
     );
   }
 
+  Widget _imgCreator(String url, double width, double aspectRatio) {
+    var user = HBaseUserService.user;
+    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+        return BlurrableImage(
+          blurDepth: post.blurDepth,
+          onTap: () => showConfirmDialogWithoutContext(
+            confirmBtnTxt: '确认',
+            cancelBtnTxt: '不了'
+          ),
+          child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
+        );
+    } else {
+      return CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,);
+    }
+  }
+
+  Widget _videoCreator(String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) {
+    var user = HBaseUserService.user;
+    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+      return BlurrableVideoPlayer(
+        width: width, 
+        aspectRatio: aspectRatio, 
+        videoUrl: videoUrl,
+        coverImgUrl: coverImgUrl,
+        blurDepth: post.blurDepth, 
+        fit: fit,
+        onTap: () => showConfirmDialogWithoutContext(
+          confirmBtnTxt: '确认',
+          cancelBtnTxt: '不了'
+        )
+      );      
+    } else if (!user.isUnlockBlur && post.blur == BlurType.limitPlay) {
+      return DurationLimitableVideoPlayer(
+        width: width, 
+        aspectRatio: aspectRatio, 
+        videoUrl: videoUrl, 
+        onTap: () => showConfirmDialogWithoutContext(
+          confirmBtnTxt: '确认',
+          cancelBtnTxt: '不了'
+        )
+      );      
+    } else {
+      return CachedVideoPlayer(
+        width: width, 
+        aspectRatio: aspectRatio, 
+        videoUrl: videoUrl,
+        coverImgUrl: coverImgUrl,
+        fit: fit,
+      );      
+    }
+  }
 }

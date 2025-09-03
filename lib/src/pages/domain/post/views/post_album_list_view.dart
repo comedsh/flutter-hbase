@@ -175,9 +175,9 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     }
     // 然后创建 img
     dynamic img = CachedImage(imgUrl: post.thumbnail, width: width);
-    img = post.blur == BlurType.blur 
-      ? BlurrableImage(child: img, unlockable: false, blurDepth: post.blurDepth,) 
-      : img;    
+    if (!HBaseUserService.user.isUnlockBlur && post.blur == BlurType.blur) { 
+      img = BlurrableImage(child: img, unlockable: false, blurDepth: post.blurDepth);
+    }
     if (badgeIcons.isNotEmpty) img = BadgedImage(img: img, badgeIcons: badgeIcons);
     return img;
   }

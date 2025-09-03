@@ -1,5 +1,5 @@
 enum UserAuthoriy {
-  unBlur,
+  unlockBlur,
   unlockPicDownload,
   unlockVideoDownload,
   unlockSubscrSale,

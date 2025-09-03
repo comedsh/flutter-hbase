@@ -24,4 +24,6 @@ class HBaseUser extends User {
       'authorities': authorities.map<String>((auth) => auth.name).toList()
     };
   
+  bool get isUnlockBlur => authorities.contains(UserAuthoriy.unlockBlur);
+  bool get isUnlockPicDownload => authorities.contains(UserAuthoriy.unlockPicDownload);
 } 
