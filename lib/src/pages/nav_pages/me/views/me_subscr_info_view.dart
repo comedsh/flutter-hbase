@@ -1,6 +1,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
 class MeSubscrInfoView extends StatefulWidget {
@@ -60,7 +61,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
                 text: '立即开通', 
                 width: sp(144.0), 
                 fontSize: sp(16.0), 
-                clickCallback: () => Get.to(() => SalePage(saleGroups: AppServiceManager.appConfig.saleGroups,))
+                clickCallback: () => Get.to(() => SalePage(saleGroups: HBaseUserService.getAvailableSaleGroups(),))
               )
             ],
           )

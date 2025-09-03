@@ -42,4 +42,19 @@ class HBaseUserService {
 
   static HBaseUser get user => UserService.user as HBaseUser;
 
+  /// 根据 [UserAuthoriy.unlockSubscrSale] 和 [UserAuthoriy.unlockPpointSale] 过滤出
+  /// 可用的 saleGroups
+  static List<SaleGroup> getAvailableSaleGroups() {
+    var user = HBaseUserService.user;
+    List<SaleGroup> saleGroups = [];
+    for (var sg in AppServiceManager.appConfig.saleGroups) {
+      if (sg.type == SaleGroupType.subscr || sg.type == SaleGroupType.noRenewalSubscr) {
+        if (user.isUnlockSubscrSale) saleGroups.add(sg);
+      }
+      if (sg.type == SaleGroupType.points) {
+        if (user.isUnlockPointSale) saleGroups.add(sg);
+      }
+    }
+    return saleGroups;
+  }
 }
