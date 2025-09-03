@@ -121,15 +121,22 @@ class PostFullScreenView extends StatelessWidget{
     );
   }
 
-  /// 将下载后的具体行为抽象出来由子类自行实现
+  /// TODO 将下载后的具体行为抽象出来由子类自行实现
+  /// 注意，分理出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
+  /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
   _downloadButton(Post post) {
-    return Column(
-      children: [
-        Icon(Ionicons.cloud_download_outline, size: sp(30),),
-        SizedBox(height: sp(4)),
-        Text('下载', style: TextStyle(fontSize: sp(14))),
-      ],
-    );
+    var user = HBaseUserService.user;
+    if (post.type == PostType.photo && user.isUnlockPicDownload || 
+      post.type != PostType.photo && user.isUnlockVideoDownload ) {
+      return Column(
+        children: [
+          Icon(Ionicons.cloud_download_outline, size: sp(30),),
+          SizedBox(height: sp(4)),
+          Text('下载', style: TextStyle(fontSize: sp(14))),
+        ],
+      );
+    }
+    return Container();
   }
 
   _followButton(Post post, BuildContext context) {

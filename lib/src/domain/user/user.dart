@@ -26,4 +26,5 @@ class HBaseUser extends User {
   
   bool get isUnlockBlur => authorities.contains(UserAuthoriy.unlockBlur);
   bool get isUnlockPicDownload => authorities.contains(UserAuthoriy.unlockPicDownload);
+  bool get isUnlockVideoDownload => authorities.contains(UserAuthoriy.unlockVideoDownload);
 } 
