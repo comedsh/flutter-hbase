@@ -225,27 +225,32 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         SizedBox(height: sp(26)),
         StatefulFavoriteButton(post: post),
         SizedBox(height: sp(26)),
-        _downloadButton(post)
+        ... _downloadButton(post),
+        const MockJuBao()
       ],
     );
   }
 
-  /// TODO 将下载后的具体行为抽象出来由子类自行实现
-  /// 注意，分理出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
-  /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
-  _downloadButton(Post post) {
+  /// 因为这个组件的展示是可配置的，因此只有在展示它的时候才需要显示 padding bottom，因此将 padding bottom
+  /// 写在组件一起；
+  List<Widget> _downloadButton(Post post) {
     var user = HBaseUserService.user;
+    /// 注意，分理出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
+    /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
     if (post.type == PostType.photo && user.isUnlockPicDownload || 
       post.type != PostType.photo && user.isUnlockVideoDownload ) {
-      return Column(
-        children: [
-          Icon(Ionicons.cloud_download_outline, size: sp(30),),
-          SizedBox(height: sp(4)),
-          Text('下载', style: TextStyle(fontSize: sp(14))),
-        ],
-      );
+      return [
+        Column(
+          children: [
+            Icon(Ionicons.cloud_download_outline, size: sp(30),),
+            SizedBox(height: sp(4)),
+            Text('下载', style: TextStyle(fontSize: sp(14))),
+          ],
+        ),
+        SizedBox(height: sp(26))
+      ];
     }
-    return Container();
+    return [Container()];
   }
 
   _followButton(Post post, BuildContext context) {
@@ -374,4 +379,85 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       });                 
     });
   }
+
 }
+
+class MockJuBao extends StatefulWidget {
+  const MockJuBao({super.key});
+
+  @override
+  State<MockJuBao> createState() => _MockJuBaoState();
+}
+
+class _MockJuBaoState extends State<MockJuBao> {
+  String? _checkVal = '1';
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => showModalBottomSheet<void>(
+        isDismissible: true,
+        // 重要属性，默认 bottom sheet 高度只能是 534，使用 scroll 避免溢出
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          // 注意，模态窗口必须使用 StatefulBuilder + setModalState 进行状态改变，否则模态窗口不会响应变化
+          return StatefulBuilder(
+            builder: (BuildContext context, StateSetter setModalState) {
+              return TitleContentBox(
+                gradient: Get.isDarkMode 
+                ? null 
+                : LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.purple.shade50, Colors.white54]
+                  ),
+                title: '举报',
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    RadioListTile(title: const Text('低俗'), value: '1', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('引战'), value: '2', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('刷屏'), value: '3', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('人身攻击'), value: '4', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('违规违法'), value: '5', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('垃圾广告'), value: '6', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    RadioListTile(title: const Text('内容不相关'), value: '7', groupValue: _checkVal, onChanged: (val) => setModalState(() => _checkVal = val)),
+                    const Divider(thickness: 1.0),
+                    SizedBox(height: sp(12)),
+                    GradientElevatedButton(
+                      gradient: LinearGradient(colors: [
+                        AppServiceManager.appConfig.appTheme.fillGradientStartColor,
+                        AppServiceManager.appConfig.appTheme.fillGradientEndColor
+                      ]),
+                      width: sp(200),
+                      height: sp(42.0),
+                      borderRadius: BorderRadius.circular(30.0),
+                      onPressed: () { 
+                        GlobalLoading.show();
+                        Timer(Duration(milliseconds: Random.randomInt(1200, 3600)), () async { 
+                          GlobalLoading.close();
+                          await showAlertDialog(context, content: '举报成功！', confirmBtnTxt: '关闭');
+                          Get.back();  // 关闭模态窗口
+                        });
+                      },
+                      child: Text('举报', style: TextStyle(color: Colors.white, fontSize: sp(18), fontWeight: FontWeight.bold),)),
+                    SizedBox(height: sp(40)),
+                  ],
+                ),
+              );
+            }
+          );
+        }
+      ),
+      child: Column(
+        children: [
+          Icon(Ionicons.alert_circle_outline, size: sp(30)),
+          SizedBox(height: sp(4)),
+          Text('举报', style: TextStyle(fontSize: sp(14))),
+        ],
+      ),
+    );
+  }
+}
+
