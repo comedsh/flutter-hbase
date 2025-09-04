@@ -54,6 +54,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   /// 是否把这个值做成可配置的？不要，减少系统复杂性，如果有更好的值，下个版本更新。
   static const userStayedMillseconds = 2200; 
 
+  var isShowEnterProfileTooltip = false.obs;
+
   @override
   void initState() {
     super.initState();
@@ -161,7 +163,22 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                   : Get.to(() => ProfilePage(profile: post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
-                  child: Text(post.profile.name, style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),),
+                  child: Obx(() => isShowEnterProfileTooltip.value 
+                    ? TooltipShowCase(
+                        name: 'enterProfileTooltip',
+                        tooltipText: '点击进入我的空间',
+                        popupDirection: TooltipDirection.up,
+                        showDurationMilsecs: 3200,
+                        child: Text(
+                          post.profile.name, 
+                          style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      )
+                    : Text(
+                        post.profile.name, 
+                        style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+                      ), 
+                  )   
                 ),
               ),
               // follow button
@@ -305,7 +322,6 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           saleGroups: HBaseUserService.getAvailableSaleGroups(),
           initialSaleGroupId: SaleGroupIdEnum.subscr,
         )),
-        // onTap: () => _mockToUnlockBlur()
       );
     } else if (!user.isUnlockBlur && widget.post.blur == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
@@ -334,6 +350,10 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     // save viewhis
     await HBaseUserService.saveViewHis(widget.post.shortcode);
     // 教学内容展示
+    // 必须保证在 unlock blur 的前提下提示进入博主空间
+    if (HBaseUserService.user.isUnlockBlur) {
+      isShowEnterProfileTooltip.value = true;
+    }
   }
 
   /// 逻辑非常的简单，休眠 3 秒钟后，将 unBlur 的权限注入即可；此时通过 GetX 的状态更新即可更新界面
