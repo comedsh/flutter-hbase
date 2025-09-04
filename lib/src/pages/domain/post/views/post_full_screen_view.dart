@@ -8,6 +8,7 @@ import 'package:hbase/hbase.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 
 final compactFormat = NumberFormat.compact(locale: 'zh_CN');
@@ -17,7 +18,7 @@ final compactFormat = NumberFormat.compact(locale: 'zh_CN');
 /// 因此它的实现粒度范围就围绕着 HBase 系统的需要展开，比如包含喜欢、收藏、关注、下载逻辑等等；然而之所以
 /// 将其定义为抽象类是让子系统可以按照自己的需求对某些功能进行定制，比如下载行为等等；
 /// 
-class PostFullScreenView extends StatelessWidget{
+class PostFullScreenView extends StatefulWidget{
   final Post post;
   /// 通常 [PostFullScreenView] 是在列表中展示，这里的 [postIndex] 即表示该 post 在此列表中的下标
   final int postIndex;
@@ -31,6 +32,11 @@ class PostFullScreenView extends StatelessWidget{
   ///    级订阅；这是基于约定简化程序的必然要面对的问题，否则就会陷入到各种分支各种配置的复杂漩涡中去了，结果
   ///    面向的不是业务，而是系统本身的复杂性了！
   /// 也因此，你可以看到无论是解锁 blur 还是 translation 都是默认跳转到 base subscr sale page.
+  /// 
+  /// 有关 UserStaying 的说明
+  /// 每次 [PostFullScreenView] 可见的时候初始化 userStaying，并生成一个定时器用于监听用户停留时长，一旦
+  /// 超过预设的时长 [userStayedMillseconds] 则回调 [userStayed] 方法，此时会销毁定时器，以确保一次展示
+  /// 只会触发一次 userStayed 事件；
   const PostFullScreenView({
     super.key, 
     required this.post,
@@ -38,16 +44,67 @@ class PostFullScreenView extends StatelessWidget{
   });
 
   @override
+  State<PostFullScreenView> createState() => _PostFullScreenViewState();
+}
+
+class _PostFullScreenViewState extends State<PostFullScreenView> {
+  Timer? userStayingTimer;
+  DateTime? userStayingStart;
+  DateTime? userStayingEnd;
+  static const userStayedMillseconds = 2600;
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint('$PostFullScreenListView.initState calls');
+  }
+
+  @override
+  void dispose() {
+    debugPrint('$PostFullScreenListView.dispose calls');
+    // 这里是防御性编程，确保在销毁该组件的时候，绑定在其上的定时器一定被销毁了
+    userStayingTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            child: createPostPage(context)
+
+    /// VisibilityDetector 主要用来监视 UserStaying 事件的
+    return VisibilityDetector(
+      key: Key('${UniqueCode.uniqueShortCode}_${widget.post.shortcode}'),
+      onVisibilityChanged: (info) {
+        if (info.visibleFraction > 0.8) {
+          debugPrint('$PostFullScreenListView, the ${widget.post.shortcode} is visible');
+          userStayingStart = DateTime.now();
+          /// 实际使用过程中发现会多次触发 inView 条件，即便是我把 inView 调整到 1.0，目前看，会触发两次；那么就会导致 
+          /// userStayingTimer 被初始化两次那么就有两个 interval；为了避免影响，务必将上一个 inteval cancel 掉。
+          userStayingTimer?.cancel();
+          userStayingTimer = Timer.periodic(const Duration(milliseconds: 300), (_) {
+            userStayingEnd = DateTime.now();
+            var diffMillseconds = userStayingEnd!.difference(userStayingStart!).inMilliseconds;
+            if (diffMillseconds > userStayedMillseconds) {
+              // 一旦触发了 userStayed，那么将 interval 立刻停止避免重复触发 userStayed
+              userStayingTimer?.cancel();
+              userStayed();
+            }
+          });
+        }
+        else {
+          debugPrint('$PostFullScreenListView, the ${widget.post.shortcode} is inVisible');
+          userStayingTimer?.cancel();
+        }
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              child: createPostPage(context)
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -55,7 +112,7 @@ class PostFullScreenView extends StatelessWidget{
     return Stack(
       children: [
         AutoKnockDoorShowCaseCarousel(
-          slots: post.slots, 
+          slots: widget.post.slots, 
           indicatorPaddingBottom: 10, 
           imageCreator: (String url, double width, double aspectRatio) => 
             Obx(() => _imgCreator(url, width, aspectRatio)),
@@ -65,12 +122,12 @@ class PostFullScreenView extends StatelessWidget{
         Positioned(
           bottom: sp(42),
           left: sp(20),
-          child: leftPanel(post, context)
+          child: leftPanel(widget.post, context)
         ),
         Positioned(
           bottom: sp(42),
           right: sp(20),
-          child: rightPanel(post, context)
+          child: rightPanel(widget.post, context)
         )
       ],
     );
@@ -92,14 +149,14 @@ class PostFullScreenView extends StatelessWidget{
                 /// 如果当前是从 ProfilePage 中跳转的，那么当点击头像的时候，是回退操作即回退到 profile page，
                 /// 这样就可以有效的阻断上述的无限链条... 
                 onTap: () => Get.previousRoute == "/$ProfilePage"
-                ? Get.back<int>(result: postIndex)
+                ? Get.back<int>(result: widget.postIndex)
                 : Get.to(() => ProfilePage(profile: post.profile)),
               ),
               // profile name
               GestureDetector(
                 /// 注释同上
                 onTap: () => Get.previousRoute == "/$ProfilePage"
-                  ? Get.back<int>(result: postIndex)
+                  ? Get.back<int>(result: widget.postIndex)
                   : Get.to(() => ProfilePage(profile: post.profile)),
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
@@ -219,9 +276,9 @@ class PostFullScreenView extends StatelessWidget{
 
   Widget _imgCreator(String url, double width, double aspectRatio) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
         return BlurrableImage(
-          blurDepth: post.blurDepth,
+          blurDepth: widget.post.blurDepth,
           onTap: () => Get.to(() => SalePage(
             saleGroups: HBaseUserService.getAvailableSaleGroups(),
             initialSaleGroupId: SaleGroupIdEnum.subscr,
@@ -235,13 +292,13 @@ class PostFullScreenView extends StatelessWidget{
 
   Widget _videoCreator(String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
       return BlurrableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio, 
         videoUrl: videoUrl,
         coverImgUrl: coverImgUrl,
-        blurDepth: post.blurDepth, 
+        blurDepth: widget.post.blurDepth, 
         fit: fit,
         onTap: () => Get.to(() => SalePage(
           saleGroups: HBaseUserService.getAvailableSaleGroups(),
@@ -249,7 +306,7 @@ class PostFullScreenView extends StatelessWidget{
         )),
         // onTap: () => _mockToUnlockBlur()
       );
-    } else if (!user.isUnlockBlur && post.blur == BlurType.limitPlay) {
+    } else if (!user.isUnlockBlur && widget.post.blur == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio, 
@@ -270,6 +327,12 @@ class PostFullScreenView extends StatelessWidget{
     }
   }
 
+  userStayed() {
+    debugPrint('$PostFullScreenListView.userStayed calls for post ${widget.post.shortcode}');
+    // TODO save viewhis
+    // 教学内容展示
+  }
+
   /// 逻辑非常的简单，休眠 3 秒钟后，将 unBlur 的权限注入即可；此时通过 GetX 的状态更新即可更新界面
   // ignore: unused_element
   _mockToUnlockBlur() {
@@ -287,5 +350,4 @@ class PostFullScreenView extends StatelessWidget{
       });                 
     });
   }
-
 }
