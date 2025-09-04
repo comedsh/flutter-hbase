@@ -1,4 +1,4 @@
-enum UserAuthoriy {
+enum UserAuthority {
   unlockBlur,
   unlockPicDownload,
   unlockVideoDownload,

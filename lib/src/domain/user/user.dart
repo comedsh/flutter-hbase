@@ -3,7 +3,7 @@ import 'package:hbase/hbase.dart';
 
 class HBaseUser extends User {
 
-  final List<UserAuthoriy> authorities;
+  final List<UserAuthority> authorities;
 
   HBaseUser({
     required super.accessToken,
@@ -14,7 +14,7 @@ class HBaseUser extends User {
   });
 
   HBaseUser.fromJson(super.json)
-    : authorities = json['authorities'].map<UserAuthoriy>((auth) => UserAuthoriy.values.byName(auth)).toList(),
+    : authorities = json['authorities'].map<UserAuthority>((auth) => UserAuthority.values.byName(auth)).toList(),
       super.fromJson();
 
   @override
@@ -24,9 +24,10 @@ class HBaseUser extends User {
       'authorities': authorities.map<String>((auth) => auth.name).toList()
     };
   
-  bool get isUnlockBlur => authorities.contains(UserAuthoriy.unlockBlur);
-  bool get isUnlockPicDownload => authorities.contains(UserAuthoriy.unlockPicDownload);
-  bool get isUnlockVideoDownload => authorities.contains(UserAuthoriy.unlockVideoDownload);
-  bool get isUnlockSubscrSale => authorities.contains(UserAuthoriy.unlockSubscrSale);
-  bool get isUnlockPointSale => authorities.contains(UserAuthoriy.unlockPointSale);
+  bool get isUnlockBlur => authorities.contains(UserAuthority.unlockBlur);
+  bool get isUnlockPicDownload => authorities.contains(UserAuthority.unlockPicDownload);
+  bool get isUnlockVideoDownload => authorities.contains(UserAuthority.unlockVideoDownload);
+  bool get isUnlockSubscrSale => authorities.contains(UserAuthority.unlockSubscrSale);
+  bool get isUnlockPointSale => authorities.contains(UserAuthority.unlockPointSale);
+  bool get isUnlockTranslation => authorities.contains(UserAuthority.unlockTranslation);
 } 

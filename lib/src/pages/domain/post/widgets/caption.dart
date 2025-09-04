@@ -6,7 +6,16 @@ import 'package:sycomponents/components.dart';
 class Caption extends StatefulWidget {
   final Post post;
   final int maxLines;
-  const Caption({super.key, required this.post, required this.maxLines});
+  final bool isAllowedTrans;
+  final Function? unlockTransCallback;
+  /// 默认展示原文，点击翻译按钮后可展示翻译内容
+  const Caption({
+    super.key, 
+    required this.post, 
+    required this.maxLines, 
+    required this.isAllowedTrans,
+    this.unlockTransCallback
+  });
 
   @override
   State<Caption> createState() => _CaptionState();
@@ -33,7 +42,14 @@ class _CaptionState extends State<Caption> {
         // 一个小优化，只有有内容的前提下才会显示翻译按钮
         widget.post.captionRaw != null
         ? GestureDetector(
-            onTap: () => isTranslated.value = !isTranslated.value, // toggle
+            onTap: () {
+              if (widget.isAllowedTrans) {
+                isTranslated.value = !isTranslated.value;
+              } else {
+                assert(widget.unlockTransCallback != null, 'unlockTransCallback param can not be null if isAllowedTrans is false');
+                widget.unlockTransCallback!();
+              }
+            }, // toggle
             child: Padding(
               padding: const EdgeInsets.only(top: 6.0),
               child: !isTranslated.value

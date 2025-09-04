@@ -42,7 +42,7 @@ class HBaseUserService {
 
   static HBaseUser get user => UserService.user as HBaseUser;
 
-  /// 根据 [UserAuthoriy.unlockSubscrSale] 和 [UserAuthoriy.unlockPpointSale] 过滤出
+  /// 根据 [UserAuthority.unlockSubscrSale] 和 [UserAuthority.unlockPpointSale] 过滤出
   /// 可用的 saleGroups
   static List<SaleGroup> getAvailableSaleGroups() {
     var user = HBaseUserService.user;

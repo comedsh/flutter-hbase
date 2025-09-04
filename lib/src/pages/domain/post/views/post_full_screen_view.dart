@@ -115,7 +115,28 @@ class PostFullScreenView extends StatelessWidget{
           ),
           SizedBox(height: sp(26)),
           /// 思路是这样的，如果用户点击展开，则 toggle 替换组件
-          Caption(post: post, maxLines: 7,)
+          Caption(
+            post: post, 
+            maxLines: 7,
+            isAllowedTrans: HBaseUserService.user.isUnlockTranslation,
+            /// 如果 isAllowedTrans == false，那么将会使用该 unlockTransCallback 进行跳转解锁
+            /// 约定，和 unlockBlur 一样加入会员只能开通会员
+            unlockTransCallback: () async {
+              var isConfirmed = await showConfirmDialog(
+                context, 
+                title: '解锁翻译', 
+                content: '加入会员即可解锁翻译', 
+                confirmBtnTxt: '加入', 
+                cancelBtnTxt: '不了'
+              );
+              if (isConfirmed) {
+                Get.to(() => SalePage(
+                  saleGroups: HBaseUserService.getAvailableSaleGroups(),
+                  initialSaleGroupId: SaleGroupIdEnum.subscr,
+                ));
+              }
+            },
+          )
         ],
       ),
     );
@@ -261,7 +282,7 @@ class PostFullScreenView extends StatelessWidget{
       user.update((user) {
         /// 这里是关键扩展点，将 user 映射为子系统的 User，这样就可以对它进行响应式编程了
         var localUser = user! as HBaseUser;
-        localUser.authorities.addIf(!localUser.authorities.contains(UserAuthoriy.unlockBlur), UserAuthoriy.unlockBlur);
+        localUser.authorities.addIf(!localUser.authorities.contains(UserAuthority.unlockBlur), UserAuthority.unlockBlur);
         debugPrint('unlockBlur authority has been added to user');
       });                 
     });
