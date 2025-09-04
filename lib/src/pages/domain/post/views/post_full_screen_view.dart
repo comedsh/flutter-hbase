@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,9 +58,9 @@ class PostFullScreenView extends StatelessWidget{
           slots: post.slots, 
           indicatorPaddingBottom: 10, 
           imageCreator: (String url, double width, double aspectRatio) => 
-            _imgCreator(url, width, aspectRatio),
+            Obx(() => _imgCreator(url, width, aspectRatio)),
           videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
-            _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)
+            Obx(() => _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)),
         ),
         Positioned(
           bottom: sp(42),
@@ -223,7 +225,8 @@ class PostFullScreenView extends StatelessWidget{
         onTap: () => Get.to(() => SalePage(
           saleGroups: HBaseUserService.getAvailableSaleGroups(),
           initialSaleGroupId: SaleGroupIdEnum.subscr,
-        ))
+        )),
+        // onTap: () => _mockToUnlockBlur()
       );
     } else if (!user.isUnlockBlur && post.blur == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
@@ -245,4 +248,23 @@ class PostFullScreenView extends StatelessWidget{
       );      
     }
   }
+
+  /// 逻辑非常的简单，休眠 3 秒钟后，将 unBlur 的权限注入即可；此时通过 GetX 的状态更新即可更新界面
+  // ignore: unused_element
+  _mockToUnlockBlur() {
+    showInfoToast(msg: 'unlock blur will happened soon');
+    Timer(const Duration(seconds: 3), () {
+      var userStateMgr = Get.find<UserStateManager>();
+      var user = userStateMgr.user; 
+      /// 使用 [UserStateManager.refresh] 方法更新整个 user 也是可以的，参考 [ResponseHandler.parseUser] 中
+      /// 的 UserService.syncUserState 执行逻辑
+      user.update((user) {
+        /// 这里是关键扩展点，将 user 映射为子系统的 User，这样就可以对它进行响应式编程了
+        var localUser = user! as HBaseUser;
+        localUser.authorities.addIf(!localUser.authorities.contains(UserAuthoriy.unlockBlur), UserAuthoriy.unlockBlur);
+        debugPrint('unlockBlur authority has been added to user');
+      });                 
+    });
+  }
+
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -144,8 +145,8 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
           key: ValueKey(post.shortcode),
           controller: autoScrollController,
           index: index,
-          child: getCell(post))
-      : getCell(post),
+          child: Obx(() => getCell(post)))
+      : Obx(() => getCell(post)),
     );
 
   }
