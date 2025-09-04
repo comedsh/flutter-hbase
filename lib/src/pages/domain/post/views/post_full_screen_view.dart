@@ -169,6 +169,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                         tooltipText: '点击进入我的空间',
                         popupDirection: TooltipDirection.up,
                         showDurationMilsecs: 3200,
+                        learnCount: 1,
                         child: Text(
                           post.profile.name, 
                           style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
