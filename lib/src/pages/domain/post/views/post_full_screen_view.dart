@@ -85,9 +85,9 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             userStayingEnd = DateTime.now();
             var diffMillseconds = userStayingEnd!.difference(userStayingStart!).inMilliseconds;
             if (diffMillseconds > userStayedMillseconds) {
-              // 一旦触发了 userStayed，那么将 interval 立刻停止避免重复触发 userStayed
+              // 一旦触发了 userStay 那么将 interval 立刻停止避免重复触发 userStay，因此一个页面只需要一次 userStay 即可
               userStayingTimer?.cancel();
-              userStayed();
+              userStayCallback();
             }
           });
         }
@@ -328,7 +328,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     }
   }
 
-  userStayed() async {
+  /// 用户在 [PostFullScreenView] 页面发生 userStay 后的回调方法
+  userStayCallback() async {
     debugPrint('$PostFullScreenListView.userStayed calls for post ${widget.post.shortcode}');
     // save viewhis
     await HBaseUserService.saveViewHis(widget.post.shortcode);
