@@ -55,6 +55,12 @@ class _MePageState extends State<MePage> {
                 trailing: const Icon(Ionicons.chevron_forward_outline),
                 onTap: () => Get.to(() => const MeFollowPage())
               ),
+              ListTile(
+                leading: const Icon(Ionicons.time_outline),
+                title: Text('我的浏览记录', style: TextStyle(fontSize: sp(18))),
+                trailing: const Icon(Ionicons.chevron_forward_outline),
+                onTap: () => Get.to(() => const MeViewhisPage())
+              ),              
             ]),
             CardListTiles(listTiles: [
               // TODO 审核模式下才展示，为了尽量的节省流量，正式版不能清空

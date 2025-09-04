@@ -51,7 +51,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   Timer? userStayingTimer;
   DateTime? userStayingStart;
   DateTime? userStayingEnd;
-  static const userStayedMillseconds = 2600;
+  /// 是否把这个值做成可配置的？不要，减少系统复杂性，如果有更好的值，下个版本更新。
+  static const userStayedMillseconds = 2200; 
 
   @override
   void initState() {
@@ -327,9 +328,10 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     }
   }
 
-  userStayed() {
+  userStayed() async {
     debugPrint('$PostFullScreenListView.userStayed calls for post ${widget.post.shortcode}');
-    // TODO save viewhis
+    // save viewhis
+    await HBaseUserService.saveViewHis(widget.post.shortcode);
     // 教学内容展示
   }
 
