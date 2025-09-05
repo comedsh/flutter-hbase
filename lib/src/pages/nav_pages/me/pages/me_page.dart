@@ -55,10 +55,15 @@ class _MePageState extends State<MePage> {
                 trailing: const Icon(Ionicons.chevron_forward_outline),
                 onTap: () => Get.to(() => const MeFollowPage())
               ),
+              ListTile(
+                leading: const Icon(Ionicons.time_outline),
+                title: Text('我的浏览记录', style: TextStyle(fontSize: sp(18))),
+                trailing: const Icon(Ionicons.chevron_forward_outline),
+                onTap: () => Get.to(() => const MeViewhisPage())
+              ),              
             ]),
             CardListTiles(listTiles: [
-              // TODO 审核模式下才展示，为了尽量的节省流量，正式版不能清空
-              const ClearCacheListTile(),
+              if ((AppServiceManager.appConfig as HBaseAppConfig).showCleanCache == true) const ClearCacheListTile(),
               ListTile(
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),
@@ -71,19 +76,19 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Icons.privacy_tip_outlined),
                 title: Text('隐私政策', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title:'隐私政策', url: '')
+                onTap: () => Window.openWebView(title:'隐私政策', url: AppServiceManager.appConfig.docs.yinSiXieYiUrl)
               ),
               ListTile(
                 leading: const Icon(Icons.menu_outlined),
                 title: Text('服务条款', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title: '服务条款', url: '')
+                onTap: () => Window.openWebView(title: '服务条款', url: AppServiceManager.appConfig.docs.fuWuXieYiUrl)
               ),
               ListTile(
                 leading: const Icon(Ionicons.mail_outline),
                 title: Text('联系我们', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title: '联系我们', url: '')
+                onTap: () => Window.openWebView(title: '联系我们', url: AppServiceManager.appConfig.docs.contactUsUrl)
               ),
             ]),
             CardListTiles(listTiles: [
@@ -103,7 +108,8 @@ class _MePageState extends State<MePage> {
             SizedBox(height: sp(20),),
             Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: sp(20),),
-            const Center(child: Text('备案号：1234566')),
+            if ((AppServiceManager.appConfig as HBaseAppConfig).showBeianNum) 
+              Center(child: Text(AppServiceManager.appConfig.beianNum)),
             SizedBox(height: sp(20),),
           ],
         ),

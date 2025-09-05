@@ -48,16 +48,13 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
           showErrorToast(msg: '网络错误，操作失败', location: ToastLocation.CENTER);
         }
       },
-      child: Column(
+      child: Obx(() => Column(
         children: [
-          Obx(() => Icon(
-            isLiked.value ? Ionicons.heart : Ionicons.heart_outline, 
-            size: sp(30),
-          )),
+          Icon(isLiked.value ? Ionicons.heart : Ionicons.heart_outline, size: sp(30),),
           SizedBox(height: sp(4)),
           Text(compactFormat.format(widget.post.likes), style: TextStyle(fontSize: sp(14))),
         ],
-      ),
+      )),
     );
   }
 }

@@ -1,12 +1,13 @@
 
 
-import 'package:appbase/appbase.dart';
+import 'package:hbase/hbase.dart';
 
-class DemoResponseHandler extends ResponseHandler {
+class DemoResponseHandler extends HBaseResponseHandler {
   
   @override
   void subIntercept(Map<String, dynamic> data) {
-    // TODO: implement subIntercept
+    /// impl your own intercept logic
+    super.subIntercept(data);
   }
 
 }

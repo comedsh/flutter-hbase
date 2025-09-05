@@ -93,7 +93,7 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
           allowImplicitScrolling: true, // 预加载 1 个页面
           /// 注意第一个页面是不会触发该回调的，
           onPageChanged: (int index) {
-            debugPrint("$PostFullScreenListView, onPageChanged, the current page index: $index");
+            debugPrint("$PostFullScreenListView#onPageChanged, the current page index: $index");
             if (index <= posts.length - 1) {
               // 如果滑动到了预加载的位置，那么则执行预加载；
               preloadPostMet(index, () {

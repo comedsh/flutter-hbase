@@ -38,3 +38,15 @@ class MeFollowProfilePager extends Pager<Profile> {
   }
 
 }
+
+class MeViewhisPostPager extends Pager<Post> {
+
+  MeViewhisPostPager({super.pageNum, super.pageSize});
+
+  @override
+  Future<List<Post>> fetchNextPage() async {
+    var r = await dio.get('/u/page/viewhis/$pageNum/$pageSize');
+    return r.data.map<Post>((data) => Post.fromJson(data)).toList();    
+  }
+
+}

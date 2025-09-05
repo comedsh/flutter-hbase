@@ -2,8 +2,9 @@
 
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:hbase/hbase.dart';
 
-class DemoAppConfig extends AppConfig {
+class DemoAppConfig extends HBaseAppConfig {
 
   /// Below singleton
   DemoAppConfig._internal();
@@ -15,8 +16,10 @@ class DemoAppConfig extends AppConfig {
   }
 
   @override
-  String get appName => '黄油视频';
+  String get appName => '黄柚';
 
+  @override
+  String get beianNum => 'demo123456';
 
   @override
   String get platformCode => 'beaut';

@@ -40,6 +40,12 @@ class HBaseUserService {
     });
   }
 
+  static saveViewHis(String shortcode) async {
+    await dio.post('/u/viewhis', data: {
+      'shortcode': shortcode        
+    }); 
+  }
+
   static HBaseUser get user => UserService.user as HBaseUser;
 
   /// 根据 [UserAuthority.unlockSubscrSale] 和 [UserAuthority.unlockPpointSale] 过滤出
