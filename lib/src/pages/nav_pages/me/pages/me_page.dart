@@ -68,7 +68,7 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () {}
+                onTap: () => Get.to(() => const QuestionAnswerPage())
               ),
             ]),
             CardListTiles(listTiles: [
