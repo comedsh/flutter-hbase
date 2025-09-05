@@ -15,8 +15,10 @@ class DemoAppConfig extends AppConfig {
   }
 
   @override
-  String get appName => '黄油视频';
+  String get appName => '黄柚';
 
+  @override
+  String get beiAnNum => 'demo123456';
 
   @override
   String get platformCode => 'beaut';
@@ -26,6 +28,7 @@ class DemoAppConfig extends AppConfig {
   
   @override
   AppTheme get appTheme => DemoAppTheme();
+  
 
 }
 
