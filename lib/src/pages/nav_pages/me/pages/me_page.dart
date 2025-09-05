@@ -76,19 +76,19 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Icons.privacy_tip_outlined),
                 title: Text('隐私政策', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title:'隐私政策', url: '')
+                onTap: () => Window.openWebView(title:'隐私政策', url: AppServiceManager.appConfig.docs.yinSiXieYiUrl)
               ),
               ListTile(
                 leading: const Icon(Icons.menu_outlined),
                 title: Text('服务条款', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title: '服务条款', url: '')
+                onTap: () => Window.openWebView(title: '服务条款', url: AppServiceManager.appConfig.docs.fuWuXieYiUrl)
               ),
               ListTile(
                 leading: const Icon(Ionicons.mail_outline),
                 title: Text('联系我们', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Window.openWebView(title: '联系我们', url: '')
+                onTap: () => Window.openWebView(title: '联系我们', url: AppServiceManager.appConfig.docs.contactUsUrl)
               ),
             ]),
             CardListTiles(listTiles: [
