@@ -226,7 +226,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         StatefulFavoriteButton(post: post),
         SizedBox(height: sp(26)),
         ... _downloadButton(post),
-        const MockJuBao()
+        if ((AppServiceManager.appConfig as HBaseAppConfig).showJubao)
+          const MockJuBao()
       ],
     );
   }

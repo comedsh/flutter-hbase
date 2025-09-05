@@ -63,8 +63,7 @@ class _MePageState extends State<MePage> {
               ),              
             ]),
             CardListTiles(listTiles: [
-              // TODO 审核模式下才展示，为了尽量的节省流量，正式版不能清空
-              const ClearCacheListTile(),
+              if ((AppServiceManager.appConfig as HBaseAppConfig).showCleanCache == true) const ClearCacheListTile(),
               ListTile(
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),
@@ -109,7 +108,8 @@ class _MePageState extends State<MePage> {
             SizedBox(height: sp(20),),
             Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: sp(20),),
-            const Center(child: Text('备案号：1234566')),
+            if ((AppServiceManager.appConfig as HBaseAppConfig).showBeianNum) 
+              Center(child: Text(AppServiceManager.appConfig.beianNum)),
             SizedBox(height: sp(20),),
           ],
         ),
