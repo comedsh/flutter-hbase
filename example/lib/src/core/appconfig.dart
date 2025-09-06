@@ -2,9 +2,8 @@
 
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
-import 'package:hbase/hbase.dart';
 
-class DemoAppConfig extends HBaseAppConfig {
+class DemoAppConfig extends AppConfig {
 
   /// Below singleton
   DemoAppConfig._internal();

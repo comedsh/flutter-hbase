@@ -78,7 +78,7 @@ class _MePageState extends State<MePage> {
                 ),
               ]),
             CardListTiles(listTiles: [
-              if ((AppServiceManager.appConfig as HBaseAppConfig).showCleanCache == true) const ClearCacheListTile(),
+              if ((AppServiceManager.appConfig.display as HBaseDisplay).showCleanCache == true) const ClearCacheListTile(),
               ListTile(
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),
@@ -108,6 +108,14 @@ class _MePageState extends State<MePage> {
             ]),
             CardListTiles(listTiles: [
               ListTile(
+                leading: const Icon(Ionicons.heart_half_outline),
+                title: Text('给我们打分', style: TextStyle(fontSize: sp(18))),
+                trailing: const Icon(Ionicons.chevron_forward_outline),
+                onTap: () => Get.to(() => const QuestionAnswerPage())
+              ),
+            ]),            
+            CardListTiles(listTiles: [
+              ListTile(
                 leading: const Icon(Ionicons.log_out_outline),
                 title: Text('退出登录', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
@@ -123,7 +131,7 @@ class _MePageState extends State<MePage> {
             SizedBox(height: sp(20),),
             Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: sp(20),),
-            if ((AppServiceManager.appConfig as HBaseAppConfig).showBeianNum) 
+            if ((AppServiceManager.appConfig.display as HBaseDisplay).showBeianNum) 
               Center(child: Text(AppServiceManager.appConfig.beianNum)),
             SizedBox(height: sp(20),),
           ],

@@ -9,7 +9,7 @@ class HBaseResponseHandler extends ResponseHandler {
   void subIntercept(Map<String, dynamic> data) {
     if (data['appConf'] != null) {
       var appConf = data['appConf'];
-      (AppServiceManager.appConfig as HBaseAppConfig).showJubao = appConf['showJubao'];
+      AppServiceManager.appConfig.display = HBaseDisplay.fromJson(appConf['display']);
     }
   }
 
