@@ -62,21 +62,21 @@ class _MePageState extends State<MePage> {
                 onTap: () => Get.to(() => const MeViewhisPage())
               ),              
             ]),
-            /// TODO 购买积分后才展示
-            CardListTiles(listTiles: [
-              ListTile(
-                leading: const Icon(Ionicons.server_outline),
-                title: Text('积分购买记录', style: TextStyle(fontSize: sp(18))),
-                trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Get.to(() => const QuestionAnswerPage())
-              ),
-              ListTile(
-                leading: const Icon(IconFont.icon_sy_trade_record_2),
-                title: Text('积分消费记录', style: TextStyle(fontSize: sp(18))),
-                trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Get.to(() => const QuestionAnswerPage())
-              ),
-            ]),
+            if (HBaseUserService.user.point?.hasPurchasedPoint == true)
+              CardListTiles(listTiles: [
+                ListTile(
+                  leading: const Icon(Ionicons.server_outline),
+                  title: Text('积分购买记录', style: TextStyle(fontSize: sp(18))),
+                  trailing: const Icon(Ionicons.chevron_forward_outline),
+                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                ),
+                ListTile(
+                  leading: const Icon(IconFont.icon_sy_trade_record_2),
+                  title: Text('积分消费记录', style: TextStyle(fontSize: sp(18))),
+                  trailing: const Icon(Ionicons.chevron_forward_outline),
+                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                ),
+              ]),
             CardListTiles(listTiles: [
               if ((AppServiceManager.appConfig as HBaseAppConfig).showCleanCache == true) const ClearCacheListTile(),
               ListTile(
