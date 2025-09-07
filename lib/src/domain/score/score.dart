@@ -18,7 +18,8 @@ class ScoreStateManager extends GetxService {
   }
 }
 
-class ScoreListener {
+class ScoreService {
+  
   static listen() {
     final scoreState = Get.find<ScoreStateManager>();
     ever(scoreState.scoreSimple, (_) {
@@ -27,10 +28,7 @@ class ScoreListener {
       }
     });
   }
-}
 
-class ScoreService {
-  
   static notifyScoreSimple() {
     ScoreStateManager ssm = Get.find();
     ssm.updateScoreSimple();

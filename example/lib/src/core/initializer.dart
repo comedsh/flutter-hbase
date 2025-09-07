@@ -45,7 +45,7 @@ class DemoInitializer extends Initializer {
   
   @override
   initAfterSynced() async {
-    ScoreListener.listen();
+    ScoreService.listen();
   }
 
   
