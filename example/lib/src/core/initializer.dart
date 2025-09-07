@@ -1,6 +1,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hbase/hbase.dart';
 
 class DemoInitializer extends Initializer {
 
@@ -14,6 +15,7 @@ class DemoInitializer extends Initializer {
 
   @override
   initSubGetxServices() {
+    Get.put(ScoreStateManager());
   }
   
   @override
@@ -38,7 +40,14 @@ class DemoInitializer extends Initializer {
   }
 
   @override
-  initSubAfterConnected() async {
+  initSubAfterConnected() async {       
   }
+  
+  @override
+  initAfterSynced() async {
+    ScoreListener.listen();
+  }
+
+  
 
 }

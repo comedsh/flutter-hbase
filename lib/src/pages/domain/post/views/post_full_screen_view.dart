@@ -151,16 +151,22 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                 /// 为了避免陷入无限的 profile -> post page -> profile -> post page ... 这样的链条中，
                 /// 如果当前是从 ProfilePage 中跳转的，那么当点击头像的时候，是回退操作即回退到 profile page，
                 /// 这样就可以有效的阻断上述的无限链条... 
-                onTap: () => Get.previousRoute == "/$ProfilePage"
-                ? Get.back<int>(result: widget.postIndex)
-                : Get.to(() => ProfilePage(profile: post.profile)),
+                onTap: () { 
+                  Get.previousRoute == "/$ProfilePage"
+                    ? Get.back<int>(result: widget.postIndex)
+                    : Get.to(() => ProfilePage(profile: post.profile));
+                  ScoreService.notifyScoreSimple();
+                },
               ),
               // profile name
               GestureDetector(
                 /// 注释同上
-                onTap: () => Get.previousRoute == "/$ProfilePage"
-                  ? Get.back<int>(result: widget.postIndex)
-                  : Get.to(() => ProfilePage(profile: post.profile)),
+                onTap: () { 
+                  Get.previousRoute == "/$ProfilePage"
+                    ? Get.back<int>(result: widget.postIndex)
+                    : Get.to(() => ProfilePage(profile: post.profile));
+                  ScoreService.notifyScoreSimple();                    
+                },
                 child: Padding(
                   padding: EdgeInsets.only(left: sp(8.0)),
                   child: Obx(() => isShowEnterProfileTooltip.value 

@@ -28,6 +28,9 @@ class DemoAppConfig extends AppConfig {
   
   @override
   AppTheme get appTheme => DemoAppTheme();
+  
+  @override
+  String get appStoreId => '6746954134';
 
 }
 

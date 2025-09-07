@@ -110,6 +110,8 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
             } else  {
               debugPrint('$index is overflow, _posts not ready yet');
             }
+            
+            if (index == 2) ScoreService.notifyScoreSimple();
           },
           /// 注意由于预加载的原因，这里的 index 可能是下一页的 post 的了，因此它不能作为 current page post.
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法

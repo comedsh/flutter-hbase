@@ -112,7 +112,7 @@ class _MePageState extends State<MePage> {
                   leading: const Icon(Ionicons.heart_half_outline),
                   title: Text('给我们打分', style: TextStyle(fontSize: sp(18))),
                   trailing: const Icon(Ionicons.chevron_forward_outline),
-                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                  onTap: () => Rating.openStoreListing(AppServiceManager.appConfig.appStoreId)
                 ),
               ]),            
             CardListTiles(listTiles: [

@@ -80,7 +80,10 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.black,
         // 如果超过 3 个 bar items 则必须添加
         type: BottomNavigationBarType.fixed,
-        onTap: (int index) => setState(() => _current = index),
+        onTap: (int index) { 
+          setState(() => _current = index);
+          ScoreService.notifyScoreSimple();
+        },
         currentIndex: _current,
         items: const [
           BottomNavigationBarItem(
