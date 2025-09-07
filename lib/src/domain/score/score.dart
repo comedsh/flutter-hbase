@@ -125,7 +125,7 @@ class ScoreTargetWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('如果您觉得还不错，请为我们打分吧？', style: TextStyle(fontSize: sp(18))),
+              Text('如果觉得还不错，请为我们打分吧？', style: TextStyle(fontSize: sp(18))),
               SizedBox(height: sp(40)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
