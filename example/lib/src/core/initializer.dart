@@ -48,6 +48,4 @@ class DemoInitializer extends Initializer {
     ScoreService.listen();
   }
 
-  
-
 }

@@ -39,6 +39,8 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
             ? await HBaseUserService.disLike(shortcode)
             : await HBaseUserService.like(shortcode);
           widget.post.isLiked = isLiked.value;  // 同步前端数据状态
+          /// 只有当发生喜欢的时候才诱捕 Score Target
+          if (isLiked.value == true) ScoreService.increaseScoreTarget();
         } catch (e, stacktrace) {
           debugPrint('Something really unknown throw from $StatefulLikeButton.onTap: $e, statcktrace below: $stacktrace');
           /// 这里提示错误并且还原状态
