@@ -106,14 +106,15 @@ class _MePageState extends State<MePage> {
                 onTap: () => Window.openWebView(title: '联系我们', url: AppServiceManager.appConfig.docs.contactUsUrl)
               ),
             ]),
-            CardListTiles(listTiles: [
-              ListTile(
-                leading: const Icon(Ionicons.heart_half_outline),
-                title: Text('给我们打分', style: TextStyle(fontSize: sp(18))),
-                trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => Get.to(() => const QuestionAnswerPage())
-              ),
-            ]),            
+            if ((AppServiceManager.appConfig.display as HBaseDisplay).showMeHomeScore)
+              CardListTiles(listTiles: [
+                ListTile(
+                  leading: const Icon(Ionicons.heart_half_outline),
+                  title: Text('给我们打分', style: TextStyle(fontSize: sp(18))),
+                  trailing: const Icon(Ionicons.chevron_forward_outline),
+                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                ),
+              ]),            
             CardListTiles(listTiles: [
               ListTile(
                 leading: const Icon(Ionicons.log_out_outline),
