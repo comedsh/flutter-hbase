@@ -76,6 +76,7 @@ class _StatefulFollowButtonState extends State<StatefulFollowButton> {
         // await Sleep.sleep(milliseconds: 3000); // 本地测试模拟 loading
         await HBaseUserService.follow(widget.profile.code);
         widget.profile.isFollowed = true;
+        ScoreService.increaseScoreTarget();
       } catch (e, stacktrace) {
         // No specified type, handles all
         debugPrint('Something really unknown throw from disFollow: $e, statcktrace below: $stacktrace');

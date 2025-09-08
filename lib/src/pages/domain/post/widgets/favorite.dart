@@ -39,6 +39,8 @@ class _StatefulFavoriteButtonState extends State<StatefulFavoriteButton> {
             ? await HBaseUserService.disFavorite(shortcode)
             : await HBaseUserService.favorite(shortcode);
           widget.post.isFavorited = isFavorited.value;
+          /// 只有当发生收藏行为的时候才触发
+          if (isFavorited.value == true) ScoreService.increaseScoreTarget();
         } catch (e, stacktrace) {
           debugPrint('Something really unknown throw from $StatefulFavoriteButton.onTap: $e, statcktrace below: $stacktrace');
           /// 这里提示错误并且还原状态
