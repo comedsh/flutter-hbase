@@ -9,7 +9,7 @@ import 'src/pages/homepage.dart';
 main() async {
 
   DemoInitializer initializer = DemoInitializer();
-  DemoUserService userService = DemoUserService();
+  ExampleUserService userService = ExampleUserService();
   DemoAppConfig appConfig = DemoAppConfig();
   DemoResponseHandler responseHandler = DemoResponseHandler();
 

@@ -23,18 +23,19 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     debugPrint('$HomePage dispose calls');
-    Colors.deepOrange;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var display = AppServiceManager.appConfig.display as HBaseDisplay;
     return Scaffold(
       body: ProsteIndexedStack(
         index: _current,
         children: [
           IndexedStackChild(
-            child: CategoryPostFullScreenListViewPage(
+            child: CategoryPostFullScreenListViewPage(             
+              /*
               chnCodes: const ['hanbeauti', 'life'],
               tabs: [
                 TabData(id: 'rcmd', name: '推荐'),
@@ -43,31 +44,22 @@ class _HomePageState extends State<HomePage> {
                 TabData(id: 'xmt', name: '新马泰'),
                 TabData(id: 'qita', name: '其它'),
               ]
+              */
+              chnCodes: display.chnCodes,
+              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList()
             ),
           ),
           IndexedStackChild(
             child: HotspotProfilePage(
-              chnCodes: const ['hanbeauti', 'life'],
-              tags: [
-                ChannelTag(code: 'omei', name: '欧美'),
-                ChannelTag(code: 'korea', name: '韩国'),
-                ChannelTag(code: 'xmt',  name: '新马泰'),
-                ChannelTag(code: 'twan', name: '台湾'),
-                ChannelTag(code: 'japan', name: '日本'),
-                ChannelTag(code: 'dalu', name: '其它'), // 把内地的命名为其它保险一些 
-              ],              
+              chnCodes: display.chnCodes,
+              tags: display.hotTags,
             )
           ),
           IndexedStackChild(
             child: CategoryPostAlbumListViewPage(
-              chnCodes: const ['hanbeauti', 'life'],
-              tabs: [
-                TabData(id: 'rcmd', name: '推荐'),
-                TabData(id: 'omei', name: '欧美'),
-                TabData(id: 'rhan', name: '日韩'),
-                TabData(id: 'xmt', name: '新马泰'),
-                TabData(id: 'qita', name: '其它')
-              ]),
+              chnCodes: display.chnCodes,
+              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList()
+            ),
           ),
           IndexedStackChild(
             child: const MePage()
