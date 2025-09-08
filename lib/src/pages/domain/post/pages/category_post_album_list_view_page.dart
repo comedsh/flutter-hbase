@@ -4,15 +4,15 @@ import 'package:hbase/hbase.dart';
 
 /// 用来构建分页 bottom tab page
 class CategoryPostAlbumListViewPage extends StatelessWidget {
+  final List<String> chnCodes;
   final List<TabData> tabs;
-  const CategoryPostAlbumListViewPage({super.key, required this.tabs});
+  const CategoryPostAlbumListViewPage({super.key, required this.chnCodes, required this.tabs});
 
   @override
   Widget build(BuildContext context) {
     return TabBarViewAppBarTitlePage(
       tabs: tabs,
       tabBarViewContentBuilder: (context, tab) {
-        var chnCodes = ['hanbeauti'];
         var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
         var postPager = ChannelTagPostPager(
           chnCodes: chnCodes, 

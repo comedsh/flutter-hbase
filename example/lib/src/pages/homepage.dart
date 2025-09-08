@@ -59,13 +59,15 @@ class _HomePageState extends State<HomePage> {
             )
           ),
           IndexedStackChild(
-            child: CategoryPostAlbumListViewPage(tabs: [
-              TabData(id: 'rcmd', name: '推荐'),
-              TabData(id: 'omei', name: '欧美'),
-              TabData(id: 'rhan', name: '日韩'),
-              TabData(id: 'xmt', name: '新马泰'),
-              TabData(id: 'qita', name: '其它')
-            ]),
+            child: CategoryPostAlbumListViewPage(
+              chnCodes: const ['hanbeauti', 'life'],
+              tabs: [
+                TabData(id: 'rcmd', name: '推荐'),
+                TabData(id: 'omei', name: '欧美'),
+                TabData(id: 'rhan', name: '日韩'),
+                TabData(id: 'xmt', name: '新马泰'),
+                TabData(id: 'qita', name: '其它')
+              ]),
           ),
           IndexedStackChild(
             child: const MePage()
