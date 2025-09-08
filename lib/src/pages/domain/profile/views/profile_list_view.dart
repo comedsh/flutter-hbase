@@ -56,11 +56,17 @@ class _ProfileListViewState extends State<ProfileListView> {
               child: Row(
                 children: [
                   /// 头像
-                  ProfileAvatar(profile: profile, size: sp(66), onTap: () => Get.to(() => ProfilePage(profile: profile)),),
+                  ProfileAvatar(profile: profile, size: sp(66), onTap: () {
+                     Get.to(() => ProfilePage(profile: profile));
+                     ScoreService.notifyScoreSimple();
+                  }),
                   SizedBox(width: sp(8)),
                   /// 名字和描述
                   GestureDetector(
-                    onTap: () => Get.to(() => ProfilePage(profile: profile)),
+                    onTap: () {
+                      Get.to(() => ProfilePage(profile: profile));
+                      ScoreService.notifyScoreSimple();
+                    },
                     child: SizedBox(
                       width: Screen.width(context) * 0.53,
                       child: Column(

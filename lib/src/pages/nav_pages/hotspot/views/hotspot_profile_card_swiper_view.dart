@@ -169,7 +169,10 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
               SizedBox(width: sp(8)),
               /// 名字和描述
               GestureDetector(
-                onTap: () => Get.to(() => ProfilePage(profile: p)),
+                onTap: () {
+                   Get.to(() => ProfilePage(profile: p));
+                   ScoreService.notifyScoreSimple();
+                },
                 child: SizedBox(
                   width: Screen.width(context) * 0.41,
                   child: Column(
