@@ -20,11 +20,14 @@ class ScoreStateManager extends GetxService {
 }
 
 class ScoreService {
+
+  // ignore: non_constant_identifier_names
+  static String LOCK_SCORE_TARGET_NAME = 'lockScoreTarget';
   
   static listen() {
     final scoreState = Get.find<ScoreStateManager>();
 
-    /// score simple 的算法简单粗暴，只要触发一次就诱导一次  
+    /// score simple 的算法简单粗暴，只要触发一次就诱导一次；而且频控通过框架自身控制即可。
     ever(scoreState.scoreSimple, (_) {
       if ((AppServiceManager.appConfig.display as HBaseDisplay).enableScoreSimple) {
         Timer(const Duration(milliseconds: 1000), () => Rating.openRating());
@@ -34,17 +37,28 @@ class ScoreService {
     /// score target 的算法要复杂一些，当目标动作发生到了 3 次或 9 次或 18 次的时候才会触发，且要注意的是
     /// 如果诱导成功即跳转发生了，那么要符合后台的评分间隔才能继续诱导了；另外如果用户拒绝了，那么前端要锁定在
     /// 多少个 hours 内只能不要再次诱导了
+    /// 
     /// 另外需要特别注意的一点是，Score Target 和 Score Download 都还包含一个隐藏的条件，即该用户必须拥有
     /// 了 unlockBlur 的权限，这个由后台进行判断
-    ever(scoreState.scoreTarget, (int val) {
-      // if ([3, 9, 18].contains(val)){
-      // }
-      // debugPrint('scoreState.scoreTarget: $val');
+    /// 
+    /// 有关频控的说明：如果用户只是简单的关闭，那么还是会按照队列中的频次控制，但是如果一旦点击了不怎么样，或者
+    /// 选择不评分，或者已经评分了，那么就要在前端上锁 24 小时；
+    /// 
+    ever(scoreState.scoreTarget, (int val) async {
       // debugPrint('enableScoreTarget: ${(AppServiceManager.appConfig.display as HBaseDisplay).enableScoreTarget}');
-      if ((AppServiceManager.appConfig.display as HBaseDisplay).enableScoreTarget) {
-        ScoreTargetWidget.showFirst();
+      // 下面这个队列只是为了方便测试，目的是让每次 target 事件发生的时候都会触发，这样便于测试
+      // const frequenceCtlArray = [1,2,3,4,5,6,7,8,9,10];
+      const frequenceCtlArray = [3, 9, 21];     
+      if (frequenceCtlArray.contains(val)){
+        if ((AppServiceManager.appConfig.display as HBaseDisplay).enableScoreTarget 
+          && await ScoreService.isScoreTargetLocked() == false 
+        ) {
+          ScoreTargetWidget.showFirst();
+        }
       }
+
     });
+
   }
 
   static notifyScoreSimple() {
@@ -56,6 +70,21 @@ class ScoreService {
     ScoreStateManager ssm = Get.find();
     ssm.increaseScoreTarget();
   }
+
+  /// 唯一需要提醒的是，因为 scoreDownload 和 scoreTarget 共享后端 score 配额限制，因此 scoreDownload 的时候也
+  /// 需要判断 [isScoreTargetLocked] 
+  static Future<bool> isScoreTargetLocked() async {
+    return await PersistentTtlLockService().isLocked(ScoreService.LOCK_SCORE_TARGET_NAME);
+  }
+
+  /// 默认锁定一天的时间，但是如果用户明确的表明了不喜欢的话，那么要锁定更长的时间；
+  static lockScoreTarget({lockSeconds = 24 * 36000}) async {
+    await PersistentTtlLockService().create(
+      name: ScoreService.LOCK_SCORE_TARGET_NAME, 
+      expireSecs: lockSeconds
+    );
+  }
+
 }
 
 class ScoreTargetWidget {
@@ -78,7 +107,11 @@ class ScoreTargetWidget {
                 children: [
                   /// 不怎么样按钮
                   TextButton(
-                    onPressed: () => Get.back(),   // 关闭窗口
+                    onPressed: () {
+                      Get.back();
+                      /// 因为这里用户明确的表明了不喜欢，那么锁定一个月
+                      ScoreService.lockScoreTarget(lockSeconds:  30 * 24 * 3600);  
+                    },   // 关闭窗口
                     style: TextButton.styleFrom(
                       /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
                       /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
@@ -131,9 +164,13 @@ class ScoreTargetWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  /// 不怎么样按钮
+                  /// 不了按钮
                   TextButton(
-                    onPressed: () => Get.back(),   // 关闭窗口
+                    onPressed: () { 
+                      Get.back();
+                      /// 虽然这里用户选择了否定按钮，但是前面用户已经表示了肯定，因此锁定默认时长即可
+                      ScoreService.lockScoreTarget();
+                    },   // 关闭窗口
                     style: TextButton.styleFrom(
                       /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
                       /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
@@ -156,8 +193,21 @@ class ScoreTargetWidget {
                     height: sp(32.0),
                     borderRadius: BorderRadius.circular(13.0),
                     onPressed: () {
+                      /// 这里虽然可以发起 post 请求，但是因为已经发起了跳转评分，前端是无法接收到 server response 的最新
+                      /// appConfDto 导致不能及时接收 enableScoreTarget 的状态值从而如果用户反复触发 score target 行
+                      /// 为就可以导致前端重复评分；有两种解决方案，如下，
+                      /// 1. 阻塞 post 请求直到其成功后才跳转评分；但是这样做的弊端是用户体验不好，如果恰好网络
+                      ///    延迟，那么要等待很久才会跳转评分；
+                      /// 2. 不阻塞 post 请求；因为这里一旦完成，前端就会对相关的操作就会被上一把锁；这样用户就无法再次发起了。
+                      ///    明显这个方案更好！
+                      dio.post('/u/tscore/save');
                       Rating.openStoreListing(AppServiceManager.appConfig.appStoreId);
-                      /// TODO record 诱导记录
+                      /// 这里必须注意要等待 tscore save 成功后才能跳转评分，否则跳转后前端无法接受 server response 的最新
+                      /// appConfDto 导致不能及时接收还可以继续触发
+                      Get.back();
+                      /// 这就是上面因为不阻塞 post 请求后跳转导致前端无法及时接收 server response 的解决方案 #2 的实现；由
+                      /// 前端来锁定即可；
+                      ScoreService.lockScoreTarget();
                     },
                     child: Text('当然', style: TextStyle(fontSize: sp(16)))
                   )
