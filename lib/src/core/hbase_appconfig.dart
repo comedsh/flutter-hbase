@@ -10,6 +10,7 @@ class HBaseDisplay extends Display {
   HBaseDisplay({
     required super.showCleanCache, 
     required super.showBeianNum,
+    required super.showSubscrRenewalDesc,
     required this.showJubao,    
     required this.showMeHomeScore, 
     required this.enableScoreSimple, 
