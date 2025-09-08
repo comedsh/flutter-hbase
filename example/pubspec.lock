@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: appbase
-      sha256: "4efee6885a6bc2352f4e5a049284836423805ac52e20038751dfedf5e9724dbc"
+      sha256: "9933c8b147342b83f00e55646a1bed9ecda72daedffe4e7f21017bb3960abe27"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+23"
+    version: "1.0.0+25"
   archive:
     dependency: transitive
     description:

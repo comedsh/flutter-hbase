@@ -1,3 +1,4 @@
+import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
@@ -85,23 +86,23 @@ class _HomePageState extends State<HomePage> {
           ScoreService.notifyScoreSimple();
         },
         currentIndex: _current,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            activeIcon: Icon(Ionicons.play_circle),
-            icon: Icon(Ionicons.play_circle_outline),
-            label: '视频',
+            activeIcon: const Icon(Ionicons.play_circle),
+            icon: const Icon(Ionicons.play_circle_outline),
+            label: AppServiceManager.appConfig.i ? '首页' : '视频',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             activeIcon: Icon(Icons.local_fire_department, size: 26,),
             icon: Icon(Icons.local_fire_department_outlined, size: 26),
             label: '热榜',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.apps),
             icon: Icon(Ionicons.apps_outline),
             label: '分类',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.person),
             icon: Icon(Ionicons.person_outline),
             label: '我',
