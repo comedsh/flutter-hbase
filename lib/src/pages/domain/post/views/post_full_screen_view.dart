@@ -330,7 +330,13 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         videoUrl: videoUrl,
         coverImgUrl: coverImgUrl,
         blurDepth: widget.post.blurDepth, 
-        fit: fit,
+        // fit: fit,
+        // 默认情况下如果是单 reel 为了让 reel 能够撑满整个屏幕，回调的是 BoxFit.cover，但是正如 [Carousel] 注解中所提到的那样，
+        // BoxFit.cover 虽然会撑满整个屏幕但是代价是 reel 会延伸到屏幕之外且试过裁剪，但是在目前 Carousel 的实现下，任何裁剪都是
+        // 无效的；因此默认这里返回的是 BoxFit.cover，单它会导致一个问题就是在横向 tab 页面之间切换的时候，比如从"推荐"切换到"欧美"
+        // 的过程中，会导致边缘被看到，因为 blur 只会 blur 屏幕内可视部分，超出屏幕部分的无法 blur；因此为了能够实现在任何情况下都
+        // 彻底 blur，因此这里将 fit 硬编码维 BoxFit.contain，这样就不会出现上面的问题了。
+        fit: BoxFit.contain,
         onTap: () => Get.to(() => SalePage(
           saleGroups: HBaseUserService.getAvailableSaleGroups(),
           initialSaleGroupId: SaleGroupIdEnum.subscr,
