@@ -36,17 +36,19 @@ class _HomePageState extends State<HomePage> {
           IndexedStackChild(
             child: CategoryPostFullScreenListViewPage(             
               /*
-              chnCodes: const ['hanbeauti', 'life'],
-              tabs: [
-                TabData(id: 'rcmd', name: '推荐'),
-                TabData(id: 'omei', name: '欧美'),
-                TabData(id: 'rhan', name: '日韩'),
-                TabData(id: 'xmt', name: '新马泰'),
-                TabData(id: 'qita', name: '其它'),
-              ]
+                // 保留下面的 demo code，可以清晰的看到数据是如何构建的
+                chnCodes: const ['hanbeauti', 'life'],
+                tabs: [
+                  TabData(id: 'rcmd', name: '推荐'),
+                  TabData(id: 'omei', name: '欧美'),
+                  TabData(id: 'rhan', name: '日韩'),
+                  TabData(id: 'xmt', name: '新马泰'),
+                  TabData(id: 'qita', name: '其它'),
+                ]
               */
               chnCodes: display.chnCodes,
-              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList()
+              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
+              isReelOnly: true,
             ),
           ),
           IndexedStackChild(
@@ -58,7 +60,8 @@ class _HomePageState extends State<HomePage> {
           IndexedStackChild(
             child: CategoryPostAlbumListViewPage(
               chnCodes: display.chnCodes,
-              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList()
+              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
+              isReelOnly: false,
             ),
           ),
           IndexedStackChild(

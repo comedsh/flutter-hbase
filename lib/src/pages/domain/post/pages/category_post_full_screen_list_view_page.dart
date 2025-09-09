@@ -6,11 +6,13 @@ import 'package:hbase/hbase.dart';
 class CategoryPostFullScreenListViewPage extends StatelessWidget {
   final List<String> chnCodes;
   final List<TabData> tabs;
+  final bool isReelOnly;
 
   const CategoryPostFullScreenListViewPage({
     super.key, 
     required this.chnCodes,
-    required this.tabs
+    required this.tabs,
+    this.isReelOnly = false,
   });
 
   @override
@@ -23,7 +25,7 @@ class CategoryPostFullScreenListViewPage extends StatelessWidget {
         var postPager = ChannelTagPostPager(
           chnCodes: chnCodes, 
           tagCodes: tagCodes, 
-          isReelOnly: true, 
+          isReelOnly: isReelOnly, 
           pageSize: 12
         );
         return PostFullScreenListView(

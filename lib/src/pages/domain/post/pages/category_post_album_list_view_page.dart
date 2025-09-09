@@ -6,7 +6,14 @@ import 'package:hbase/hbase.dart';
 class CategoryPostAlbumListViewPage extends StatelessWidget {
   final List<String> chnCodes;
   final List<TabData> tabs;
-  const CategoryPostAlbumListViewPage({super.key, required this.chnCodes, required this.tabs});
+  final bool isReelOnly;
+
+  const CategoryPostAlbumListViewPage({
+    super.key, 
+    required this.chnCodes, 
+    required this.tabs,
+    this.isReelOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,7 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
         var postPager = ChannelTagPostPager(
           chnCodes: chnCodes, 
           tagCodes: tagCodes, 
-          isReelOnly: true, 
+          isReelOnly: isReelOnly, 
           pageSize: 24
         );
         return PostAlbumListView(
