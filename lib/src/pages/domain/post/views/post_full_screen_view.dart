@@ -123,13 +123,14 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             Obx(() => _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)),
         ),
         Positioned(
-          bottom: sp(42),
+          bottom: sp(34),
           left: sp(20),
           child: leftPanel(widget.post, context)
         ),
         Positioned(
-          bottom: sp(42),
-          right: sp(20),
+          bottom: sp(34),
+          // right: sp(20),
+          right: 0,
           child: rightPanel(widget.post, context)
         )
       ],
@@ -143,6 +144,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// 博主头像、名字和关注元素的控制面板
           Row(
             children: [
               ProfileAvatar(
@@ -168,56 +170,77 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                   ScoreService.notifyScoreSimple();                    
                 },
                 child: Padding(
-                  padding: EdgeInsets.only(left: sp(8.0)),
-                  child: Obx(() => isShowEnterProfileTooltip.value 
-                    ? TooltipShowCase(
-                        name: 'enterProfileTooltip',
-                        tooltipText: '点击进入我的空间',
-                        popupDirection: TooltipDirection.up,
-                        showDurationMilsecs: 3200,
-                        learnCount: 1,
-                        child: Text(
+                  padding: EdgeInsets.symmetric(horizontal: sp(8.0)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[
+                          Colors.black12.withOpacity(0.3),
+                          Colors.black12.withOpacity(0.2)
+                        ]
+                      ),
+                    ),                    
+                    child: Obx(() => isShowEnterProfileTooltip.value 
+                      ? TooltipShowCase(
+                          name: 'enterProfileTooltip',
+                          tooltipText: '点击进入我的空间',
+                          popupDirection: TooltipDirection.up,
+                          showDurationMilsecs: 3200,
+                          learnCount: 1,
+                          child: Text(
+                            post.profile.name, 
+                            style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                        )
+                      : Text(
                           post.profile.name, 
                           style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                      )
-                    : Text(
-                        post.profile.name, 
-                        style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
-                      ), 
+                        ), 
+                    ),
                   )   
                 ),
               ),
               // follow button
-              Padding(
-                padding: EdgeInsets.only(left: sp(8.0)),
-                child: _followButton(post, context),
-              ),
+              _followButton(post, context),
             ],
           ),
           SizedBox(height: sp(26)),
           /// 思路是这样的，如果用户点击展开，则 toggle 替换组件
-          Caption(
-            post: post, 
-            maxLines: 7,
-            isAllowedTrans: HBaseUserService.user.isUnlockTranslation,
-            /// 如果 isAllowedTrans == false，那么将会使用该 unlockTransCallback 进行跳转解锁
-            /// 约定，和 unlockBlur 一样加入会员只能开通会员
-            unlockTransCallback: () async {
-              var isConfirmed = await showConfirmDialog(
-                context, 
-                title: '解锁翻译', 
-                content: '加入会员即可解锁翻译', 
-                confirmBtnTxt: '加入', 
-                cancelBtnTxt: '不了'
-              );
-              if (isConfirmed) {
-                Get.to(() => SalePage(
-                  saleGroups: HBaseUserService.getAvailableSaleGroups(),
-                  initialSaleGroupId: SaleGroupIdEnum.subscr,
-                ));
-              }
-            },
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomLeft,
+                end: Alignment.topRight,
+                colors: <Color>[
+                  Colors.black12.withOpacity(0.1),
+                  Colors.black12.withOpacity(0.1)
+                ]
+              ),
+            ),            
+            child: Caption(
+              post: post, 
+              maxLines: 7,
+              isAllowedTrans: HBaseUserService.user.isUnlockTranslation,
+              /// 如果 isAllowedTrans == false，那么将会使用该 unlockTransCallback 进行跳转解锁
+              /// 约定，和 unlockBlur 一样加入会员只能开通会员
+              unlockTransCallback: () async {
+                var isConfirmed = await showConfirmDialog(
+                  context, 
+                  title: '解锁翻译', 
+                  content: '加入会员即可解锁翻译', 
+                  confirmBtnTxt: '加入', 
+                  cancelBtnTxt: '不了'
+                );
+                if (isConfirmed) {
+                  Get.to(() => SalePage(
+                    saleGroups: HBaseUserService.getAvailableSaleGroups(),
+                    initialSaleGroupId: SaleGroupIdEnum.subscr,
+                  ));
+                }
+              },
+            ),
           )
         ],
       ),
@@ -225,16 +248,33 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   }
 
   rightPanel(Post post, BuildContext context) {
-    return Column(
-      children: [
-        StatefulLikeButton(post: post),
-        SizedBox(height: sp(26)),
-        StatefulFavoriteButton(post: post),
-        SizedBox(height: sp(26)),
-        ... _downloadButton(post),
-        if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
-          const MockJuBao()
-      ],
+    /// Container 是蒙版，避免因为贴文太白导致控制面板看不清
+    return Container(
+      width: sp(50),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.centerRight,
+          end: Alignment.centerLeft,
+          colors: <Color>[
+            Colors.black12.withOpacity(0.2),
+            Colors.black12.withOpacity(0.1)
+          ]
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Column(
+          children: [
+            StatefulLikeButton(post: post),
+            SizedBox(height: sp(26)),
+            StatefulFavoriteButton(post: post),
+            SizedBox(height: sp(26)),
+            ... _downloadButton(post),
+            if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
+              const MockJuBao()
+          ],
+        ),
+      ),
     );
   }
 
