@@ -52,6 +52,8 @@ export 'src/domain/user/user_pager.dart';
 export 'src/domain/user/user_authoriy.dart';
 export 'src/domain/user/user.dart';
 export 'src/domain/score/score.dart';
+export 'src/domain/download/download_strategy.dart';
+export 'src/domain/download/download_service.dart';
 
 export 'src/core/hbase_appconfig.dart';
 export 'src/core/hbase_response_handler.dart';
