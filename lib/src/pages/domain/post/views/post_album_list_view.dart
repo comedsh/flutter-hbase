@@ -169,7 +169,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
         icon: const Icon(IconFont.icon_sy_images, color: Colors.white)));
       // return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
     }
-    else if ([PostType.igtv, PostType.reel, PostType.video].contains(post.type)) {
+    else if (post.type == PostType.video) {
       badgeIcons.add(BadgeIcon(
         location: BadgeIconLocation.rightTop, 
         icon: const Icon(IconFont.icon_sy_video, color: Colors.white)));
