@@ -284,15 +284,20 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     var user = HBaseUserService.user;
     /// 注意，分理出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
     /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
-    if (post.type == PostType.photo && user.isUnlockPicDownload || 
+    if ((post.type == PostType.photo || post.isPhotoAlbum) && user.isUnlockPicDownload || 
       post.type != PostType.photo && user.isUnlockVideoDownload ) {
       return [
-        Column(
-          children: [
-            Icon(Ionicons.cloud_download_outline, size: sp(30),),
-            SizedBox(height: sp(4)),
-            Text('下载', style: TextStyle(fontSize: sp(14))),
-          ],
+        GestureDetector(
+          onTap: () async {
+            await DownloadService.showDownloadItems(context, post.type);
+          },
+          child: Column(
+            children: [
+              Icon(Ionicons.cloud_download_outline, size: sp(30),),
+              SizedBox(height: sp(4)),
+              Text('下载', style: TextStyle(fontSize: sp(14))),
+            ],
+          ),
         ),
         SizedBox(height: sp(26))
       ];
