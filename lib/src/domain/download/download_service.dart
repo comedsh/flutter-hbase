@@ -101,8 +101,10 @@ class DownloadService {
                               title: '加入会员', 
                               subTitle: ds.purchaseSubscrDesc!, 
                               btnText: '查看', 
-                              // btnClickedCallback: () => Get.to(() => )
-                              btnClickedCallback: () {}
+                              btnClickedCallback: () => Get.to(() => SalePage(
+                                saleGroups: AppServiceManager.appConfig.saleGroups,
+                                initialSaleGroupId: SaleGroupIdEnum.subscr,
+                              ))
                             )
                           : Container(),
                         ds.purchasePointDesc != null 
@@ -111,8 +113,10 @@ class DownloadService {
                               title: '购买积分', 
                               subTitle: ds.purchasePointDesc!, 
                               btnText: '查看', 
-                              btnClickedCallback: () {
-                              }
+                              btnClickedCallback: () => Get.to(() => SalePage(
+                                saleGroups: AppServiceManager.appConfig.saleGroups,
+                                initialSaleGroupId: SaleGroupIdEnum.points,
+                              ))
                             )           
                           : Container(),
                         ds.scoreToDownload != null 
