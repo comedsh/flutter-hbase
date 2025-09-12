@@ -27,16 +27,17 @@ class ScoreService {
   static listen() {
     final scoreState = Get.find<ScoreStateManager>();
 
-    /// score simple 的算法简单粗暴，只要触发一次就诱导一次；而且频控通过框架自身控制即可。
-    ever(scoreState.scoreSimple, (_) {
-      if ((AppServiceManager.appConfig.display as HBaseDisplay).enableScoreSimple) {
+    /// score simple 的算法简单粗暴，只要触发一次就诱导一次；频控通过框架自身控制即可，但要注意的是，如果 scoreTarget
+    /// 已经被锁定，那么这里也不应该被展示了
+    ever(scoreState.scoreSimple, (_) async {
+      if (HBaseUserService.user.isUnlockScoreSimple && await ScoreService.isScoreTargetLocked() == false) {
         Timer(const Duration(milliseconds: 1000), () => Rating.openRating());
       }
     });
 
-    /// score target 的算法要复杂一些，当目标动作发生到了 3 次或 9 次或 18 次的时候才会触发，且要注意的是
-    /// 如果诱导成功即跳转发生了，那么要符合后台的评分间隔才能继续诱导了；另外如果用户拒绝了，那么前端要锁定在
-    /// 多少个 hours 内只能不要再次诱导了
+    /// score target 的算法要复杂一些，当目标动作发生到 [frequenceCtlArray] 中所配置的时候才会触发，且
+    /// 要注意的是如果诱导成功即跳转发生了，那么要符合后台的评分间隔才能继续诱导了；另外如果用户拒绝了，那么前端
+    /// 要锁定在多少个 hours 内只能不要再次诱导了
     /// 
     /// 另外需要特别注意的一点是，Score Target 和 Score Download 都还包含一个隐藏的条件，即该用户必须拥有
     /// 了 unlockBlur 的权限，这个由后台进行判断
@@ -50,9 +51,7 @@ class ScoreService {
       // const frequenceCtlArray = [1,2,3,4,5,6,7,8,9,10];
       const frequenceCtlArray = [3, 9, 21];     
       if (frequenceCtlArray.contains(val)){
-        if ((AppServiceManager.appConfig.display as HBaseDisplay).enableScoreTarget 
-          && await ScoreService.isScoreTargetLocked() == false 
-        ) {
+        if (HBaseUserService.user.isUnlockScoreTarget && await ScoreService.isScoreTargetLocked() == false) {
           ScoreTargetWidget.showFirst();
         }
       }
