@@ -20,9 +20,9 @@ void main() {
   
   /// 直接查看打印的 DownloadStrategy 返回的内容即可，确保执行不会报错
   test('get download strategy', () async {
-    await DownloadService.getDownloadStrategy(PostType.video, false);
-    await DownloadService.getDownloadStrategy(PostType.album, false);
-    await DownloadService.getDownloadStrategy(PostType.photo, false);
+    await DownloadService.getDownloadStrategy(PostType.video);
+    await DownloadService.getDownloadStrategy(PostType.album);
+    await DownloadService.getDownloadStrategy(PostType.photo);
   });
 
 }
