@@ -1155,13 +1155,13 @@ packages:
     source: hosted
     version: "3.3.0+3"
   sypayment:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sypayment
-      sha256: "43412f8f76c1bda35253533e617e218b79659cf9942dde513d5f965e8abf54ae"
+      sha256: "3868bc5c0e0f9481154492c0be1b1394a479bc2844afd8d6937f022c8878fd98"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.2+2"
+    version: "2.1.2+3"
   syrequest:
     dependency: transitive
     description:

@@ -5,7 +5,7 @@ class DownloadStrategy {
   final bool unlimitToDownload;  
   final String? purchasePointDesc;
   final String? purchaseSubscrDesc;
-  final String? scoreToDownload;
+  final ScoreToDownload? scoreToDownload;
 
   DownloadStrategy({
     this.payToDownload, 
@@ -24,7 +24,7 @@ class DownloadStrategy {
       unlimitToDownload = json['unlimitToDownload'] ?? false,
       purchasePointDesc = json['purchasePointDesc'],
       purchaseSubscrDesc = json['purchaseSubscrDesc'],
-      scoreToDownload = json['scoreToDownload'];
+      scoreToDownload = json['scoreToDownload'] != null ? ScoreToDownload.fromJson(json['scoreToDownload']) : null;
 }
 
 class PayToDownload {
@@ -49,5 +49,16 @@ class QuotaToDownload {
   QuotaToDownload({required this.quota});
   QuotaToDownload.fromJson(Map<String, dynamic> json)
     : quota = json['quota'];
+}
+
+class ScoreToDownload {
+  final String title;
+  final String content;
+  final String btnText;
+  ScoreToDownload({required this.title, required this.content, required this.btnText});
+  ScoreToDownload.fromJson(Map<String, dynamic> json)
+    : title = json['title'],
+      content = json['content'],
+      btnText = json['btnText'];
 }
 

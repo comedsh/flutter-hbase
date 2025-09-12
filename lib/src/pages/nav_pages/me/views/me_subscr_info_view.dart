@@ -61,7 +61,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
                 text: '立即开通', 
                 width: sp(144.0), 
                 fontSize: sp(16.0), 
-                clickCallback: () => Get.to(() => SalePage(saleGroups: HBaseUserService.getAvailableSaleGroups(),))
+                clickCallback: () => Get.to(() => SalePage(saleGroups: AppServiceManager.appConfig.saleGroups,))
               )
             ],
           )

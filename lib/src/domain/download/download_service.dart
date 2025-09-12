@@ -6,17 +6,17 @@ import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
+import 'package:sypayment/sypayment.dart';
 
 class DownloadService {
 
   /// 
-  static Future<void> showDownloadItems(BuildContext context, PostType postType) async {
+  static Future<void> showDownloadItems(BuildContext context, Post post) async {
     /// 有关 GlobalLoading 的说明，关闭不能放到 finally 中执行，因为 modal Bottomsheet 会阻塞关闭直到其关闭为止
     GlobalLoading.show();
     try { 
-      var ds = await DownloadService.getDownloadStrategy(postType);
+      var ds = await DownloadService.getDownloadStrategy(post.type);
       GlobalLoading.close();
-      /// Direct download ...
       
       if (ds.unlimitToDownload == true) {
         // TODO 直接发起下载了，但是如果已经下载需要提示已下载，这样尽可能的节省流量
@@ -53,59 +53,82 @@ class DownloadService {
         return;
       }
 
+      ProductDetails? pd;
+      if (ds.payToDownload != null) {
+        var iapProductId = ds.payToDownload!.iapProductId;
+        pd = await PaymentParser.parseSingle(iapProductId);
+        // 误删：通过日志打印确认 pd.price = pd.currencySymbol + pd.rawPrice
+        // debugPrint('price: ${pd?.price}, rawPrice: ${pd?.rawPrice}, currencySymbol: ${pd?.currencySymbol}, '
+        //   'currencyCode: ${pd?.currencyCode}');
+      }
+
       /// 构建下载 items
       if (context.mounted) {
         await showModalBottomSheet(
           context: context, 
           builder: (BuildContext context) {
-            return TitleContentBox(
-                gradient: Get.isDarkMode 
-                ? null 
-                : LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.purple.shade50, Colors.white54]
-                  ),
-                title: '下载',
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: ListTile.divideTiles(
-                    context: context,
-                    tiles:[
-                      ds.purchaseSubscrDesc != null 
-                        ? DownloadService.listTileItem(
-                            icon: Icon(Icons.diamond_outlined, size: sp(26)),
-                            title: '加入会员', 
-                            subTitle: ds.purchaseSubscrDesc!, 
-                            btnText: '查看', 
-                            btnClickedCallback: () {
+            return SafeArea(
+              child: TitleContentBox(
+                  gradient: Get.isDarkMode 
+                  ? null 
+                  : LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Colors.purple.shade50, Colors.white54]
+                    ),
+                  title: '下载',
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: ListTile.divideTiles(
+                      context: context,
+                      tiles:[
+                        /// 注意在七颜第一次上线的时候，in-app-purchase consumable iap product 没有审核通过，导致展示失败
+                        /// 如果审核没有通过这里的 pd 为 null 也就不展示即可，因此 pd != null 是为了兼容这种情况
+                        ds.payToDownload != null && pd != null
+                          ? DownloadService.listTileItem(
+                              icon: Icon(MaterialIcons.save_alt, size: sp(26)),
+                              title: '付费保存', 
+                              subTitle: '支付 ${pd.price} 即可下载此${post.typeName}', 
+                              btnText: '支付', 
+                              btnClickedCallback: () {
 
-                            }
-                          )
-                        : Container(),
-                      ds.purchasePointDesc != null 
-                        ? DownloadService.listTileItem(
-                            icon: Icon(Ionicons.server_outline, size: sp(26)),
-                            title: '购买积分', 
-                            subTitle: ds.purchasePointDesc!, 
-                            btnText: '查看', 
-                            btnClickedCallback: () {
-                            }
-                          )           
-                        : Container(),
-                      ds.scoreToDownload != null 
-                        ? DownloadService.listTileItem(
-                            icon: const Icon(Octicons.thumbsup), 
-                            title: '五星好评', 
-                            subTitle: ds.scoreToDownload!, 
-                            btnText: '打分', 
-                            btnClickedCallback: () {}
-                          )
-                        : Container()
-                    ]
-                  ).toList()
-                )
-            );              
+                              }
+                            )
+                          : Container(),
+                        ds.purchaseSubscrDesc != null 
+                          ? DownloadService.listTileItem(
+                              icon: Icon(Icons.diamond_outlined, size: sp(26)),
+                              title: '加入会员', 
+                              subTitle: ds.purchaseSubscrDesc!, 
+                              btnText: '查看', 
+                              // btnClickedCallback: () => Get.to(() => )
+                              btnClickedCallback: () {}
+                            )
+                          : Container(),
+                        ds.purchasePointDesc != null 
+                          ? DownloadService.listTileItem(
+                              icon: const Icon(Ionicons.server_outline),
+                              title: '购买积分', 
+                              subTitle: ds.purchasePointDesc!, 
+                              btnText: '查看', 
+                              btnClickedCallback: () {
+                              }
+                            )           
+                          : Container(),
+                        ds.scoreToDownload != null 
+                          ? DownloadService.listTileItem(
+                              icon: Icon(Octicons.thumbsup, size: sp(24)),
+                              title: ds.scoreToDownload!.title,
+                              subTitle: ds.scoreToDownload!.content, 
+                              btnText: ds.scoreToDownload!.btnText, 
+                              btnClickedCallback: () {}
+                            )
+                          : Container()
+                      ]
+                    ).toList()
+                  )
+              ),
+            );
           }
         );
       }
@@ -165,6 +188,5 @@ class DownloadService {
       contentPadding: const EdgeInsets.all(4.0),
     );
   }
-
 }
 

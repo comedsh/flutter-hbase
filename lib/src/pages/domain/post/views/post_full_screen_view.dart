@@ -235,7 +235,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                 );
                 if (isConfirmed) {
                   Get.to(() => SalePage(
-                    saleGroups: HBaseUserService.getAvailableSaleGroups(),
+                    saleGroups: AppServiceManager.appConfig.saleGroups,
                     initialSaleGroupId: SaleGroupIdEnum.subscr,
                   ));
                 }
@@ -289,7 +289,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       return [
         GestureDetector(
           onTap: () async {
-            await DownloadService.showDownloadItems(context, post.type);
+            await DownloadService.showDownloadItems(context, post);
           },
           child: Column(
             children: [
@@ -356,7 +356,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         return BlurrableImage(
           blurDepth: widget.post.blurDepth,
           onTap: () => Get.to(() => SalePage(
-            saleGroups: HBaseUserService.getAvailableSaleGroups(),
+            saleGroups: AppServiceManager.appConfig.saleGroups,
             initialSaleGroupId: SaleGroupIdEnum.subscr,
           )),
           child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
@@ -383,7 +383,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         // 彻底 blur，因此这里将 fit 硬编码维 BoxFit.contain，这样就不会出现上面的问题了。
         fit: BoxFit.contain,
         onTap: () => Get.to(() => SalePage(
-          saleGroups: HBaseUserService.getAvailableSaleGroups(),
+          saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
         )),
       );
@@ -393,7 +393,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         aspectRatio: aspectRatio, 
         videoUrl: videoUrl, 
         onTap: () => Get.to(() => SalePage(
-          saleGroups: HBaseUserService.getAvailableSaleGroups(),
+          saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
         ))
       );      

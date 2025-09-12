@@ -48,8 +48,9 @@ class HBaseUserService {
 
   static HBaseUser get user => UserService.user as HBaseUser;
 
-  /// 根据 [UserAuthority.unlockSubscrSale] 和 [UserAuthority.unlockPpointSale] 过滤出
+  /// 根据 [UserAuthority.unlockSubscrSale] 和 [UserAuthority.unlockPointSale] 过滤出
   /// 可用的 saleGroups
+  @Deprecated('已经从后台进行过滤了')
   static List<SaleGroup> getAvailableSaleGroups() {
     var user = HBaseUserService.user;
     List<SaleGroup> saleGroups = [];
