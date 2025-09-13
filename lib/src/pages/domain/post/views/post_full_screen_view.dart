@@ -282,14 +282,15 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   /// 写在组件一起；
   List<Widget> _downloadButton(Post post) {
     var user = HBaseUserService.user;
-    /// 注意，分理出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
+    /// 注意，分解出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
     /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
     if ((post.type == PostType.photo || post.isPhotoAlbum) && user.isUnlockPicDownload || 
       post.type != PostType.photo && user.isUnlockVideoDownload ) {
       return [
         GestureDetector(
           onTap: () async {
-            await DownloadService.showDownloadItems(context, post);
+            // await DownloadService.showDownloadItems(context, post);
+            await DownloadService.triggerDownload(context, post);
           },
           child: Column(
             children: [

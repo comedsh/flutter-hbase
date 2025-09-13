@@ -445,6 +445,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.8"
+  format:
+    dependency: transitive
+    description:
+      name: format
+      sha256: "94f93703645ec4d7d19f02d7d87617a5463169e252c0d45b125f13a54a90d037"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.2"
   get:
     dependency: "direct main"
     description:

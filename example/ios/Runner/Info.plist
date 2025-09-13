@@ -51,6 +51,10 @@
 		<true/>
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>	
+	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>HBaseDemo 需要访问您的相册，以便为您保存图片等资源</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>HBaseDemo 需要访问您的相册，以便为您保存图片等资源</string>
 </dict>
 </plist>

@@ -78,8 +78,7 @@ dependencies:
   # 注意版本最好与 sycomponents 中的保持一致
   visibility_detector: ^0.4.0+2
   flutter_font_icons: ^2.2.7
-
-
+  format: ^1.5.2
 
 dev_dependencies:
   flutter_test:
