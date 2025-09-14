@@ -43,10 +43,10 @@ class PointToDownload {
 
 /// 是指购买了配额会员，即每天可以享有的下载配额的情况
 class QuotaToDownload {
-  final int quota;
-  QuotaToDownload({required this.quota});
+  final int quotaRemains;
+  QuotaToDownload({required this.quotaRemains});
   QuotaToDownload.fromJson(Map<String, dynamic> json)
-    : quota = json['quota'];
+    : quotaRemains = json['quotaRemains'];
 }
 
 class ScoreToDownload {

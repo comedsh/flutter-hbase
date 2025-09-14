@@ -57,18 +57,8 @@ class DownloadService {
 
     // 检查用户是否有每日的下载配额，如果有则发起下载
     if (ds.quotaToDownload != null) {
-      var quota = ds.quotaToDownload?.quota;
-      var isConfirmed = await showConfirmDialogWithoutContext(
-        content: '今天剩余下载配额 $quota 次，是否使用？',
-        confirmBtnTxt: '使用',
-        cancelBtnTxt: '不了'
-      );
-      if (isConfirmed) {
-        // TODO 再次验证是否有充足的配额
-        DownloadService.triggerDownload(context, post); 
-        DownloadCache.cacheDownload(post); // 缓存下载有效期
-        // TODO 扣减配额
-      }
+      var quota = ds.quotaToDownload?.quotaRemains;
+      DownloadHandler.spendQuota2Download(context, quota!, post);
       return;
     }
 
@@ -246,6 +236,20 @@ class DownloadHandler {
         debugPrint('$err');        
       }
     }
+  }
+
+  static spendQuota2Download(BuildContext context, int quotaRemains, Post post) async {
+      var isConfirmed = await showConfirmDialogWithoutContext(
+        content: '今天剩余下载配额 $quotaRemains 次，是否使用？',
+        confirmBtnTxt: '使用',
+        cancelBtnTxt: '不了'
+      );
+      if (isConfirmed) {
+        // TODO 再次验证是否有充足的配额
+        DownloadService.triggerDownload(context, post); 
+        DownloadCache.cacheDownload(post); // 缓存下载有效期
+        // TODO 扣减配额
+      }
   }
 
 }
