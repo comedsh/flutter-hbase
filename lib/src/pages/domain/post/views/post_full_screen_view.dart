@@ -289,8 +289,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       return [
         GestureDetector(
           onTap: () async {
-            // await DownloadService.showDownloadItems(context, post);
-            await DownloadService.triggerDownload(context, post);
+            await DownloadService.downloadChoice(context, post);
           },
           child: Column(
             children: [

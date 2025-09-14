@@ -84,6 +84,24 @@ class ScoreService {
     );
   }
 
+  /// 为了不阻塞跳转，不阻塞 post 请求，但随之而来的问题是 enableScoreTarget 的状态值无法得到更新，因此
+  /// 借助 [ScoreService.lockScoreTarget] 来解决，详情参考该方法的实现过程
+  static jumpToScore() {
+    /// 这里虽然可以发起 post 请求，但是因为已经发起了跳转评分，前端是无法接收到 server response 的最新
+    /// appConfDto 导致不能及时接收 enableScoreTarget 的状态值从而如果用户反复触发 score target 行
+    /// 为就可以导致前端重复评分；有两种解决方案，如下，
+    /// 1. 阻塞 post 请求直到其成功后才跳转评分；但是这样做的弊端是用户体验不好，如果恰好网络
+    ///    延迟，那么要等待很久才会跳转评分；
+    /// 2. 不阻塞 post 请求；因为这里一旦完成，前端就会对相关的操作就会被上一把锁；这样用户就无法再次发起了。
+    ///    明显这个方案更好！
+    dio.post('/u/tscore/save');
+    Rating.openStoreListing(AppServiceManager.appConfig.appStoreId);
+    Get.back();
+    /// 这就是上面因为不阻塞 post 请求后跳转导致前端无法及时接收 server response 的解决方案 #2 的实现；由
+    /// 前端来锁定即可；
+    ScoreService.lockScoreTarget();
+  }
+
 }
 
 class ScoreTargetWidget {
@@ -191,23 +209,7 @@ class ScoreTargetWidget {
                     width: sp(98),
                     height: sp(32.0),
                     borderRadius: BorderRadius.circular(13.0),
-                    onPressed: () {
-                      /// 这里虽然可以发起 post 请求，但是因为已经发起了跳转评分，前端是无法接收到 server response 的最新
-                      /// appConfDto 导致不能及时接收 enableScoreTarget 的状态值从而如果用户反复触发 score target 行
-                      /// 为就可以导致前端重复评分；有两种解决方案，如下，
-                      /// 1. 阻塞 post 请求直到其成功后才跳转评分；但是这样做的弊端是用户体验不好，如果恰好网络
-                      ///    延迟，那么要等待很久才会跳转评分；
-                      /// 2. 不阻塞 post 请求；因为这里一旦完成，前端就会对相关的操作就会被上一把锁；这样用户就无法再次发起了。
-                      ///    明显这个方案更好！
-                      dio.post('/u/tscore/save');
-                      Rating.openStoreListing(AppServiceManager.appConfig.appStoreId);
-                      /// 这里必须注意要等待 tscore save 成功后才能跳转评分，否则跳转后前端无法接受 server response 的最新
-                      /// appConfDto 导致不能及时接收还可以继续触发
-                      Get.back();
-                      /// 这就是上面因为不阻塞 post 请求后跳转导致前端无法及时接收 server response 的解决方案 #2 的实现；由
-                      /// 前端来锁定即可；
-                      ScoreService.lockScoreTarget();
-                    },
+                    onPressed: () => ScoreService.jumpToScore(),
                     child: Text('当然', style: TextStyle(fontSize: sp(16)))
                   )
                 ],             
