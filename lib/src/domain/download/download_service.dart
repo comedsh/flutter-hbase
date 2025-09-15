@@ -228,6 +228,7 @@ class DownloadHandler {
         GlobalLoading.show();
         // 该 post 请求会再次检查当前用户的积分是否够用并同时扣除积分，如果积分不足，则会返回通知类型异常 580，由框架处理
         var r = await dio.post('/u/download/point', data: {
+          'shortcode': post.shortcode,
           'postType': post.type.name
         });
         GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
