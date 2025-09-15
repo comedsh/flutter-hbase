@@ -35,10 +35,10 @@ class PayToDownload {
 }
 
 class PointToDownload {
-  final int pointToSpent;
-  PointToDownload({required this.pointToSpent});
+  final int pointToSpend;
+  PointToDownload({required this.pointToSpend});
   PointToDownload.fromJson(Map<String, dynamic> json)
-    : pointToSpent = json['pointToSpent'];
+    : pointToSpend = json['pointToSpend'];
 }
 
 /// 是指购买了配额会员，即每天可以享有的下载配额的情况

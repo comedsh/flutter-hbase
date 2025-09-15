@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:appbase/appbase.dart';
@@ -57,15 +58,15 @@ class DownloadService {
 
     // 检查用户是否有每日的下载配额，如果有则发起下载
     if (ds.quotaToDownload != null) {
-      var quota = ds.quotaToDownload?.quotaRemains;
-      DownloadHandler.spendQuota2Download(context, quota!, post);
+      var quotaRemains = ds.quotaToDownload?.quotaRemains;
+      DownloadHandler.spendQuota2Download(context, quotaRemains!, post);
       return;
     }
 
     // 检查用户是否有足够的积分能够支持下载，注意 pointToDownload 能够返回则说明检查的时候下载次资源的积分是够的
     if (ds.pointToDownload != null) {
-      var pointToSpent = ds.pointToDownload?.pointToSpent;
-      await DownloadHandler.spendPoint2Download(context, pointToSpent!, post);
+      var pointToSpend = ds.pointToDownload?.pointToSpend;
+      await DownloadHandler.spendPoint2Download(context, pointToSpend!, post);
       return;
     }
 
@@ -213,11 +214,12 @@ class DownloadService {
 
 class DownloadHandler {
 
-  /// [pointToSpent] 是由 [DownloadStrategy] 返回，表示下载该资源需要消费多少的积分；但是要知道的是，用户可能多个终端
+  /// [pointToSpend] 由后台返回，表示下载该资源需要消费多少的积分；但是要知道的是，用户可能多个终端
   /// 同一个账号再不断的发起下载，因此实际上下载的时候，后台还是需要判断，如果不能下载则提示报错信息
-  static spendPoint2Download(BuildContext context, int pointToSpent, Post post) async {
+  /// 测试说明：使用后台 beaut/trade-test.test.ts 快速模拟创建和删除积分交易
+  static spendPoint2Download(BuildContext context, int pointToSpend, Post post) async {
     var isConfirmed = await showConfirmDialogWithoutContext(
-      content: '下载需支付 $pointToSpent 积分，是否使用？',
+      content: '下载需支付 $pointToSpend 积分，是否使用？',
       confirmBtnTxt: '使用',
       cancelBtnTxt: '不了'
     );
@@ -225,31 +227,44 @@ class DownloadHandler {
       try {
         GlobalLoading.show();
         // 该 post 请求会再次检查当前用户的积分是否够用并同时扣除积分，如果积分不足，则会返回通知类型异常 580，由框架处理
-        await dio.post('/u/download/point', data: {
+        var r = await dio.post('/u/download/point', data: {
           'postType': post.type.name
         });
         GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
-        DownloadService.triggerDownload(context, post);
+        await DownloadService.triggerDownload(context, post);
         DownloadCache.cacheDownload(post); // 缓存下载有效期
+        Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
       } catch (err) {
         GlobalLoading.close();
-        debugPrint('$err');        
+        debugPrint('$err');
       }
     }
   }
 
+  /// 同 [spendPoint2Download] 一样，在发起下载前依然要再次检查配额
+  /// 测试说明：使用后台 beaut/trade-test.test.ts 快速模拟创建和删除会员交易
   static spendQuota2Download(BuildContext context, int quotaRemains, Post post) async {
-      var isConfirmed = await showConfirmDialogWithoutContext(
-        content: '今天剩余下载配额 $quotaRemains 次，是否使用？',
-        confirmBtnTxt: '使用',
-        cancelBtnTxt: '不了'
-      );
-      if (isConfirmed) {
-        // TODO 再次验证是否有充足的配额
-        DownloadService.triggerDownload(context, post); 
+    var isConfirmed = await showConfirmDialogWithoutContext(
+      content: '今天剩余下载配额 $quotaRemains 次，是否使用？',
+      confirmBtnTxt: '使用',
+      cancelBtnTxt: '不了'
+    );
+    if (isConfirmed) {
+      try {
+        GlobalLoading.show();
+        // 该 post 请求会再次检查当前用户的配额是否够用并同时保存下载记录，如果配额不足，则会返回通知类型异常 580，由框架处理
+        var r = await dio.post('/u/download/quota', data: {
+          'shortcode': post.shortcode,
+        });
+        GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
+        await DownloadService.triggerDownload(context, post); 
         DownloadCache.cacheDownload(post); // 缓存下载有效期
-        // TODO 扣减配额
+        Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
+      } catch (err) {
+        GlobalLoading.close();
+        debugPrint('$err');
       }
+    }
   }
 
 }
