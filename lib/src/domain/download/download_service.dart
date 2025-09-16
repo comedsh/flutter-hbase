@@ -136,18 +136,35 @@ class DownloadService {
                             title: '加入会员', 
                             subTitle: ds.purchaseSubscrDesc!, 
                             btnText: '查看', 
-                            btnClickedCallback: () async {
+                            btnClickedCallback: () {
                               /// 为什么使用 AppState manualTradeSuccess 来捕获交易成功事件的详细原因参考“购买积分”代码部分；
+                              // var sm = Get.find<AppStateManager>();
+                              /// 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
+                              // once(sm.manualTradeSuccess, (_) {
+                              //   debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
+                              //   Get.back();
+                              // });
+                              /// 因为最终还是采用了 closeOverlays 的方法，即使在 Get.back 的同时就已经将 app 中的所有诸如 BottomSheets 这样的 
+                              /// Overlays 关闭了，因此这里也就无需监听结果来关闭了
+                              // ignore: unused_local_variable
+                              // Get.to(() => SalePage(
+                              //   saleGroups: AppServiceManager.appConfig.saleGroups,
+                              //   initialSaleGroupId: SaleGroupIdEnum.subscr,
+                              // ));
                               var sm = Get.find<AppStateManager>();
-                              // 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
-                              once(sm.manualTradeSuccess, (_) {
-                                debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
+                              once(sm.manualSubscrTradeSuccess, (_) {
+                                debugPrint('AppState manualSubscrTradeSuccess event caught, now try to close BottomSheet');
                                 Get.back();
-                              });
-                              await Get.to(() => SalePage(
-                                saleGroups: AppServiceManager.appConfig.saleGroups,
-                                initialSaleGroupId: SaleGroupIdEnum.subscr,
-                              ));
+                              });                              
+                              /// 至于为什么最终放弃使用 Get.to 参考购买积分处的注解
+                              Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) => SalePage(
+                                    saleGroups: AppServiceManager.appConfig.saleGroups,
+                                    initialSaleGroupId: SaleGroupIdEnum.subscr,
+                                  ),
+                                ),
+                              );                                   
                             }
                           )
                         : Container(),
@@ -158,6 +175,7 @@ class DownloadService {
                             subTitle: ds.purchasePointDesc!, 
                             btnText: '查看', 
                             btnClickedCallback: () async { 
+                              /// 🚩______时间线1______
                               /// 下面记录为什么这里无法接收到 Get.back result 的原因
                               /// 经过多轮测试，发现是因为 BottomSheet 的原因导致无法接受到 Get.back 的返回值 result，这是 Overlays 导致
                               /// 的，dialog, snackbar, or bottom sheet 都称之为 Overlays；下面是 Google AI 的回答：
@@ -169,26 +187,62 @@ class DownloadService {
                               ///  - Manually closing overlays: If you have multiple overlays, you might need to close them 
                               ///    individually using Get.snackbar().close(), Get.dialog().close(), or Get.bottomSheet().close() 
                               ///    before calling Get.back().
+                              /// 🚩______时间线2______
                               /// 试过上面的 Get.back(closeOverlays: true) 方式后，的确这里可以接收到返回值了，也基本上能够满足我的需要了，但是
                               /// 毕竟 SalePage 是一个通用的页面，如果不管三七二十一在返回的时候通通的将 Overlays 关闭掉，将来一定会埋下隐藏的 BUG，
                               /// 因此取而代之，创建了一个新的 AppState manualTradeSuccess 来处理这种情况，当交易成功后触发该事件，这里捕获然后关
                               /// 闭 BottomSheet；如下代码所示
-                              var sm = Get.find<AppStateManager>();
-                              // 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
-                              once(sm.manualTradeSuccess, (_) {
-                                debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
-                                Get.back();
-                              });
+                              // var sm = Get.find<AppStateManager>();
+                              /// 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
+                              /// 🚩______时间线3______
+                              /// 注意，实测中发现，之前和 subscr 交易共用一个 manualTradeSuccess 事件，结果两个地方同时会发生监听... 为什么呢？
+                              /// 明明积分交易的 btnClickedCallback 被点击了呀 ... 为什么会员交易的 btnClickedCallback 中的 once listen 也被初始化了？唯
+                              /// 一的解释就是编译优化 ...
+                              /// ----
+                              /// 于是最终决定还是采用最简单直接的 closeOverlays 参数的方式，不再使用 manualTradeSuccess 状态
+                              // once(sm.manualTradeSuccess, (_) {
+                              //   debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
+                              //   Get.back();
+                              // });
+                              /// 备注：即便是采用了 AppState manualTradeSuccess 后，这里依然要阻塞，否则 btnClickedCallback 局部方法会被释放掉
+                              /// ---
+                              /// 因为最终还是采用了 closeOverlays 的方法，即使在 Get.back 的同时就已经将 app 中的所有诸如 BottomSheets 这样的 
+                              /// Overlays 关闭了，因此这里也就无需监听结果来关闭了
                               // ignore: unused_local_variable
-                              // 备注：即便是采用了 AppState manualTradeSuccess 后，这里依然要阻塞，否则 btnClickedCallback 局部方法会被释放掉
-                              var result = await Get.to(() => SalePage(
-                                saleGroups: AppServiceManager.appConfig.saleGroups,
-                                initialSaleGroupId: SaleGroupIdEnum.points,
-                              ));
+                              // var result = await Get.to(() => SalePage(
+                              //   saleGroups: AppServiceManager.appConfig.saleGroups,
+                              //   initialSaleGroupId: SaleGroupIdEnum.points,
+                              // ));
                               /// 正如上述注解中所描述的那样，现在暂时放弃这种做法
                               // debugPrint('result: $result');
                               // 如果确认交易成功后，关闭 bottomSheet
                               // if (result == true) Get.back();
+                              /// 🚩______时间线5______
+                              /// 既然 closeOverlays 会导致会员中心页面崩溃，如果从会员中心跳转到 SalePage 购买成功后跳转回来，导致页面崩溃，因此
+                              /// 最终还是通过 GetX events 来实现，为了避免同时被两个方法句柄监听的问题，这次分别定义饿了两个状态 manualPointTradeSuccess
+                              /// 和 manualSubscrTradeSuccess 状态事件。
+                              var sm = Get.find<AppStateManager>();
+                              once(sm.manualPointTradeSuccess, (_) {
+                                debugPrint('AppState manualPointTradeSuccess event caught, now try to close BottomSheet');
+                                // 还是给一个有好的提示吧
+                                Timer(const Duration(milliseconds: 500), () =>
+                                  showInfoToast(msg: '购买积分成功，点击下载按钮即可开启下载', showInSecs: 5)
+                                );
+                                Get.back();
+                              });
+                              /// 🚩______时间线4______
+                              /// 哈哈，最后我连 Get.to 路由都放弃了，因为我发现它在真机上有一个莫名其妙的 bug，就是随便选择购买会员或者积分进入 SalePage 
+                              /// 后，此时我发起了某项支付，但是中途点击 x 按钮取消，然后点击 SalePage 上的左上角关闭按钮返回当前页面，并且继续点击 BottomSheet 
+                              /// 中的购买积分或者会员的“查看“按钮，结果无法跳转了... 真的是遇到鬼了，改成原生的 Navigator 就没有问题了；看来 GetX 上面的
+                              ///  BUG 还是很多呀！使用的时候可得注意了
+                              await Navigator.of(context).push(
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) => SalePage(
+                                    saleGroups: AppServiceManager.appConfig.saleGroups,
+                                    initialSaleGroupId: SaleGroupIdEnum.points,
+                                  ),
+                                ),
+                              );                              
                             }
                           )           
                         : Container(),
