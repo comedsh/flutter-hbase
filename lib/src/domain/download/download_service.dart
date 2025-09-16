@@ -40,7 +40,7 @@ class DownloadService {
       var isConfirmed = await showConfirmDialog(
         context, 
         content: '您已下载过此${post.typeName}，是否继续下载？',
-        confirmBtnTxt: '是的',
+        confirmBtnTxt: '继续',
         cancelBtnTxt: '不了',
       );
       if (isConfirmed) DownloadService.triggerDownload(context, post);

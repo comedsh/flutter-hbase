@@ -159,7 +159,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
                   initialSaleGroupId: SaleGroupIdEnum.points
                 )
               ),
-              child: const Text('点击购买积分', style: TextStyle(color: Color.fromARGB(255, 50, 110, 141)))
+              child: const Text('点击购买积分', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
             )
           ]
         ],
