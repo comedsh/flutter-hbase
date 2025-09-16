@@ -70,6 +70,13 @@ class DownloadService {
       return;
     }
 
+    /// 当上述条件都不满足的时候展示 Bottom sheet
+    await showBottomSheet(context, ds, post);
+
+  }
+
+  static showBottomSheet(BuildContext context, DownloadStrategy ds, Post post) async {
+
     /// 如果支持付费下载，那么这里需要提前解析出必要参数 pd
     ProductDetails? pd;
     if (ds.payToDownload != null) {
@@ -129,11 +136,19 @@ class DownloadService {
                             title: '加入会员', 
                             subTitle: ds.purchaseSubscrDesc!, 
                             btnText: '查看', 
-                            /// TODO 跳转到 SalePage 后如果用户购买成功返回后应该把 BottomSheet 给关闭，这样再次点击下载的时候开始下载
-                            btnClickedCallback: () => Get.to(() => SalePage(
-                              saleGroups: AppServiceManager.appConfig.saleGroups,
-                              initialSaleGroupId: SaleGroupIdEnum.subscr,
-                            ))
+                            btnClickedCallback: () async {
+                              /// 为什么使用 AppState manualTradeSuccess 来捕获交易成功事件的详细原因参考“购买积分”代码部分；
+                              var sm = Get.find<AppStateManager>();
+                              // 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
+                              once(sm.manualTradeSuccess, (_) {
+                                debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
+                                Get.back();
+                              });
+                              await Get.to(() => SalePage(
+                                saleGroups: AppServiceManager.appConfig.saleGroups,
+                                initialSaleGroupId: SaleGroupIdEnum.subscr,
+                              ));
+                            }
                           )
                         : Container(),
                       ds.purchasePointDesc != null 
@@ -142,11 +157,39 @@ class DownloadService {
                             title: '购买积分', 
                             subTitle: ds.purchasePointDesc!, 
                             btnText: '查看', 
-                            /// TODO 跳转到 SalePage 后如果用户购买成功返回后应该把 BottomSheet 给关闭，这样再次点击下载的时候开始下载
-                            btnClickedCallback: () => Get.to(() => SalePage(
-                              saleGroups: AppServiceManager.appConfig.saleGroups,
-                              initialSaleGroupId: SaleGroupIdEnum.points,
-                            ))
+                            btnClickedCallback: () async { 
+                              /// 下面记录为什么这里无法接收到 Get.back result 的原因
+                              /// 经过多轮测试，发现是因为 BottomSheet 的原因导致无法接受到 Get.back 的返回值 result，这是 Overlays 导致
+                              /// 的，dialog, snackbar, or bottom sheet 都称之为 Overlays；下面是 Google AI 的回答：
+                              /// If Get.back() is not closing a dialog, snackbar, or bottom sheet and returning to the previous
+                              /// screen as expected, it might be because these overlays are still active. You can address this 
+                              /// by:
+                              ///  - Using Get.back(closeOverlays: true): This explicitly tells GetX to close any open overlays 
+                              ///    when navigating back.
+                              ///  - Manually closing overlays: If you have multiple overlays, you might need to close them 
+                              ///    individually using Get.snackbar().close(), Get.dialog().close(), or Get.bottomSheet().close() 
+                              ///    before calling Get.back().
+                              /// 试过上面的 Get.back(closeOverlays: true) 方式后，的确这里可以接收到返回值了，也基本上能够满足我的需要了，但是
+                              /// 毕竟 SalePage 是一个通用的页面，如果不管三七二十一在返回的时候通通的将 Overlays 关闭掉，将来一定会埋下隐藏的 BUG，
+                              /// 因此取而代之，创建了一个新的 AppState manualTradeSuccess 来处理这种情况，当交易成功后触发该事件，这里捕获然后关
+                              /// 闭 BottomSheet；如下代码所示
+                              var sm = Get.find<AppStateManager>();
+                              // 注意这个监听器必须放到跳转到交易界面之前执行，否则下面的 await 会导致它的监听还没有启动
+                              once(sm.manualTradeSuccess, (_) {
+                                debugPrint('AppState manualTradeSuccess event caught, now try to close BottomSheet');
+                                Get.back();
+                              });
+                              // ignore: unused_local_variable
+                              // 备注：即便是采用了 AppState manualTradeSuccess 后，这里依然要阻塞，否则 btnClickedCallback 局部方法会被释放掉
+                              var result = await Get.to(() => SalePage(
+                                saleGroups: AppServiceManager.appConfig.saleGroups,
+                                initialSaleGroupId: SaleGroupIdEnum.points,
+                              ));
+                              /// 正如上述注解中所描述的那样，现在暂时放弃这种做法
+                              // debugPrint('result: $result');
+                              // 如果确认交易成功后，关闭 bottomSheet
+                              // if (result == true) Get.back();
+                            }
                           )           
                         : Container(),
                       ds.scoreToDownload != null 

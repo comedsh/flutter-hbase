@@ -25,7 +25,10 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
     return Obx(() => Card(
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: sp(14)),
-        visualDensity: Device.isSmallSizeScreen(context) ? const VisualDensity(horizontal: -2, vertical: -2) : null,
+        // visualDensity: Device.isSmallSizeScreen(context) ? const VisualDensity(horizontal: -2, vertical: -2) : null,
+        /// visualDensity 使得 ListTile 的各个元素之间的间距显得更紧凑比如 leading 和 title/subTitle 之间，不像 [dense] 那样将字体缩小，
+        /// 这里明显的是调整元素之间的间距
+        visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
         dense: Device.isSmallSizeScreen(context),
         leading: leading(),
         title: title(),
@@ -130,7 +133,17 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
           ]
         ],
       ),
-      Text('${dateFormatter.format(user.subscr!.start)} 至 ${dateFormatter.format(user.subscr!.end)}'),
+      Text('从 ${dateFormatter.format(user.subscr!.start)} 开始'),
+      Text('至 ${dateFormatter.format(user.subscr!.end)} 结束'),
+      // 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
+      // Text('${dateFormatter.format(user.subscr!.end)} 到期'),
+      // GestureDetector(
+      //   onTap: () => showAlertDialogWithoutContext(
+      //     content: '${dateFormatter.format(user.subscr!.start)} 开始至 ${dateFormatter.format(user.subscr!.end)} 结束',
+      //     confirmBtnTxt: '关闭'
+      //   ),
+      //   child: const Text('详情', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
+      // ),
       SizedBox(height: sp(4)),
       const Text('会员权益', style: TextStyle(color: Colors.white30)),
       BulletList(
@@ -147,23 +160,31 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
     return [
       SizedBox(height: sp(4)),
       const Text('积分概要', style: TextStyle(color: Colors.white30)),
-      Row(
-        children: [
-          Text('积分余额 ${user.point?.remainPoints}'),
-          if (user.isUnlockPointSale) ... [
-            SizedBox(width: sp(6)), 
-            GestureDetector(
-              onTap: () => Get.to(() => 
-                SalePage(
-                  saleGroups: AppServiceManager.appConfig.saleGroups, 
-                  initialSaleGroupId: SaleGroupIdEnum.points
-                )
-              ),
-              child: const Text('点击购买积分', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
-            )
-          ]
-        ],
-      )
+      BulletList(
+        items: ['积分余额 ${user.point?.remainPoints}'],
+        bulletSize: sp(12), 
+        bulletPaddingLeft: sp(4), 
+        textPaddingLeft: sp(6),
+        rowPaddingBottom: 0
+      )      
+      // 有点画蛇添足了，没有必要再加一个点击进入购买积分的链接
+      // Row(
+      //   children: [
+      //     Text('积分余额 ${user.point?.remainPoints}'),
+      //     if (user.isUnlockPointSale) ... [
+      //       SizedBox(width: sp(6)), 
+      //       GestureDetector(
+      //         onTap: () => Get.to(() => 
+      //           SalePage(
+      //             saleGroups: AppServiceManager.appConfig.saleGroups, 
+      //             initialSaleGroupId: SaleGroupIdEnum.points
+      //           )
+      //         ),
+      //         child: const Text('购买积分', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
+      //       )
+      //     ]
+      //   ],
+      // )
     ];
   }
 
