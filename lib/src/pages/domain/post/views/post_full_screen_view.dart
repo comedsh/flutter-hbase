@@ -181,7 +181,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                           Colors.black12.withOpacity(0.2)
                         ]
                       ),
-                    ),                    
+                    ),
                     child: Obx(() => isShowEnterProfileTooltip.value 
                       ? TooltipShowCase(
                           name: 'enterProfileTooltip',
