@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+import 'package:intl/intl.dart';
 import 'package:sycomponents/components.dart';
 
+DateFormat dateFormatter = DateFormat('yyyy-MM-dd HH:mm');
+
+/// 整个展示逻辑在 Notability 的 MeSubscrInfoView 的设计手稿中已经详细的阐述；归纳起来就是后台所开放的购买权限
+/// 和用户已有的权利结合起来进行展示；为了能够让实现逻辑变得简单和可控，我将 [MeSubscrInfoView] 独立分割为了多个
+/// 小的组件，分别是 leading, title, subTitle 和 bigBotton，其中 subTitle 负责展示会员规则和积分概要；
 class MeSubscrInfoView extends StatefulWidget {
   const MeSubscrInfoView({super.key});
 
@@ -16,19 +22,21 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Obx(() => Card(
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: sp(14)),
+        visualDensity: Device.isSmallSizeScreen(context) ? const VisualDensity(horizontal: -2, vertical: -2) : null,
+        dense: Device.isSmallSizeScreen(context),
         leading: leading(),
         title: title(),
         subtitle: subTitle(),
         trailing: bigButton(),
       ),
-    );
+    ));
   }
 
   /// 展示皇冠的情况有两种
-  /// 1. 非有效期订阅会员用户但是开启了 unlockSubscr ，
+  /// 1. 非会员或过期会员且后台开启了 unlockSubscr，其实就是表示可以购买会员，因此显示皇冠
   /// 2. 有效期内的用户
   /// 其它情况通通展示普通用户 icon
   Widget? leading() {
@@ -96,22 +104,67 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
   /// 一个是会员的有效期和会员条款，另外一个是积分
   Widget? subTitle() {
     var user = HBaseUserService.user;
-    if (!user.hasPurchasedSubscr() && user.isUnlockSubscrSale) {
-      return Text('解锁会员权限 >', style: TextStyle(color: Colors.amber[200]),);
-    }
-    if (user.hasPurchasedSubscr()) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (!user.hasPurchasedSubscr() && user.isUnlockSubscrSale) 
+          Text('解锁会员权限 >', style: TextStyle(color: Colors.amber[200])),
+        if (user.hasPurchasedSubscr()) ...subscrDescs(user),
+        if (user.point?.hasPurchasedPoint == true) ...pointDescs(user)
+      ],
+    );
+  }
+
+  List<Widget> subscrDescs(HBaseUser user) {
+    var subscrRuleDescs = [... user.subscr!.ruleDescs];  // Shadow copy
+    /// 因为 HBaseUser 的属性 dailyQuotaRemains 一定是今日下载剩余配额，因此直接硬编码 ruleDesc 是可以的
+    if (user.dailyQuotaRemains != null) subscrRuleDescs.add('今日剩余下载次数 ${user.dailyQuotaRemains} 次');
+    return [
+      SizedBox(height: sp(4)),
+      Row(
         children: [
-          Text('会员有效期', style: TextStyle(color: Colors.white30, fontSize: sp(13))),
-          const Text('2001-01-01:05:03 至 2001-09-01:05:03'),
-          Text('会员权益', style: TextStyle(color: Colors.white30, fontSize: sp(13))),
-          ... user.subscr!.ruleDescs.map((desc) => Text(desc)),
-          Text('积分概要', style: TextStyle(color: Colors.white30, fontSize: sp(13))),
+          const Text('会员有效期', style: TextStyle(color: Colors.white30)),
+          if (user.subscr?.isValid == false) ... [
+            SizedBox(width: sp(4)),
+            const Text('(已过期)', style: TextStyle(color: Colors.deepOrange))
+          ]
         ],
-      );
-    }
-    return null;
+      ),
+      Text('${dateFormatter.format(user.subscr!.start)} 至 ${dateFormatter.format(user.subscr!.end)}'),
+      SizedBox(height: sp(4)),
+      const Text('会员权益', style: TextStyle(color: Colors.white30)),
+      BulletList(
+        items: subscrRuleDescs,
+        bulletSize: sp(12), 
+        bulletPaddingLeft: sp(4), 
+        textPaddingLeft: sp(6),
+        rowPaddingBottom: 0
+      )
+    ];
+  }
+
+  List<Widget> pointDescs(HBaseUser user) {
+    return [
+      SizedBox(height: sp(4)),
+      const Text('积分概要', style: TextStyle(color: Colors.white30)),
+      Row(
+        children: [
+          Text('积分余额 ${user.point?.remainPoints}'),
+          if (user.isUnlockPointSale) ... [
+            SizedBox(width: sp(6)), 
+            GestureDetector(
+              onTap: () => Get.to(() => 
+                SalePage(
+                  saleGroups: AppServiceManager.appConfig.saleGroups, 
+                  initialSaleGroupId: SaleGroupIdEnum.points
+                )
+              ),
+              child: const Text('点击购买积分', style: TextStyle(color: Color.fromARGB(255, 50, 110, 141)))
+            )
+          ]
+        ],
+      )
+    ];
   }
 
   /// BigButton 展示逻辑非常的简单，unlockSubscrSale 的展示优先级高于 unlockPointSale 

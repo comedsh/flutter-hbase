@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: appbase
-      sha256: "96e6e569e2eb7c4f977a20466c2695bc5254ad75458aacad010210ef6e17063e"
+      sha256: "2d8fed8aea805d5a272c018382d872843ac27f0c5ead1ce5bd281744ec4fb6f7"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+36"
+    version: "1.0.0+39"
   archive:
     dependency: transitive
     description:
@@ -1150,10 +1150,10 @@ packages:
     dependency: "direct main"
     description:
       name: sycomponents
-      sha256: "8bf5fad15c320db8b694b0e6b85161c4acc454dc5df52bb094f82b9cd1308ef3"
+      sha256: "5bd2aa91f96c3e8d5ffc9231a89a905ce1a701d8c43014cf2bdf0b56a4d9f8be"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.3+9"
+    version: "2.1.5+1"
   synchronized:
     dependency: transitive
     description:
