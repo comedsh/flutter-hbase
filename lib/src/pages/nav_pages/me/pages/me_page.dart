@@ -68,13 +68,13 @@ class _MePageState extends State<MePage> {
                   leading: const Icon(Ionicons.server_outline),
                   title: Text('积分购买记录', style: TextStyle(fontSize: sp(18))),
                   trailing: const Icon(Ionicons.chevron_forward_outline),
-                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                  onTap: () => Get.to(() => const PaginatedDataTableDemo())
                 ),
                 ListTile(
                   leading: const Icon(IconFont.icon_sy_trade_record_2),
                   title: Text('积分消费记录', style: TextStyle(fontSize: sp(18))),
                   trailing: const Icon(Ionicons.chevron_forward_outline),
-                  onTap: () => Get.to(() => const QuestionAnswerPage())
+                  onTap: () => Get.to(() => const DataTableDemo())
                 ),
               ]),
             CardListTiles(listTiles: [

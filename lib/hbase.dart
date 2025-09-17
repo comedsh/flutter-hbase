@@ -3,6 +3,7 @@ library hbase;
 export 'src/pages/_core/paging/paging.dart';
 export 'src/pages/_core/paging/paging_indicators.dart';
 
+export 'src/pages/common/utils.dart';
 export 'src/pages/common/views/tab_bar_view/model/tab.dart';
 export 'src/pages/common/views/tab_bar_view/model/type.dart';
 export 'src/pages/common/views/tab_bar_view/views/tab_bar_view_page_body.dart';
@@ -37,6 +38,8 @@ export 'src/pages/nav_pages/me/pages/sub/me_like_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_follow_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_viewhis_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/qa_page.dart';
+export 'src/pages/nav_pages/me/pages/sub/point_page/point_consumption_page.dart';
+export 'src/pages/nav_pages/me/pages/sub/point_page/point_receipt_page.dart';
 export 'src/pages/nav_pages/me/views/card_list_tiles.dart';
 
 export 'src/domain/_core/pager.dart';

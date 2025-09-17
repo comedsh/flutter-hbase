@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-import 'package:intl/intl.dart';
 import 'package:sycomponents/components.dart';
-
-DateFormat dateFormatter = DateFormat('yyyy-MM-dd HH:mm', 'zh_CN');
 
 /// 整个展示逻辑在 Notability 的 MeSubscrInfoView 的设计手稿中已经详细的阐述；归纳起来就是后台所开放的购买权限
 /// 和用户已有的权利结合起来进行展示；为了能够让实现逻辑变得简单和可控，我将 [MeSubscrInfoView] 独立分割为了多个
@@ -81,6 +78,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         user.subscr!.title, 
         style: TextStyle(
           color: Colors.amber[200], 
+          // color: AppServiceManager.appConfig.appTheme.seedColor,
           fontSize: sp(22), 
           fontWeight: FontWeight.bold
         ),
@@ -134,8 +132,8 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         ],
       ),
       /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
-      Text('从 ${dateFormatter.format(user.subscr!.start.toLocal())} 开始'),
-      Text('至 ${dateFormatter.format(user.subscr!.end.toLocal())} 结束'),
+      Text('从 ${HBaseUtils.dateFormatter.format(user.subscr!.start.toLocal())} 开始'),
+      Text('至 ${HBaseUtils.dateFormatter.format(user.subscr!.end.toLocal())} 结束'),
       // 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
       // Text('${dateFormatter.format(user.subscr!.end)} 到期'),
       // GestureDetector(
