@@ -1,48 +1,30 @@
+import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:sycomponents/components.dart';
 
-class DataTableDemo extends StatefulWidget {
-  const DataTableDemo({super.key});
+class PointReceiptPage extends StatefulWidget {
+  final Pager<PointReceipt> pager;
+  const PointReceiptPage({super.key, required this.pager});
 
   @override
-  DataTableDemoState createState() => DataTableDemoState();
+  PointReceiptPageState createState() => PointReceiptPageState();
 }
 
-class DataTableDemoState extends State<DataTableDemo> {
+class PointReceiptPageState extends State<PointReceiptPage> {
+  final PagingController<int, PointReceipt> pagingController = PagingController(firstPageKey: 1);
 
-  final List _data = [
-    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},
-    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    {'date': DateTime.now(), 'age': '30', 'city': '购买积分'},
-    {'date': DateTime.now(), 'age': '2400', 'city': '购买月会员'},
-    {'date': DateTime.now(), 'age': '35', 'city': '购买年会员'},    
-  ];
+  @override
+  void initState() {
+    super.initState();
+    /// 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
+    /// 唯一需要特别注意的是 PagingController 会自动触发第一页的加载，因此无需手动的去触发第一页加载；
+    pagingController.addPageRequestListener((pageNum) async {
+      debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
+      await Paging.nextPage(pageNum, widget.pager, pagingController, context);
+    });    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,30 +32,6 @@ class DataTableDemoState extends State<DataTableDemo> {
       appBar: AppBar(
         title: const Text('积分获得记录'),
       ),
-      // body: SingleChildScrollView( // Important for scrollable content
-      //   child: ConstrainedBox(
-      //     constraints: const BoxConstraints(minWidth: double.infinity),
-      //     child: DataTable(
-      //       // columns: const <DataColumn>[
-      //       //   DataColumn(label: Text('日期')),
-      //       //   DataColumn(label: Text('获得积分')),
-      //       //   DataColumn(label: Text('来源')),
-      //       // ],
-      //       columns: [],
-      //       rows: _data
-      //           .map(
-      //             (item) => DataRow(
-      //               cells: <DataCell>[
-      //                 DataCell(Text(HBaseUtils.dateFormatter.format(item['date'].toLocal()))),
-      //                 DataCell(Text(item['age']!)),
-      //                 DataCell(Text(item['city']!)),
-      //               ],
-      //             ),
-      //           )
-      //           .toList(),
-      //     ),
-      //   ),
-      // ),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           // 返回一个 Sliver 数组给外部可滚动组件。
@@ -100,7 +58,7 @@ class DataTableDemoState extends State<DataTableDemo> {
           direction: Axis.horizontal,
           children: [
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Padding(
                 padding: EdgeInsets.only(left: sp(20), right: sp(8)),
                 child: const Text('日期'),
@@ -110,14 +68,20 @@ class DataTableDemoState extends State<DataTableDemo> {
               flex: 2,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sp(8)),
-                child: const Align(alignment: Alignment.centerRight, child: Text('获得积分')),
+                child: const Align(
+                  alignment: Alignment.centerRight, 
+                  child: Text('获得积分')
+                ),
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: sp(8)),
-                child: const Align(alignment: Alignment.centerLeft, child: Text('来源')),
+                child: const Align(
+                  alignment: Alignment.centerLeft, 
+                  child: Text('来源')
+                ),
               ),
             ),                  
           ]
@@ -127,42 +91,56 @@ class DataTableDemoState extends State<DataTableDemo> {
   }
 
   rows() {
-    return SingleChildScrollView(
-      child: Column(
-        children: _data.map((item) =>
-          Column(
-            children: [
-              const Divider(thickness: 0.5,),
-              Flex(
-                direction: Axis.horizontal,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: EdgeInsets.only(left: sp(20), right: sp(8)),
-                      child: Text(HBaseUtils.dateFormatter.format(item['date'].toLocal())),
-                    )
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: sp(8)),
-                      child: Align(alignment: Alignment.centerRight, child: Text(item['age']!)),
+    return PagedListView<int, PointReceipt>(
+        pagingController: pagingController,
+        builderDelegate: PagedChildBuilderDelegate<PointReceipt>(
+          // 加载第一页时候的使用的 loading 组件
+          firstPageProgressIndicatorBuilder: (context) => const Center(child: CircularProgressIndicator()),
+          // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
+          firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
+          // 如果加载下一页失败后使用的 reloading 组件
+          newPageErrorIndicatorBuilder: (context) => 
+            NewPageErrorIndicator(
+              errMsg: '网络异常，点击重试',
+              onTap: () => pagingController.retryLastFailedRequest()),
+          // 第一页就没有数据时候所使用的组件
+          noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),),
+          itemBuilder: (context, pointReceipt, index) => 
+            Column(
+              children: [
+                const Divider(thickness: 0.5,),
+                Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: sp(20), right: sp(8)),
+                        child: Text(HBaseUtils.dateFormatterHhmmss.format(pointReceipt.createTs.toLocal())),
+                      )
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: sp(8)),
-                      child: Align(alignment: Alignment.centerLeft, child: Text(item['city']!)),
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: sp(8)),
+                        child: Align(alignment: Alignment.centerRight, child: Padding(
+                          padding: EdgeInsets.only(right: sp(4)),
+                          child: Text(pointReceipt.points.toString()),
+                        )),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ).toList(),
-      ),
+                    Expanded(
+                      flex: 3,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: sp(8)),
+                        child: Align(alignment: Alignment.centerLeft, child: Text(pointReceipt.receiveDesc)),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+        )
     );
   }
 }

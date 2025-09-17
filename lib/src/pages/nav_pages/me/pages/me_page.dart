@@ -62,21 +62,27 @@ class _MePageState extends State<MePage> {
                 onTap: () => Get.to(() => const MeViewhisPage())
               ),              
             ]),
-            if (HBaseUserService.user.point?.hasPurchasedPoint == true)
-              CardListTiles(listTiles: [
-                ListTile(
-                  leading: const Icon(Ionicons.server_outline),
-                  title: Text('积分购买记录', style: TextStyle(fontSize: sp(18))),
-                  trailing: const Icon(Ionicons.chevron_forward_outline),
-                  onTap: () => Get.to(() => const PaginatedDataTableDemo())
-                ),
-                ListTile(
-                  leading: const Icon(IconFont.icon_sy_trade_record_2),
-                  title: Text('积分消费记录', style: TextStyle(fontSize: sp(18))),
-                  trailing: const Icon(Ionicons.chevron_forward_outline),
-                  onTap: () => Get.to(() => const DataTableDemo())
-                ),
-              ]),
+            /// 使用 Obx 监听用户状态的变化，然后更新界面展示
+            Obx(() {
+              if (HBaseUserService.user.point?.hasPurchasedPoint == true) {
+                return CardListTiles(listTiles: [
+                  ListTile(
+                    leading: const Icon(Ionicons.server_outline),
+                    title: Text('积分购买记录', style: TextStyle(fontSize: sp(18))),
+                    trailing: const Icon(Ionicons.chevron_forward_outline),
+                    onTap: () => Get.to(() => PointReceiptPage(pager: PointReceiptPager(),))
+                  ),
+                  ListTile(
+                    leading: const Icon(IconFont.icon_sy_trade_record_2),
+                    title: Text('积分消费记录', style: TextStyle(fontSize: sp(18))),
+                    trailing: const Icon(Ionicons.chevron_forward_outline),
+                    onTap: () => Get.to(() => PointConsumptionPage(pager: PointConsumptionPager(),))
+                  ),
+                ]);
+              } else {
+                return Container();
+              }  
+            }),
             CardListTiles(listTiles: [
               if ((AppServiceManager.appConfig.display as HBaseDisplay).showCleanCache == true) const ClearCacheListTile(),
               ListTile(

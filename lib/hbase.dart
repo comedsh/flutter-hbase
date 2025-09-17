@@ -40,6 +40,8 @@ export 'src/pages/nav_pages/me/pages/sub/me_viewhis_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/qa_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/point_page/point_consumption_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/point_page/point_receipt_page.dart';
+export 'src/pages/nav_pages/me/pages/sub/point_page/model/point.dart';
+export 'src/pages/nav_pages/me/pages/sub/point_page/model/point_pager.dart';
 export 'src/pages/nav_pages/me/views/card_list_tiles.dart';
 
 export 'src/domain/_core/pager.dart';
