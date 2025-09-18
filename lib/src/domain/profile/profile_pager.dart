@@ -16,7 +16,7 @@ class HotestPerTagsProfileGroupPager extends Pager<List<Profile>> {
     var chnCodesStr = chnCodes.join(',');
     var tagCodesStr = tagCodes.join(',');
 
-    var r = await dio.get('/profiles/prf/hot/pertags/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
+    var r = await dio.get('/profile/hot/pertags/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
     var profileGroupData = r.data;
     List<List<Profile>> profileGroup = [];
     for (var rawProfiles in profileGroupData) {
@@ -53,7 +53,7 @@ class HotestProfilePager extends Pager<Profile> {
   Future<List<Profile>> fetchNextPage() async {
     var chnCodesStr = chnCodes?.join(',');
     var tagCodesStr = tagCodes?.join(',');
-    var r = await dio.get('/profiles/prf/hot/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
+    var r = await dio.get('/profile/hot/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
     return r.data.map<Profile>((data) => Profile.fromJson(data)).toList();
   }
 

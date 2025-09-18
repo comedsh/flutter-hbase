@@ -22,8 +22,8 @@ class ChannelTagPostPager extends Pager<Post> {
 
     /// ppg: Post Page 的简写
     var r = tagCodesStr == null
-      ? await dio.get('/posts/chn/ppg/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
-      : await dio.get('/posts/chn/tag/ppg/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
+      ? await dio.get('/post/chn/ppg/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
+      : await dio.get('/post/chn/tag/ppg/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
 
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
@@ -44,7 +44,7 @@ class ProfilePostPager extends Pager<Post> {
 
   @override
   Future<List<Post>> fetchNextPage() async {
-    var r = await dio.get('/posts/prf/ppg/$pageNum/$pageSize/$profileCode/$sortBy');
+    var r = await dio.get('/post/prf/ppg/$pageNum/$pageSize/$profileCode/$sortBy');
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
 

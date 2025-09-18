@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:sypayment/sypayment.dart';
+import 'package:http/http.dart' as http;
 
 class DownloadService {
 
@@ -118,7 +119,7 @@ class DownloadService {
                               handler.buy(pd!, 
                                 successCallback: () async {
                                   if (context.mounted) {
-                                    DownloadService.triggerDownload(context, post);
+                                    await DownloadService.triggerDownload(context, post);
                                     await DownloadCache.cacheDownload(post); // 缓存下载有效期
                                     Get.back();  // 关闭 BottomSheet;
                                   }
@@ -290,7 +291,7 @@ class DownloadService {
 
   /// 发起下载
   /// 考虑一种场景，就是 cdn signed url 在用户下载的时候可能已经过期了，最好是从服务器上去加载最新的有效的 cdn signed url
-  static triggerDownload(BuildContext context, Post post) async {
+  static Future<bool> triggerDownload(BuildContext context, Post post) async {
     try {
       List<String> urls = [];
       // 注意，如果是视频资源则不要追加封面到下载列表中了
@@ -301,9 +302,40 @@ class DownloadService {
           urls.add(slot.pic);
         }
       }
-      await showImgDownloader(context, urls: urls, appName: AppServiceManager.appConfig.appName);
+      GlobalLoading.show();
+      // check the urls availability：如果有任何一个返回不可以下载，则发起重新签名
+      if (await __isUrlsAccessible(urls) == false) {
+        urls = await __reSignCdn(urls);
+      }
+      var val = await showImgDownloader(context, urls: urls, appName: AppServiceManager.appConfig.appName);
+      return val == 'done';  // 如果返回 'done' 则表示下载成功
     } catch (e, stacktrace) {
       debugPrint('Something really unknown: $e, statcktrace below: $stacktrace');
+    } finally {
+      GlobalLoading.close();
+    }
+    return false;
+  }
+  
+  /// 只要有任何一个链接不可反问则返回 false
+  static Future<bool> __isUrlsAccessible(List<String> urls) async {
+    for (var url in urls) {
+      final response = await http.head(Uri.parse(url));
+      if (response.statusCode != 200) return false;
+    }
+    return true;
+  }
+
+  /// 将无效的链接发送到后台进行重新签名，然后返回新签名后的链接
+  static Future<List<String>> __reSignCdn(List<String> urls) async {
+    try {
+      var r = await dio.post('/post/resign/urls', data: {
+        urls: urls
+      });
+      return r.data;
+    } catch(e, stacktrace) {
+      debugPrint('__reSignCdn get error: $e, stacktrace: $stacktrace');
+      rethrow;
     }
   }
 
@@ -329,9 +361,13 @@ class DownloadHandler {
           'postType': post.type.name
         });
         GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
-        await DownloadService.triggerDownload(context, post);
-        DownloadCache.cacheDownload(post); // 缓存下载有效期
-        Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
+        var isSuccess = await DownloadService.triggerDownload(context, post);
+        await DownloadCache.cacheDownload(post); // 缓存下载有效期
+        /// 即便是下载过程失败，可能因为权限问题失败，也或者是网络临时出现问题，下载没有成功；但是记住，下载状态已经保存到本地了
+        /// 也就是说，用户随时可以重启下载，因此积分照扣，只是不提示余额了。
+        if (isSuccess) {
+          Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
+        }
       } catch (err) {
         GlobalLoading.close();
         debugPrint('$err');
@@ -355,9 +391,13 @@ class DownloadHandler {
           'shortcode': post.shortcode,
         });
         GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
-        await DownloadService.triggerDownload(context, post); 
-        DownloadCache.cacheDownload(post); // 缓存下载有效期
-        Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
+        var isSuccess = await DownloadService.triggerDownload(context, post); 
+        await DownloadCache.cacheDownload(post); // 缓存下载有效期
+        /// 即便是下载过程失败，可能因为权限问题失败，也或者是网络临时出现问题，下载没有成功；但是记住，下载状态已经保存到本地了
+        /// 也就是说，用户随时可以重启下载，因此配额照扣，只是不提示余额了。
+        if (isSuccess) {
+          Timer(const Duration(milliseconds: 600), () => showInfoToast(msg: r.data['msg'], location: ToastLocation.CENTER));
+        }
       } catch (err) {
         GlobalLoading.close();
         debugPrint('$err');
