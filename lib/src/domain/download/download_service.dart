@@ -44,7 +44,7 @@ class DownloadService {
         confirmBtnTxt: '继续',
         cancelBtnTxt: '不了',
       );
-      if (isConfirmed) DownloadService.triggerDownload(context, post);
+      if (isConfirmed) await DownloadService.triggerDownload(context, post);
       return;
     } 
 
@@ -52,15 +52,15 @@ class DownloadService {
 
     /// 如果用户拥有无限次下载权限
     if (ds.unlimitToDownload == true) {
-      triggerDownload(context, post);
-      DownloadCache.cacheDownload(post);
+      await triggerDownload(context, post);
+      await DownloadCache.cacheDownload(post);
       return;
     }
 
     // 检查用户是否有每日的下载配额，如果有则发起下载
     if (ds.quotaToDownload != null) {
       var quotaRemains = ds.quotaToDownload?.quotaRemains;
-      DownloadHandler.spendQuota2Download(context, quotaRemains!, post);
+      await DownloadHandler.spendQuota2Download(context, quotaRemains!, post);
       return;
     }
 
@@ -156,7 +156,7 @@ class DownloadService {
                               once(sm.manualSubscrTradeSuccess, (_) {
                                 debugPrint('AppState manualSubscrTradeSuccess event caught, now try to close BottomSheet');
                                 Get.back();
-                              });                              
+                              });
                               /// 至于为什么最终放弃使用 Get.to 参考购买积分处的注解
                               Navigator.of(context).push(
                                 MaterialPageRoute<void>(
@@ -303,10 +303,17 @@ class DownloadService {
         }
       }
       GlobalLoading.show();
-      // check the urls availability：如果有任何一个返回不可以下载，则发起重新签名
-      if (await __isUrlsAccessible(urls) == false) {
-        urls = await __reSignCdn(urls);
-      }
+      /// check the urls availability：如果有任何一个返回不可以下载，则发起重新签名
+      /// 备注：之前心里有个声音，这样一个一个链接去阿里 CDN 验证还不如直接发起 reSign 请求来得更快；但是记住，reSign 是一个超敏感的
+      /// 接口，如果被别人轻易的发现了，那么别人就可以绕开签名机制，以我的服务器作为他的图片服务器了，因为他只需要每次 reSign 一次即可；
+      /// 因此，千万不要这样做；只有当 CDN 的确不可用之后才能使用；
+      /// 不过，经过测试，发现 url 验证太耗时了... 干脆这样，还是在 ImgDownloader 中抛出异常，那些链接出问题后，捕获异常后，再试？
+      // if (await __isUrlsAccessible(urls) == false) {
+      //   debugPrint('post ${post.shortcode} url signed time invalid, start to resign the urls');
+      //   urls = await __reSignCdn(urls);
+      // }
+      /// 上面验签的做法太耗时了，第一个版本直接就 resign 算了...
+      urls = await __reSignCdn(urls);
       var val = await showImgDownloader(context, urls: urls, appName: AppServiceManager.appConfig.appName);
       return val == 'done';  // 如果返回 'done' 则表示下载成功
     } catch (e, stacktrace) {
@@ -321,6 +328,7 @@ class DownloadService {
   static Future<bool> __isUrlsAccessible(List<String> urls) async {
     for (var url in urls) {
       final response = await http.head(Uri.parse(url));
+      debugPrint('response statusCode ${response.statusCode} accessible test for $url');
       if (response.statusCode != 200) return false;
     }
     return true;
@@ -330,11 +338,13 @@ class DownloadService {
   static Future<List<String>> __reSignCdn(List<String> urls) async {
     try {
       var r = await dio.post('/post/resign/urls', data: {
-        urls: urls
+        "urls": urls
       });
-      return r.data;
+      // covnert r.data List<dynamic> to List<String>
+      return r.data.map<String>((url) => url.toString()).toList();
     } catch(e, stacktrace) {
       debugPrint('__reSignCdn get error: $e, stacktrace: $stacktrace');
+      showErrorToast(msg: '网络异常，请稍后再试');
       rethrow;
     }
   }
