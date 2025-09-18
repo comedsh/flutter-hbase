@@ -303,17 +303,11 @@ class DownloadService {
         }
       }
       GlobalLoading.show();
-      /// check the urls availability：如果有任何一个返回不可以下载，则发起重新签名
-      /// 备注：之前心里有个声音，这样一个一个链接去阿里 CDN 验证还不如直接发起 reSign 请求来得更快；但是记住，reSign 是一个超敏感的
-      /// 接口，如果被别人轻易的发现了，那么别人就可以绕开签名机制，以我的服务器作为他的图片服务器了，因为他只需要每次 reSign 一次即可；
-      /// 因此，千万不要这样做；只有当 CDN 的确不可用之后才能使用；
-      /// 不过，经过测试，发现 url 验证太耗时了... 干脆这样，还是在 ImgDownloader 中抛出异常，那些链接出问题后，捕获异常后，再试？
-      // if (await __isUrlsAccessible(urls) == false) {
-      //   debugPrint('post ${post.shortcode} url signed time invalid, start to resign the urls');
-      //   urls = await __reSignCdn(urls);
-      // }
-      /// 上面验签的做法太耗时了，第一个版本直接就 resign 算了...
-      urls = await __reSignCdn(urls);
+      /// check the urls availability：如果有任何一个返回不可以下载，则发起重新签名；
+      if (await __isUrlsAccessible(urls) == false) {
+        debugPrint('post ${post.shortcode} url signed time invalid, start to resign the urls');
+        urls = await __reSignCdn(urls);
+      }
       var val = await showImgDownloader(context, urls: urls, appName: AppServiceManager.appConfig.appName);
       return val == 'done';  // 如果返回 'done' 则表示下载成功
     } catch (e, stacktrace) {
@@ -324,14 +318,19 @@ class DownloadService {
     return false;
   }
   
-  /// 只要有任何一个链接不可反问则返回 false
+  /// 因为只是验证 CDN 签名，因此只要有任何一个链接不可反问则返回 false，相应的，如果任何一个返回 true 也返回 true 即表示签名可用
+  /// 注意：之前挂了腾讯的 VPN 导致检查得异常的慢，只要把 VPN 关闭访问就好了；
   static Future<bool> __isUrlsAccessible(List<String> urls) async {
     for (var url in urls) {
       final response = await http.head(Uri.parse(url));
       debugPrint('response statusCode ${response.statusCode} accessible test for $url');
-      if (response.statusCode != 200) return false;
+      if (response.statusCode != 200) {
+        return false;
+      } else {
+        return true;
+      }
     }
-    return true;
+    return false;
   }
 
   /// 将无效的链接发送到后台进行重新签名，然后返回新签名后的链接
