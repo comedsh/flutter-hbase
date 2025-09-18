@@ -115,7 +115,7 @@ class PointConsumptionPageState extends State<PointConsumptionPage> {
                       flex: 4,
                       child: Padding(
                         padding: EdgeInsets.only(left: sp(20), right: sp(8)),
-                        child: Text(HBaseUtils.dateFormatterHhmmss.format(pointConsumption.createTs.toLocal())),
+                        child: Text(HBaseUtils.dateFormatterHhmm.format(pointConsumption.createTs.toLocal())),
                       )
                     ),
                     Expanded(

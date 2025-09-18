@@ -1,4 +1,3 @@
-import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -116,7 +115,7 @@ class PointReceiptPageState extends State<PointReceiptPage> {
                       flex: 4,
                       child: Padding(
                         padding: EdgeInsets.only(left: sp(20), right: sp(8)),
-                        child: Text(HBaseUtils.dateFormatterHhmmss.format(pointReceipt.createTs.toLocal())),
+                        child: Text(HBaseUtils.dateFormatterHhmm.format(pointReceipt.createTs.toLocal())),
                       )
                     ),
                     Expanded(
