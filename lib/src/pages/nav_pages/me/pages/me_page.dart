@@ -126,13 +126,64 @@ class _MePageState extends State<MePage> {
                 leading: const Icon(Ionicons.log_out_outline),
                 title: Text('退出登录', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => {}
+                onTap: () async {
+                  var isConfirmed = await showConfirmDialogWithoutContext(
+                    title: '退出登录',
+                    content: '退出登录后，您的喜欢、收藏、浏览和关注记录都会被删除，确定退出？',
+                    confirmBtnTxt: '确定',
+                    cancelBtnTxt: '不了'
+                  );
+                  if (isConfirmed) {
+                    GlobalLoading.show();
+                    try {
+                      await dio.post('/u/logout');
+                      GlobalLoading.close();
+                      await showAlertDialogWithoutContext(
+                        content: '已登出',
+                        confirmBtnTxt: '好的'
+                      );
+                    } catch(e, stacktrace) {
+                      debugPrint('user logout get error: $e, stacktrace: $stacktrace');
+                      GlobalLoading.close();
+                      showErrorToast(msg: '网络异常，请稍后再试');
+                    }
+                  }
+                }
               ),
               ListTile(
                 leading: const Icon(Ionicons.close_circle_outline),
                 title: Text('注销账号', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
-                onTap: () => {}
+                onTap: () async {
+                  var isConfirmed = await showConfirmDialogWithoutContext(
+                    title: '警告',
+                    content: '注销账户后，您的订阅和其它交易记录都将会被清除，确定注销账户？',
+                    confirmBtnTxt: '确定',
+                    cancelBtnTxt: '不了'
+                  );
+                 if (isConfirmed) {
+                    GlobalLoading.show();
+                    try {
+                      await dio.post('/u/zhuxiao');
+                      GlobalLoading.close();
+                      await showAlertDialogWithoutContext(
+                        content: '账户已注销',
+                        confirmBtnTxt: '好的'
+                      );
+                      // 只在前端清空用户的订阅、积分等信息          
+                      var userStateMgr = Get.find<UserStateManager>();
+                      var user = userStateMgr.user; 
+                      user.update((user) {
+                        user!.subscr = null;
+                        user.point = Point(hasPurchasedPoint: false, remainPoints: 0);
+                      });                                       
+                    } catch(e, stacktrace) {
+                      debugPrint('user logout get error: $e, stacktrace: $stacktrace');
+                      GlobalLoading.close();
+                      showErrorToast(msg: '网络异常，请稍后再试');
+                    }
+                  }
+                }
               ),
             ]),
             SizedBox(height: sp(20),),

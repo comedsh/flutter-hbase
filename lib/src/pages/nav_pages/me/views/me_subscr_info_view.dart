@@ -134,7 +134,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
       /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
       Text('从 ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.start.toLocal())} 开始'),
       Text('至 ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.end.toLocal())} 结束'),
-      // 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
+      /// 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
       // Text('${dateFormatter.format(user.subscr!.end)} 到期'),
       // GestureDetector(
       //   onTap: () => showAlertDialogWithoutContext(
@@ -144,14 +144,18 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
       //   child: const Text('详情', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
       // ),
       SizedBox(height: sp(4)),
-      const Text('会员权益', style: TextStyle(color: Colors.white30)),
-      BulletList(
-        items: subscrRuleDescs,
-        bulletSize: sp(12), 
-        bulletPaddingLeft: sp(4), 
-        textPaddingLeft: sp(6),
-        rowPaddingBottom: 0
-      )
+      /// 只有当用户处于有效订阅的情况下才展示条款，因为条款可能会发生变化，过期后的会员发现会员期间没有享受到变化的内容，可能会投诉；
+      if (user.subscr?.isValid == true) 
+        ... [
+          const Text('会员权益', style: TextStyle(color: Colors.white30)),
+          BulletList(
+            items: subscrRuleDescs,
+            bulletSize: sp(12), 
+            bulletPaddingLeft: sp(4), 
+            textPaddingLeft: sp(6),
+            rowPaddingBottom: 0
+          )
+        ]
     ];
   }
 
