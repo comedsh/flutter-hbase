@@ -23,6 +23,8 @@ class ScoreService {
 
   // ignore: non_constant_identifier_names
   static String LOCK_SCORE_TARGET_NAME = 'lockScoreTarget';
+  // ignore: non_constant_identifier_names
+  static String LOCK_SCORE_SIMPLE_NAME = 'lockScoreSimple';
   
   static listen() {
     final scoreState = Get.find<ScoreStateManager>();
@@ -30,7 +32,10 @@ class ScoreService {
     /// score simple 的算法简单粗暴，只要触发一次就诱导一次；频控通过框架自身控制即可，但要注意的是，如果 scoreTarget
     /// 已经被锁定，那么这里也不应该被展示了
     ever(scoreState.scoreSimple, (_) async {
-      if (HBaseUserService.user.isUnlockScoreSimple && await ScoreService.isScoreTargetLocked() == false) {
+      if (HBaseUserService.user.isUnlockScoreSimple 
+        && await ScoreService.isScoreSimpleLocked() == false
+        && await ScoreService.isScoreTargetLocked() == false
+      ) {
         Timer(const Duration(milliseconds: 1000), () => Rating.openRating());
       }
     });
@@ -60,14 +65,20 @@ class ScoreService {
 
   }
 
+  /// 发送 score simple 事件
   static notifyScoreSimple() {
-    ScoreStateManager ssm = Get.find();
-    ssm.updateScoreSimple();
+    if (HBaseUserService.user.isUnlockScoreSimple) {
+      ScoreStateManager ssm = Get.find();
+      ssm.updateScoreSimple();
+    }
   }
 
+  /// score target 是通过相关事件发生的次数积累后才会触发的
   static increaseScoreTarget() {
-    ScoreStateManager ssm = Get.find();
-    ssm.increaseScoreTarget();
+    if (HBaseUserService.user.isUnlockScoreTarget) {
+      ScoreStateManager ssm = Get.find();
+      ssm.increaseScoreTarget();
+    }
   }
 
   /// 唯一需要提醒的是，因为 scoreDownload 和 scoreTarget 共享后端 score 配额限制，因此 scoreDownload 的时候也
@@ -76,10 +87,21 @@ class ScoreService {
     return await PersistentTtlLockService().isLocked(ScoreService.LOCK_SCORE_TARGET_NAME);
   }
 
+  static Future<bool> isScoreSimpleLocked() async {
+    return await PersistentTtlLockService().isLocked(ScoreService.LOCK_SCORE_SIMPLE_NAME);
+  }
+
   /// 默认锁定一天的时间，但是如果用户明确的表明了不喜欢的话，那么要锁定更长的时间；
-  static lockScoreTarget({lockSeconds = 24 * 36000}) async {
+  static lockScoreTarget({lockSeconds = 24 * 3600}) async {
     await PersistentTtlLockService().create(
       name: ScoreService.LOCK_SCORE_TARGET_NAME, 
+      expireSecs: lockSeconds
+    );
+  }
+
+  static lockScoreSimple({lockSeconds = 24 * 3600}) async {
+    await PersistentTtlLockService().create(
+      name: ScoreService.LOCK_SCORE_SIMPLE_NAME, 
       expireSecs: lockSeconds
     );
   }
