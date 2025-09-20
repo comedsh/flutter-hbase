@@ -8,6 +8,10 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sycomponents/components.dart';
 
+/// 误删：下面两个导入是为了验证 blur album 抖动的问题所导入的
+// import 'package:blur/blur.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
+
 typedef OnCellTapped = Future<int?> Function(List<Post> posts, Post post, Pager<Post> postPager);
 
 /// post album/grid list 应该共享一个抽象类；或者应该只有一个 abstract PostGridList 然后由子类实现自己的逻辑即可；
@@ -178,6 +182,16 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     dynamic img = CachedImage(imgUrl: post.thumbnail, width: width);
     if (!HBaseUserService.user.isUnlockBlur && post.blur == BlurType.blur) { 
       img = BlurrableImage(child: img, unlockable: false, blurDepth: post.blurDepth);
+      /// 误删，以下代码是为了验证 blur 情况下拖动 album 会有图片边缘一个像素的线条抖动的问题；通过下面直接使用 blur 代码的方式
+      /// 可以确认是 Blur 框架的问题；看来要彻底解决这个问题，就必须自己写 Blur 的代码逻辑了；
+      /// TODO 上面的有关 album Blur 抖动任务留到后面去做吧，毕竟已经知道了 root cause 是什么了
+      // img = Blur(
+      //   blur: BlurDepthService.getBlurDepthValue(post.blurDepth ?? BlurDepth.medium),
+      //   blurColor: Theme.of(context).primaryColor,
+      //   child: img,
+      //   // 即便是使用下面的原生 CachedNetworkImage 也是一样的
+      //   // child: CachedNetworkImage(imageUrl: post.thumbnail,)
+      // );
     }
     if (badgeIcons.isNotEmpty) img = BadgedImage(img: img, badgeIcons: badgeIcons);
     return img;

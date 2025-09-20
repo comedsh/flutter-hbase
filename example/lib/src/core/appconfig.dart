@@ -3,6 +3,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+import 'package:sycomponents/components.dart';
 
 class DemoAppConfig extends HBaseAppConfig {
 
@@ -40,7 +41,9 @@ class DemoAppConfig extends HBaseAppConfig {
     }
     else {
       return HBaseUserService.user.isUnlockSubscrSale 
-        ? const Image(image: AssetImage('images/sale_page_bg_s.png'))
+        ? Device.isSmallSizeScreenWithoutContext() 
+          ? const Image(image: AssetImage('images/sale_page_bg_s_small.png'))
+          : const Image(image: AssetImage('images/sale_page_bg_s.png'))
         : const Image(image: AssetImage('images/sale_page_bg_p.png'));
 
     }
