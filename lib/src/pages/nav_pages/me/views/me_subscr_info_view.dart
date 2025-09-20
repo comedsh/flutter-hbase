@@ -199,7 +199,10 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         text: '立即开通', 
         width: sp(144.0), 
         fontSize: sp(16.0), 
-        clickCallback: () => Get.to(() => SalePage(saleGroups: AppServiceManager.appConfig.saleGroups,))
+        clickCallback: () => Get.to(() => SalePage(
+          saleGroups: AppServiceManager.appConfig.saleGroups,
+          backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
+        ))
       );
     }
     else if (user.isUnlockPointSale) {
@@ -207,7 +210,10 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         text: '购买积分', 
         width: sp(144.0), 
         fontSize: sp(16.0), 
-        clickCallback: () => Get.to(() => SalePage(saleGroups: AppServiceManager.appConfig.saleGroups,))
+        clickCallback: () => Get.to(() => SalePage(
+          saleGroups: AppServiceManager.appConfig.saleGroups,
+          backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
+        ))
       );        
     }
     return null;

@@ -163,6 +163,7 @@ class DownloadService {
                                   builder: (BuildContext context) => SalePage(
                                     saleGroups: AppServiceManager.appConfig.saleGroups,
                                     initialSaleGroupId: SaleGroupIdEnum.subscr,
+                                    backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                                   ),
                                 ),
                               );                                   
@@ -241,6 +242,7 @@ class DownloadService {
                                   builder: (BuildContext context) => SalePage(
                                     saleGroups: AppServiceManager.appConfig.saleGroups,
                                     initialSaleGroupId: SaleGroupIdEnum.points,
+                                    backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                                   ),
                                 ),
                               );                              

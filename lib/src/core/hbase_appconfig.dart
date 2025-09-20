@@ -1,5 +1,14 @@
 import 'package:appbase/appbase.dart';
+import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+
+
+abstract class HBaseAppConfig extends AppConfig {
+
+  /// 抽象该方法主要是为了应对 beaut 子项目审核、非审核以及非审核非会员、会员用户的 SalePage backgroundImage 都不同的情况
+  Widget get salePageBackgroundImage;
+}
+
 
 class HBaseDisplay extends Display {
   final bool showJubao;

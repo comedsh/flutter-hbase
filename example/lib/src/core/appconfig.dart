@@ -2,8 +2,9 @@
 
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
+import 'package:hbase/hbase.dart';
 
-class DemoAppConfig extends AppConfig {
+class DemoAppConfig extends HBaseAppConfig {
 
   /// Below singleton
   DemoAppConfig._internal();
@@ -31,6 +32,19 @@ class DemoAppConfig extends AppConfig {
   
   @override
   String get appStoreId => '6746954134';
+  
+  @override
+  Widget get salePageBackgroundImage {
+    if (AppServiceManager.appConfig.i) {
+      return const Image(image: AssetImage('images/sale_page_bg_i.jpg'));
+    }
+    else {
+      return HBaseUserService.user.isUnlockSubscrSale 
+        ? const Image(image: AssetImage('images/sale_page_bg_s.png'))
+        : const Image(image: AssetImage('images/sale_page_bg_p.png'));
+
+    }
+  }
 
 }
 

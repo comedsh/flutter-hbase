@@ -36,7 +36,10 @@ class ScoreService {
         && await ScoreService.isScoreSimpleLocked() == false
         && await ScoreService.isScoreTargetLocked() == false
       ) {
-        Timer(const Duration(milliseconds: 1000), () => Rating.openRating());
+        Timer(const Duration(milliseconds: 1000), () {
+           Rating.openRating();
+           ScoreService.lockScoreSimple();
+        });
       }
     });
 

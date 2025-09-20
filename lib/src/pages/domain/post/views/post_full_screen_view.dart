@@ -237,6 +237,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                   Get.to(() => SalePage(
                     saleGroups: AppServiceManager.appConfig.saleGroups,
                     initialSaleGroupId: SaleGroupIdEnum.subscr,
+                    backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                   ));
                 }
               },
@@ -358,6 +359,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           onTap: () => Get.to(() => SalePage(
             saleGroups: AppServiceManager.appConfig.saleGroups,
             initialSaleGroupId: SaleGroupIdEnum.subscr,
+            backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
           )),
           child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
         );
@@ -385,6 +387,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
+          backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
       );
     } else if (!user.isUnlockBlur && widget.post.blur == BlurType.limitPlay) {
@@ -395,6 +398,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
+          backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         ))
       );      
     } else {
