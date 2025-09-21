@@ -36,7 +36,7 @@ class DemoInitializer extends Initializer {
     //   });
     // });
     
-    Get.changeTheme(ThemeData.dark());
+    Get.changeTheme(AppServiceManager.appConfig.appTheme.darkTheme);
   }
 
   @override
