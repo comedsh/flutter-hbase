@@ -361,6 +361,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             initialSaleGroupId: SaleGroupIdEnum.subscr,
             backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
           )),
+          unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
           child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
         );
     } else {
@@ -384,6 +385,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         // 的过程中，会导致边缘被看到，因为 blur 只会 blur 屏幕内可视部分，超出屏幕部分的无法 blur；因此为了能够实现在任何情况下都
         // 彻底 blur，因此这里将 fit 硬编码维 BoxFit.contain，这样就不会出现上面的问题了。
         fit: BoxFit.contain,
+        unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
