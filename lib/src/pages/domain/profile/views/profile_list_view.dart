@@ -26,6 +26,7 @@ class _ProfileListViewState extends State<ProfileListView> {
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await Paging.nextPage(pageNum, widget.pager, pagingController, context);
+      if (pageNum != 1) UserService.sendReloadUserEvent();
     });
   }
 

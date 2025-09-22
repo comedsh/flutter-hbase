@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -71,6 +72,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await Paging.nextPage(pageNum, widget.postPager, pagingController, context);
+      if (pageNum != 1) UserService.sendReloadUserEvent();
     });
 
     /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复

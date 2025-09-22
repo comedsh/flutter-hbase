@@ -1,3 +1,4 @@
+import 'package:appbase/appbase.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -126,7 +127,10 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   Future<List<Post>> nextPage() async {
     // 如果有初始入参 posts，那么第一次分页使用入参的数据；
     debugPrint('nextPage calls, try to load the page with pageNum: ${widget.postPager.pageNum}');
-    return await widget.postPager.nextPage();
+    var pageNum = widget.postPager.pageNum;
+    var page = await widget.postPager.nextPage();
+    if (pageNum != 1) UserService.sendReloadUserEvent();
+    return page;
   }
 
   void initPageController() {
