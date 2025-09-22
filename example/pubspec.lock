@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: appbase
-      sha256: "84fd795895c20b69459eee4ec527076d1657ca99a39982d5759f046d3cc74e0e"
+      sha256: "55dbe22a76dbbe43bc40d798a8564503cad0199a867f6e9dc6e5c70a26bc0193"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+53"
+    version: "1.0.0+55"
   archive:
     dependency: transitive
     description:
@@ -491,7 +491,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0+6"
+    version: "1.0.0+8"
   hive:
     dependency: transitive
     description:
