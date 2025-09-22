@@ -207,29 +207,43 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             ],
           ),
           SizedBox(height: sp(26)),
-          // 添加背景色使得文字可以突出展示
-          Caption(
-            post: post, 
-            maxLines: 7,
-            isAllowedTrans: HBaseUserService.user.isUnlockTranslation,
-            /// 如果 isAllowedTrans == false，那么将会使用该 unlockTransCallback 进行跳转解锁
-            /// 约定，和 unlockBlur 一样加入会员只能开通会员
-            unlockTransCallback: () async {
-              var isConfirmed = await showConfirmDialog(
-                context, 
-                title: '解锁翻译', 
-                content: '加入会员即可解锁翻译', 
-                confirmBtnTxt: '加入', 
-                cancelBtnTxt: '不了'
-              );
-              if (isConfirmed) {
-                Get.to(() => SalePage(
-                  saleGroups: AppServiceManager.appConfig.saleGroups,
-                  initialSaleGroupId: SaleGroupIdEnum.subscr,
-                  backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
-                ));
-              }
-            },
+          if (post.captionRaw != null)
+            // 添加背景色使得文字可以突出展示
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomLeft,
+                  end: Alignment.topRight,
+                  colors: <Color>[
+                    Colors.black12.withOpacity(0.1),
+                    Colors.black12.withOpacity(0.1)
+                  ]
+                ),
+              ),
+              /// 思路是这样的，如果用户点击展开，则 toggle 替换组件
+              child: Caption(
+                post: post, 
+                maxLines: 7,
+                isAllowedTrans: HBaseUserService.user.isUnlockTranslation,
+                /// 如果 isAllowedTrans == false，那么将会使用该 unlockTransCallback 进行跳转解锁
+                /// 约定，和 unlockBlur 一样加入会员只能开通会员
+                unlockTransCallback: () async {
+                  var isConfirmed = await showConfirmDialog(
+                    context, 
+                    title: '解锁翻译', 
+                    content: '加入会员即可解锁翻译', 
+                    confirmBtnTxt: '加入', 
+                    cancelBtnTxt: '不了'
+                  );
+                  if (isConfirmed) {
+                    Get.to(() => SalePage(
+                      saleGroups: AppServiceManager.appConfig.saleGroups,
+                      initialSaleGroupId: SaleGroupIdEnum.subscr,
+                      backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
+                    ));
+                  }
+                },
+              ),
           )
         ],
       ),
