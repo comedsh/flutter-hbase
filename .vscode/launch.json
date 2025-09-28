@@ -47,6 +47,15 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
+        },
+        {
+            "name": "hyou1",
+            "cwd": "subprjs/beaut/hyou1",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define=APP_ENV=dev"
+            ]
+        },        
     ]
 }

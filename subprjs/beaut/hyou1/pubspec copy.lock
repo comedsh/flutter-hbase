@@ -258,7 +258,7 @@ packages:
     source: hosted
     version: "3.1.0"
   easy_debounce:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: easy_debounce
       sha256: f082609cfb8f37defb9e37fc28bc978c6712dedf08d4c5a26f820fa10165a236
@@ -335,7 +335,7 @@ packages:
     source: hosted
     version: "5.2.1"
   flutter_font_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_font_icons
       sha256: d06eb0ab903d0e90a9a758de30892ea0d43221f03dad059970384e62479c787e
@@ -399,7 +399,7 @@ packages:
     source: hosted
     version: "4.0.0"
   flutter_localizations:
-    dependency: "direct main"
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -412,7 +412,7 @@ packages:
     source: hosted
     version: "2.4.4"
   flutter_staggered_grid_view:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
@@ -462,7 +462,7 @@ packages:
     source: hosted
     version: "8.2.8"
   format:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: format
       sha256: "94f93703645ec4d7d19f02d7d87617a5463169e252c0d45b125f13a54a90d037"
@@ -477,6 +477,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.2"
+  google_mlkit_commons:
+    dependency: transitive
+    description:
+      name: google_mlkit_commons
+      sha256: "9990a65f407a3ef6bae646bf10143faa93fec126683771465bc6c0b43fb0e6e9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.1"
+  google_mlkit_face_detection:
+    dependency: transitive
+    description:
+      name: google_mlkit_face_detection
+      sha256: "0aeab4f39204f7a235ed4cccedfe7e61401b43f4ef139a868c01fa29fdc225ab"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.1"
   gradient_borders:
     dependency: transitive
     description:
@@ -485,6 +501,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  hbase:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "1.0.0+10"
   hive:
     dependency: transitive
     description:
@@ -502,7 +525,7 @@ packages:
     source: hosted
     version: "0.15.6"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
@@ -614,7 +637,7 @@ packages:
     source: hosted
     version: "2.0.5"
   infinite_scroll_pagination:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: infinite_scroll_pagination
       sha256: b68bce20752fcf36c7739e60de4175494f74e99e9a69b4dd2fe3a1dd07a7f16a
@@ -622,7 +645,7 @@ packages:
     source: hosted
     version: "4.0.0"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
@@ -950,7 +973,7 @@ packages:
     source: hosted
     version: "2.2.0"
   quiver:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: quiver
       sha256: ea0b925899e64ecdfbf9c7becb60d5b50e706ade44a85b2363be2a22d88117d2
@@ -974,7 +997,7 @@ packages:
     source: hosted
     version: "0.28.0"
   scroll_to_index:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: scroll_to_index
       sha256: b707546e7500d9f070d63e5acf74fd437ec7eeeb68d3412ef7b0afada0b4f176
@@ -1150,10 +1173,10 @@ packages:
     dependency: "direct main"
     description:
       name: sycomponents
-      sha256: "8748a0548c18ac50795d4757c72d84c20edd98e881393099d11e1750050cac9e"
+      sha256: "12b546b2cf430b0b27c448d1795363737c8629f121b3f0d29987ef999cf1965b"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.6+1"
+    version: "2.1.5+3"
   synchronized:
     dependency: transitive
     description:
@@ -1163,7 +1186,7 @@ packages:
     source: hosted
     version: "3.3.0+3"
   sypayment:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sypayment
       sha256: "3868bc5c0e0f9481154492c0be1b1394a479bc2844afd8d6937f022c8878fd98"
@@ -1307,7 +1330,7 @@ packages:
     source: hosted
     version: "3.0.2"
   visibility_detector:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: visibility_detector
       sha256: dd5cc11e13494f432d15939c3aa8ae76844c42b723398643ce9addb88a5ed420
