@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';

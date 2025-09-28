@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "2.0.3"
   appbase:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: appbase
       sha256: "480d8e5eb4972810134e8de68eae99d211da45ddd9a47687fbd6e2bcdd2ab8f3"
@@ -1154,7 +1154,7 @@ packages:
     source: hosted
     version: "2.1.0"
   sycomponents:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sycomponents
       sha256: "8748a0548c18ac50795d4757c72d84c20edd98e881393099d11e1750050cac9e"

@@ -39,14 +39,6 @@ dependencies:
   ionicons: ^0.2.2  
   hbase: 
     path: ../
-  sycomponents:
-    version: ^2.1.1
-    hosted:
-      url: http://localhost:4000/
-  appbase:
-    version: ^1.0.0
-    hosted:
-      url: http://localhost:4000/
   proste_indexed_stack: ^0.2.4
   community_material_icon: ^5.9.55
 
