@@ -1,0 +1,1 @@
+flutter run --dart-define=APP_ENV=mock --no-enable-impeller
