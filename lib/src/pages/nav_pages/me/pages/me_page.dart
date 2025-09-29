@@ -36,6 +36,27 @@ class _MePageState extends State<MePage> {
       body: SingleChildScrollView(
         child: Column(children: [
             const MeSubscrInfoView(),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: sp(6)),
+              child: GradientElevatedButton(
+                width: Screen.width(context) * 0.94,
+                gradient: LinearGradient(colors: [
+                  AppServiceManager.appConfig.appTheme.fillGradientStartColor, 
+                  AppServiceManager.appConfig.appTheme.fillGradientEndColor
+                ]),
+                borderRadius: BorderRadius.circular(30.0),
+                onPressed: () => Get.to(() => PostSubmitPage()),
+                child: Text(
+                  '发布作品', 
+                  style: TextStyle(
+                    fontSize: sp(18), 
+                    fontWeight: FontWeight.bold, 
+                    // 强悍，使用下面这个方式设置颜色，就可以自动的感知 light/dark model 的变化了          
+                    color: Theme.of(context).textTheme.bodyLarge?.color
+                  )
+                )
+              ),
+            ),
             CardListTiles(listTiles: [
               ListTile(
                 leading: const Icon(Ionicons.heart_outline),

@@ -32,6 +32,15 @@
             ]
         },
         {
+            "name": "example-prod",
+            "cwd": "example",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define=APP_ENV=prod"
+            ]
+        },        
+        {
             "name": "example (profile mode)",
             "cwd": "example",
             "request": "launch",
