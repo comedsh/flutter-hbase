@@ -274,7 +274,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             SizedBox(height: sp(26)),
             ... _downloadButton(post),
             if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
-              const MockJuBao()
+              const JuBao()
           ],
         ),
       ),

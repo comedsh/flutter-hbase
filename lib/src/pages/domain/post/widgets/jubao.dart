@@ -7,14 +7,15 @@ import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
 
-class MockJuBao extends StatefulWidget {
-  const MockJuBao({super.key});
+/// 签名上不要写 mock
+class JuBao extends StatefulWidget {
+  const JuBao({super.key});
 
   @override
-  State<MockJuBao> createState() => _MockJuBaoState();
+  State<JuBao> createState() => _JuBaoState();
 }
 
-class _MockJuBaoState extends State<MockJuBao> {
+class _JuBaoState extends State<JuBao> {
   String? _checkVal = '1';
 
   @override
