@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -12,11 +13,17 @@ import 'package:image_picker/image_picker.dart';
 class PostSubmitPage extends StatefulWidget {
   final int? limit; // 最大上传的个数，默认最大值为 9
 
-  /// TODO 将选中的帖子同步到本地存储中去
-  /// TODO 实现模拟的提交
+  /// 提交用户的贴文组件：思路是这样的，先把用户待上传的图片/视频缓存在本地（XFile 已经实现了直接读取即可），然后用户可以
+  /// 返回删除再提交，直到他确认 OK 为止，此时点击“上传作品”按钮提交即可；同时为了让用户可以返回此页面后可以继续编辑上传，
+  /// 使用了 [PostSubmitSerializer] 利用本地缓存存储来保存用户临时上传的数据。
   /// 
-  /// TODO 如果新增帖子，应该将 Carousel 的 currentPageIndex 移动到 0？如果要实现的话，还得去控制 Carousel 的 
-  ///   pagedController 去设置的同时去修改 CarouselState.currentPageIndex 才行；不过其实没太大必要。
+  /// TODO 待完成的
+  ///  1. 实现添加文案
+  ///  2. 实现 submitting 
+  /// 
+  /// TODO 优化
+  ///  1. 如果新增帖子，应该将 Carousel 的 currentPageIndex 移动到 0？如果要实现的话，还得去控制 Carousel 的 
+  ///     pagedController 去设置的同时去修改 CarouselState.currentPageIndex 才行；不过其实没太大必要。
   const PostSubmitPage({
     super.key,
     this.limit = 9,
@@ -31,7 +38,9 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
   late List<PostSlot> postSlots;
   final placeHolderPostSlot = PostSlot(pic: 'assets/images/transparent-gray.png', width: 640, height: 640);
   int curIndex = 0;
+  /// 需要异步从 [SharedPreferences] 中读取存储的数据，因此需要 loading
   bool isLoading = true;
+  bool isSubmitted = false;
 
   @override
   void initState() {
@@ -39,6 +48,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       List<PostSlot> savedPostSlots = await PostSubmitSerializer.load();
       postSlots = savedPostSlots.isEmpty ? [placeHolderPostSlot] : savedPostSlots;
+      isSubmitted = await PostSubmitSerializer.isSubmitted();
       setState(() => isLoading = false);
     });
   }
@@ -108,20 +118,24 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
                     color: Colors.white10,
                     padding: const EdgeInsets.all(12),
                     onPressed: () async {
+                      if (isSubmitted) {
+                        // await showAlertDialogWithoutContext(content: '正在等待审核，不可追加新的作品');
+                        return;
+                      }
+                      if (postSlots.length > widget.limit!) {
+                        await showAlertDialogWithoutContext(content: '已超过最大上传限制，请删除部分作品', confirmBtnTxt: '确定');
+                        return;
+                      }         
                       // 注意在我 iPhone 11 ProMax 真机上打开相册是需要花费一小段时间的，因此需要 loading 等待
                       GlobalLoading.show();  
                       try {
-                        if (postSlots.length > widget.limit!) {
-                          await showAlertDialog(context, content: '已超过最大上传限制，请删除部分帖子', confirmBtnTxt: '确定');
-                        } else {
-                          final List<XFile> files = await picker.pickMultipleMedia(limit: 9);
-                          if (files.isNotEmpty) await addCarouselSlots(files);
-                        }
+                        final List<XFile> files = await picker.pickMultipleMedia(limit: 9);
+                        if (files.isNotEmpty) await addCarouselSlots(files);
                       } finally {
                         GlobalLoading.close();
                       }
                     },
-                    child: const Icon(Ionicons.add, color: Colors.white),
+                    child: Icon(Ionicons.add, color: !isSubmitted ? Colors.white : Colors.white30),
                   ),
                 ),
                 /// 拍照添加
@@ -141,47 +155,81 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
                     color: Colors.white10,
                     padding: const EdgeInsets.all(12),
                     onPressed: () async {
+                      if (isSubmitted) {
+                        // await showAlertDialogWithoutContext(content: '正在等待审核，不可追加新的作品');
+                        return;
+                      }
+                      if (postSlots.length > widget.limit!) {
+                        await showAlertDialogWithoutContext(content: '已超过最大上传限制，请删除部分作品', confirmBtnTxt: '确定');
+                        return;
+                      }               
                       // 注意在我 iPhone 11 ProMax 真机上打开相册是需要花费一小段时间的，因此需要 loading 等待
                       GlobalLoading.show();  
                       try {
-                        if (postSlots.length > widget.limit!) {
-                          await showAlertDialog(context, content: '已超过最大上传限制，请删除部分帖子', confirmBtnTxt: '确定');
-                        } else {
-                          /// 再打开的相机中无法切换使用图片或者是视频，无奈只好在打开之前询问下
-                          bool isPhoto = await showConfirmDialogWithoutContext(content: '请选择您的拍摄方式', confirmBtnTxt: '拍照', cancelBtnTxt: '录像');
-                          XFile? file = isPhoto 
-                            ? await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear)
-                            : await picker.pickVideo(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
-                          if (file != null) await addCarouselSlots([file]);
-                        }
+                        /// 再打开的相机中无法切换使用图片或者是视频，无奈只好在打开之前询问下
+                        bool isPhoto = await showConfirmDialogWithoutContext(content: '请选择您的拍摄方式', confirmBtnTxt: '拍照', cancelBtnTxt: '录像');
+                        XFile? file = isPhoto 
+                          ? await picker.pickImage(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear)
+                          : await picker.pickVideo(source: ImageSource.camera, preferredCameraDevice: CameraDevice.rear);
+                        if (file != null) await addCarouselSlots([file]);
                       } finally {
                         GlobalLoading.close();
                       }
                     },
-                    child: const Icon(Ionicons.camera_outline, color: Colors.white),
+                    child: Icon(Ionicons.camera_outline, color: !isSubmitted ? Colors.white : Colors.white30),
                   ),
                 ),
               ],
             ),
           ),
-          GradientElevatedButton(
-            width: Screen.width(context) * 0.94,
-            gradient: LinearGradient(colors: [
-              AppServiceManager.appConfig.appTheme.fillGradientStartColor, 
-              AppServiceManager.appConfig.appTheme.fillGradientEndColor
-            ]),
-            borderRadius: BorderRadius.circular(30.0),
-            onPressed: () => null,
-            child: Text(
-              '上传作品', 
-              style: TextStyle(
-                fontSize: sp(18), 
-                fontWeight: FontWeight.bold, 
-                // 强悍，使用下面这个方式设置颜色，就可以自动的感知 light/dark model 的变化了          
-                color: Theme.of(context).textTheme.bodyLarge?.color
+          !isSubmitted
+          ? GradientElevatedButton(
+              width: Screen.width(context) * 0.94,
+              gradient: LinearGradient(colors: [
+                AppServiceManager.appConfig.appTheme.fillGradientStartColor, 
+                AppServiceManager.appConfig.appTheme.fillGradientEndColor
+              ]),
+              borderRadius: BorderRadius.circular(30.0),
+              onPressed: () async {
+                bool isConfrimed = await showConfirmDialogWithoutContext(content: '确定上传？', confirmBtnTxt: '确定', cancelBtnTxt: '不了');
+                if (isConfrimed) {
+                  GlobalLoading.show('正在提交，请稍后...');
+                  Timer(Duration(milliseconds: Random.randomInt(3200, 8600)), () async { 
+                    GlobalLoading.close();
+                    await showAlertDialog(context, content: '提交成功！', confirmBtnTxt: '关闭');
+                    await PostSubmitSerializer.saveSubmitted();
+                    setState(() => isSubmitted = true);
+                  });
+                }
+              },
+              child: Text(
+                '上传作品', 
+                style: TextStyle(
+                  fontSize: sp(18), 
+                  fontWeight: FontWeight.bold, 
+                  // 强悍，使用下面这个方式设置颜色，就可以自动的感知 light/dark model 的变化了          
+                  color: Theme.of(context).textTheme.bodyLarge?.color
+                )
               )
             )
-          ),          
+          : GradientElevatedButton(
+              width: Screen.width(context) * 0.94,
+              gradient: const LinearGradient(colors: [
+                Colors.white38, 
+                Colors.white38
+              ]),
+              borderRadius: BorderRadius.circular(30.0),
+              onPressed: () {  },
+              child: Text(
+                '等待审核中...', 
+                style: TextStyle(
+                  fontSize: sp(18), 
+                  fontWeight: FontWeight.bold,                                                                                                                        
+                  // 强悍，使用下面这个方式设置颜色，就可以自动的感知 light/dark model 的变化了          
+                  color: Theme.of(context).textTheme.bodyLarge?.color
+                )
+              )
+            )
         ],
       ),
     );
@@ -267,6 +315,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
     /// 因为上述更新视图的逻辑会使用到 async/await，而 setState block 中不允许使用，因此将其放置到上面处理完了以后再发起一次强制更新即可
     setState((){});
   }
+  
   /// 如果开头是 asserts 开头表明是从 sycomponents 中加载的 placeholder 图片
   bool isPlaceholderPostSlot(PostSlot slot) {
     return isPlaceholder(slot.pic);
@@ -287,7 +336,7 @@ class PostSubmitSerializer {
   // ignore: non_constant_identifier_names
   static String SUBMIT_POST_SLOTS_KEY = 'submitPostSlotsKey';
   // ignore: non_constant_identifier_names
-  static String IS_SUBMIT_KEY = 'isSubmitPost';
+  static String IS_SUBMITTED_KEY = 'isSubmitPost';
 
   static Future<List<PostSlot>> load() async {
     SharedPreferences p = await SharedPreferences.getInstance();
@@ -324,8 +373,16 @@ class PostSubmitSerializer {
     await save(postSlots);
   }
 
-  static bool isSubmitted() {
-    throw Exception("not implemented");
+  static saveSubmitted() async {
+    SharedPreferences p = await SharedPreferences.getInstance();
+    p.setBool(IS_SUBMITTED_KEY, true);
   }
+
+  static Future<bool> isSubmitted() async {
+    SharedPreferences p = await SharedPreferences.getInstance();
+    bool? isSubmitted = p.getBool(IS_SUBMITTED_KEY);
+    return isSubmitted == true;
+  }
+
 
 }

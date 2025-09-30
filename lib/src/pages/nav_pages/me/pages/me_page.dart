@@ -45,7 +45,7 @@ class _MePageState extends State<MePage> {
                   AppServiceManager.appConfig.appTheme.fillGradientEndColor
                 ]),
                 borderRadius: BorderRadius.circular(30.0),
-                onPressed: () => Get.to(() => PostSubmitPage()),
+                onPressed: () => Get.to(() => const PostSubmitPage()),
                 child: Text(
                   '发布作品', 
                   style: TextStyle(
