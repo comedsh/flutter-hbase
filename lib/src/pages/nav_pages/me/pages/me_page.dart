@@ -36,6 +36,7 @@ class _MePageState extends State<MePage> {
       body: SingleChildScrollView(
         child: Column(children: [
             const MeSubscrInfoView(),
+            if ((AppServiceManager.appConfig.display as HBaseDisplay).showPostSubmit == true) 
             Padding(
               padding: EdgeInsets.symmetric(vertical: sp(6)),
               child: GradientElevatedButton(
@@ -105,7 +106,8 @@ class _MePageState extends State<MePage> {
               }  
             }),
             CardListTiles(listTiles: [
-              if ((AppServiceManager.appConfig.display as HBaseDisplay).showCleanCache == true) const ClearCacheListTile(),
+              if ((AppServiceManager.appConfig.display as HBaseDisplay).showCleanCache == true) 
+                const ClearCacheListTile(),
               ListTile(
                 leading: const Icon(Icons.question_answer_outlined),
                 title: Text('常见问答集锦', style: TextStyle(fontSize: sp(18))),

@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: appbase
-      sha256: "480d8e5eb4972810134e8de68eae99d211da45ddd9a47687fbd6e2bcdd2ab8f3"
+      sha256: a9a2d9cd6df0ef736cc04c68cc930a65e52327773f6441f25814ef73d00087b0
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+58"
+    version: "1.0.0+59"
   archive:
     dependency: transitive
     description:

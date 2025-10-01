@@ -13,6 +13,7 @@ abstract class HBaseAppConfig extends AppConfig {
 class HBaseDisplay extends Display {
   final bool showJubao;
   final bool showMeHomeScore;
+  final bool showPostSubmit;
   final List<String> chnCodes;
   /// 总分类标签
   final List<ChannelTag> tags;
@@ -25,6 +26,7 @@ class HBaseDisplay extends Display {
     required super.showSubscrRenewalDesc,
     required this.showJubao,    
     required this.showMeHomeScore, 
+    required this.showPostSubmit,
     required this.chnCodes, 
     required this.tags, 
     required this.hotTags,
@@ -36,5 +38,6 @@ class HBaseDisplay extends Display {
       tags = json['tags'].map<ChannelTag>((tag) => ChannelTag.fromJson(tag)).toList(),
       hotTags = json['hotTags'].map<ChannelTag>((tag) => ChannelTag.fromJson(tag)).toList(),
       showMeHomeScore = json['showMeHomeScore'],
+      showPostSubmit = json['showPostSubmit'],
       super.fromJson();
 }
