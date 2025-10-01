@@ -5,7 +5,6 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
-import 'package:sycomponents/components.dart';
 
 class HQJGuanAppConfig extends HBaseAppConfig {
 
@@ -38,17 +37,7 @@ class HQJGuanAppConfig extends HBaseAppConfig {
   
   @override
   Widget get salePageBackgroundImage {
-    if (AppServiceManager.appConfig.i) {
-      return const Image(image: AssetImage('images/sale_page_bg_i.jpg'));
-    }
-    else {
-      return HBaseUserService.user.isUnlockSubscrSale 
-        ? Device.isSmallSizeScreenWithoutContext() 
-          ? const Image(image: AssetImage('images/sale_page_bg_s_small.png'))
-          : const Image(image: AssetImage('images/sale_page_bg_s.png'))
-        : const Image(image: AssetImage('images/sale_page_bg_p.png'));
-
-    }
+      return const Image(image: AssetImage('images/sale_page_bg.jpg'));
   }
 
 }
@@ -56,7 +45,14 @@ class HQJGuanAppConfig extends HBaseAppConfig {
 class DemoAppTheme extends AppTheme {
 
   @override
-  ThemeData get darkTheme => ThemeData.dark();
+  ThemeData get darkTheme {
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorSchemeSeed: seedColor,
+      tabBarTheme: TabBarTheme(labelColor: seedColor),
+    );
+  }
 
   @override
   ThemeData get lightTheme => ThemeData(
@@ -66,18 +62,18 @@ class DemoAppTheme extends AppTheme {
 
   /// 这个值是以 deepPurple 为 seed color 不断微调出来的，感觉比较舒服的一个颜色
   @override
-  Color get borderGradientStartColor => const Color.fromARGB(255, 214, 165, 223);  
+  Color get borderGradientStartColor => const Color.fromARGB(255, 75, 235, 99);  
 
   @override
-  Color get borderGradientEndColor => Colors.purpleAccent;
+  Color get borderGradientEndColor => const Color.fromARGB(255, 47, 161, 64);
 
   @override
-  Color get fillGradientStartColor => Colors.purple.shade200;
+  Color get fillGradientStartColor => const Color.fromARGB(255, 54, 228, 80);
 
   @override
-  Color get fillGradientEndColor => Colors.deepPurple;
+  Color get fillGradientEndColor => seedColor;
   
   @override
-  Color get seedColor => Colors.deepPurple;
+  Color get seedColor => const Color.fromARGB(255, 28, 118, 42);
 
 }
