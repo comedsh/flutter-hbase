@@ -193,7 +193,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
               onPressed: () async {
                 /// 用户还没有上传任何作品
                 if (isInPlaceholderState()) {
-                  await showAlertDialogWithoutContext(content: '您还没有添加任何作品，请添加作品后再上传', confirmBtnTxt: '好的');
+                  await showAlertDialogWithoutContext(content: '您还没有添加任何作品', confirmBtnTxt: '好的');
                   return;
                 }
                 bool isConfrimed = await showConfirmDialogWithoutContext(content: '确定上传？', confirmBtnTxt: '确定', cancelBtnTxt: '不了');
