@@ -10,7 +10,7 @@ packages:
     source: hosted
     version: "2.0.3"
   appbase:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: appbase
       sha256: a9a2d9cd6df0ef736cc04c68cc930a65e52327773f6441f25814ef73d00087b0
@@ -114,7 +114,7 @@ packages:
     source: hosted
     version: "1.18.0"
   community_material_icon:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: community_material_icon
       sha256: bb389689f6278158d7b9d9b0c9433e603933283104fea226594590f61503fd08
@@ -539,7 +539,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "1.0.0+15"
+    version: "1.0.1+1"
   hive:
     dependency: transitive
     description:

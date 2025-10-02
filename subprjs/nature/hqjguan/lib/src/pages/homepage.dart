@@ -103,8 +103,8 @@ class _HomePageState extends State<HomePage> {
             label: AppServiceManager.appConfig.i ? '首页' : '视频',
           ),
           const BottomNavigationBarItem(
-            activeIcon: Icon(Icons.local_fire_department, size: 26,),
-            icon: Icon(Icons.local_fire_department_outlined, size: 26),
+            activeIcon: Icon(Ionicons.flame, size: 26,),
+            icon: Icon(Ionicons.flame_outline, size: 26),
             label: '热榜',
           ),
           const BottomNavigationBarItem(
