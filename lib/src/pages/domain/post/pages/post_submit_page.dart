@@ -191,6 +191,11 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
               ]),
               borderRadius: BorderRadius.circular(30.0),
               onPressed: () async {
+                /// 用户还没有上传任何作品
+                if (isInPlaceholderState()) {
+                  await showAlertDialogWithoutContext(content: '您还没有添加任何作品，请添加作品后再上传', confirmBtnTxt: '好的');
+                  return;
+                }
                 bool isConfrimed = await showConfirmDialogWithoutContext(content: '确定上传？', confirmBtnTxt: '确定', cancelBtnTxt: '不了');
                 if (isConfrimed) {
                   GlobalLoading.show('正在提交，请稍后...');
@@ -326,6 +331,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
     return path.startsWith('assets');
   }
 
+  /// 表示用户还没有上传任何作品
   bool isInPlaceholderState() {
     return postSlots.length == 1 && isPlaceholderPostSlot(postSlots[0]);
   }
