@@ -345,6 +345,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  flukit:
+    dependency: transitive
+    description:
+      name: flukit
+      sha256: e71be5693a2c612be09ca1d1e97dd2584c60f9e467fec7674bf4198f47ef2037
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -1274,6 +1282,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0+3"
+  sypages:
+    dependency: "direct main"
+    description:
+      name: sypages
+      sha256: "6472ab804d980cea01f25040680080c002b140f9895352fa9823dcda51e030d0"
+      url: "http://localhost:4000"
+    source: hosted
+    version: "2.0.0+9"
   sypayment:
     dependency: "direct main"
     description:

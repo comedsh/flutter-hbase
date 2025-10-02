@@ -19,6 +19,7 @@ class HBaseDisplay extends Display {
   final List<ChannelTag> tags;
   /// 热榜页面的 tags
   final List<ChannelTag> hotTags; 
+  final List<String>? searchHotKeywords;
 
   HBaseDisplay({
     required super.showCleanCache, 
@@ -30,6 +31,7 @@ class HBaseDisplay extends Display {
     required this.chnCodes, 
     required this.tags, 
     required this.hotTags,
+    this.searchHotKeywords
   });
 
   HBaseDisplay.fromJson(super.json) 
@@ -37,6 +39,7 @@ class HBaseDisplay extends Display {
       chnCodes = json['chnCodes'].map<String>((code) => code.toString()).toList(),  // json['chnCodes'] 的类型是 List<dynamic> 因此这里必须转换一下
       tags = json['tags'].map<ChannelTag>((tag) => ChannelTag.fromJson(tag)).toList(),
       hotTags = json['hotTags'].map<ChannelTag>((tag) => ChannelTag.fromJson(tag)).toList(),
+      searchHotKeywords = json['searchHotKeywords']?.map<String>((s) => s.toString()).toList(),
       showMeHomeScore = json['showMeHomeScore'],
       showPostSubmit = json['showPostSubmit'],
       super.fromJson();

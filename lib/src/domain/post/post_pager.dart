@@ -49,3 +49,27 @@ class ProfilePostPager extends Pager<Post> {
   }
 
 }
+
+class SearchPostPager extends Pager<Post> {
+  final String token;
+  final List<String>? chnCodes;
+
+  SearchPostPager({
+    super.pageNum,
+    super.pageSize,
+    required this.token,
+    this.chnCodes
+  });
+
+  @override
+  Future<List<Post>> fetchNextPage() async {
+    var r = await dio.post('/search/posts', data: {
+      'pageNum': pageNum,
+      'pageSize': pageSize,
+      'token': token,
+      'chnCodes': chnCodes
+    });
+    return r.data.map<Post>((data) => Post.fromJson(data)).toList();
+  }
+
+}

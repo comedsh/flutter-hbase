@@ -3,6 +3,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+import 'package:sypages/pages.dart' hide TabData;
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 
@@ -60,6 +61,16 @@ class _HomePageState extends State<HomePage> {
             )
           ),
           IndexedStackChild(
+            child: SearchBarInAppBar(
+              // 想了想还是展示 leading button 吧，这样布局上好看些。
+              appBarAutomaticallyImplyLeading: false,
+              isEmptyFocusToShowKeywordListPage: false,
+              flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
+              keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
+              searchResultPageCreator: (String keyword) => searchResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
+            )
+          ),
+          IndexedStackChild(
             child: CategoryPostAlbumListViewPage(
               chnCodes: display.chnCodes,
               tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
@@ -95,6 +106,11 @@ class _HomePageState extends State<HomePage> {
             activeIcon: Icon(Icons.local_fire_department, size: 26,),
             icon: Icon(Icons.local_fire_department_outlined, size: 26),
             label: '热榜',
+          ),
+          const BottomNavigationBarItem(
+            activeIcon: Icon(Ionicons.search, size: 26,),
+            icon: Icon(Ionicons.search_outline, size: 26,),
+            label: '搜索',
           ),
           const BottomNavigationBarItem(
             activeIcon: Icon(Ionicons.apps),

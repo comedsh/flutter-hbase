@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart' hide UserService, Initializer;
 
 import 'src/core/appconfig.dart';
