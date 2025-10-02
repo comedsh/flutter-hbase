@@ -55,8 +55,9 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     super.initState();
      pagingController = PagingController(
       firstPageKey: 1, 
-      /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个，这里重载一下设置得多一些
-      invisibleItemsThreshold: 6
+      /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个
+      /// 备注：之前这个值设置为了 6，结果初始情况下就会加在 2 页；因此我怀疑，在 [PostAlbumListView] 中是不是按照行数来计算的？
+      invisibleItemsThreshold: 3
     );
     /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
     autoScrollController = AutoScrollController(
