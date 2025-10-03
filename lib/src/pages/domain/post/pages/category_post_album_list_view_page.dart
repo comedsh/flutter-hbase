@@ -7,12 +7,15 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
   final List<String> chnCodes;
   final List<TabData> tabs;
   final bool isReelOnly;
+  /// 因为分页器 [ChannelTagPostPager] 目前会被多个页面共用，我想知道是哪个具体页面使用的，供后台子应用可以单独定制；
+  final PageLabel pageLabel;
 
   const CategoryPostAlbumListViewPage({
     super.key, 
     required this.chnCodes, 
     required this.tabs,
     this.isReelOnly = false,
+    required this.pageLabel,
   });
 
   @override
@@ -25,7 +28,8 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
           chnCodes: chnCodes, 
           tagCodes: tagCodes, 
           isReelOnly: isReelOnly, 
-          pageSize: 24
+          pageSize: 24,
+          pageLabel: pageLabel
         );
         return PostAlbumListView(
           postPager: postPager, 

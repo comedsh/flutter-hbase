@@ -1,0 +1,4 @@
+enum PageLabel {
+  homePage,
+  classifyPage
+}

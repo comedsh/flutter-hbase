@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage> {
       body: ProsteIndexedStack(
         index: _current,
         children: [
+          /// 首页
           IndexedStackChild(
             child: CategoryPostFullScreenListViewPage(             
               /*
@@ -52,14 +53,17 @@ class _HomePageState extends State<HomePage> {
               chnCodes: display.chnCodes,
               tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
               isReelOnly: true,
+              pageLabel: PageLabel.homePage,
             ),
           ),
+          /// 热榜页
           IndexedStackChild(
             child: HotspotProfilePage(
               chnCodes: display.chnCodes,
               tags: display.hotTags,
             )
           ),
+          /// 搜索页
           IndexedStackChild(
             child: SearchBarInAppBar(
               // 想了想还是展示 leading button 吧，这样布局上好看些。
@@ -70,13 +74,16 @@ class _HomePageState extends State<HomePage> {
               searchResultPageCreator: (String keyword) => searchResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
             )
           ),
+          /// 分类页
           IndexedStackChild(
             child: CategoryPostAlbumListViewPage(
               chnCodes: display.chnCodes,
               tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
               isReelOnly: false,
+              pageLabel: PageLabel.classifyPage,
             ),
           ),
+          /// 用户中心页
           IndexedStackChild(
             child: const MePage()
           ),

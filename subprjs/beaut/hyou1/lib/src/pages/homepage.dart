@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
               chnCodes: display.chnCodes,
               tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
               isReelOnly: true,
+              pageLabel: PageLabel.homePage,
             ),
           ),
           IndexedStackChild(
@@ -64,6 +65,7 @@ class _HomePageState extends State<HomePage> {
               chnCodes: display.chnCodes,
               tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
               isReelOnly: false,
+              pageLabel: PageLabel.classifyPage
             ),
           ),
           IndexedStackChild(

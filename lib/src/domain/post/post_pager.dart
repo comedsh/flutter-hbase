@@ -5,6 +5,8 @@ class ChannelTagPostPager extends Pager<Post> {
   final List<String> chnCodes;
   List<String>? tagCodes;
   final bool isReelOnly;
+  /// 该分页器 [Pager] 目前会被多个页面共用，我想知道是哪个具体页面使用的，供后台子应用可以单独定制；
+  final PageLabel pageLabel;
 
   /// 获取一个或者多个 channel 中的 posts，分页按照一个 profile 一个 post 的方式返回
   ChannelTagPostPager({
@@ -12,7 +14,8 @@ class ChannelTagPostPager extends Pager<Post> {
     super.pageSize, 
     required this.chnCodes, 
     this.tagCodes,
-    required this.isReelOnly
+    required this.isReelOnly,
+    required this.pageLabel
   });
 
   @override
@@ -22,8 +25,8 @@ class ChannelTagPostPager extends Pager<Post> {
 
     /// ppg: Post Page 的简写
     var r = tagCodesStr == null
-      ? await dio.get('/post/chn/ppg/$pageNum/$pageSize/$chnCodesStr/$isReelOnly')
-      : await dio.get('/post/chn/tag/ppg/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly');
+      ? await dio.get('/post/chn/ppg/$pageNum/$pageSize/$chnCodesStr/$isReelOnly/${pageLabel.name}')
+      : await dio.get('/post/chn/tag/ppg/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr/$isReelOnly/${pageLabel.name}');
 
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
