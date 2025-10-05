@@ -55,10 +55,10 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   @override
   void initState() {
     super.initState();
-    if (widget.firstPagePosts == null) {
-      isFirstPageLoading = true;
-      isFirstPageLoadFail = false; 
-    }
+    // if (widget.firstPagePosts == null) {
+    //   isFirstPageLoading = true;
+    //   isFirstPageLoadFail = false; 
+    // }
     initPageController();
     loadFirstPage();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -181,7 +181,14 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   void loadFirstPage() {
     // 如果第一页是通过传值传入，那么直接渲染
     if (widget.firstPagePosts != null) {
-      posts.addAll(widget.firstPagePosts!);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // posts.addAll(widget.firstPagePosts!);
+        await appendPosts(widget.firstPagePosts!);
+        setState(() {
+          isFirstPageLoading = false;
+          isFirstPageLoadFail = false;
+        });
+      });
     }
     // 否则则异步获取第一页的数据，然后渲染它
     else {
@@ -193,14 +200,15 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
 
   /// 单独提取出这个方法的初衷是，失败重试也可以重用该句柄
   void _doGetFirstPage() {
-    nextPage().then((posts_) {
+    nextPage().then((posts_) async {
       // 如果加载时间过长，用户退出该页面后该请求返回，然后调用 setState 会因为该组件已经从 tree 中移除而报错；错误描述如下，
       // flutter: Error: setState() called after dispose(): _PostPageFullScreenListState#7161c(lifecycle state: defunct, not mounted)
       // flutter: This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree
       // 因此为了避免这样的情况，使用 mounted 来判断该组件是否依然被挂载在 tree 中
       if (mounted) {
+        // posts.addAll(posts_);          
+        await appendPosts(posts_);
         setState((){
-          posts.addAll(posts_);
           isFirstPageLoading = false;
           isFirstPageLoadFail = false;
           debugPrint('posts.length: ${posts.length}');
@@ -246,12 +254,12 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
         _postsPreloadedSuccess(
           cachedNextPagePosts,  // cachedNextPagePosts 不为空则表示回调成功，相反则表示回调失败
           // successCalblack
-          () {
+          () async {
             // 如果预加载分页成功，则这里直接载入该分页即可 - 实现丝滑的进入下一个分页
             // 经过测试，是可以非常丝滑的自动的滑动到新增的下一页的
-            setState((){
-              posts.addAll(cachedNextPagePosts!);
-            });
+            // posts.addAll(cachedNextPagePosts!);
+            await appendPosts(cachedNextPagePosts!);
+            setState((){ });
           }, 
           // failCallback 
           () {
@@ -262,15 +270,15 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
               const Duration(milliseconds: PostFullScreenListView.loadNextPageThrottleMilseconds),   // <-- The throttle duration
               () { 
                 // 加载新的分页
-                nextPage().then((posts){
+                nextPage().then((posts) async {
                   /// 最后一页了，无法加载更多分页了
                   /// 细节：不能通过 preLoad 判断是否最后一页了，因为 preLoad 可能失败；
                   if (posts.isEmpty) {  
                     Get.snackbar('到底了', '已经触底，没有更多内容了', snackPosition: SnackPosition.BOTTOM);
-                  } else {                              
-                    setState((){
-                      posts.addAll(posts);
-                    });
+                  } else {       
+                    // posts.addAll(posts);                       
+                    await appendPosts(posts);
+                    setState(() {});
                   }
                 // ignore: invalid_return_type_for_catch_error
                 }).catchError((err) => debugPrint('when fetch the last page, get the error: $err'));
@@ -315,14 +323,22 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   }
 
   /// 将某个帖子从 posts 中删除，对应的是屏蔽功能
-  void removePost(String shortcode) {
+  removePost(String shortcode) {
     GlobalLoading.show('正在屏蔽中...');
     Timer(Duration(milliseconds: Random.randomInt(800, 2800)), () async { 
-      // TODO add the unseen posts into local cache
+      await PostUnseenService.saveUnseenPost(shortcode);
       setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
       GlobalLoading.close();
       // showInfoToast(msg: '屏蔽成功', location: ToastLocation.TOP);
-    });    
+    });
+  }
+
+  /// 该方法中过滤掉了屏蔽的 posts
+  appendPosts(List<Post> newPosts) async {
+    var unSeenPosts = await PostUnseenService.loadUnseenPosts();
+    // 注意直接从源 newPosts 中进行了删除
+    newPosts.removeWhere((p) => unSeenPosts.contains(p.shortcode));
+    posts.addAll(newPosts);
   }
 
 }
