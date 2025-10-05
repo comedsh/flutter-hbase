@@ -229,9 +229,9 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                 /// 约定，和 unlockBlur 一样加入会员只能开通会员
                 unlockTransCallback: () async {
                   var isConfirmed = await showConfirmDialog(
-                    context, 
-                    title: '解锁翻译', 
-                    content: '加入会员即可解锁翻译', 
+                    context,
+                    title: '解锁翻译',
+                    content: '加入会员即可解锁翻译',
                     confirmBtnTxt: '加入', 
                     cancelBtnTxt: '不了'
                   );
@@ -272,9 +272,11 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             SizedBox(height: sp(26)),
             StatefulFavoriteButton(post: post),
             SizedBox(height: sp(26)),
+            ... _unSeenPostButton(post, context),
             ... _downloadButton(post),
             if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
               const JuBao()
+
           ],
         ),
       ),
@@ -285,8 +287,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   /// 写在组件一起；
   List<Widget> _downloadButton(Post post) {
     var user = HBaseUserService.user;
-    /// 注意，分解出 [isUnlockPicDownload] 只是为了审核，审核员模式下只能下载图片，为了更简化就直接只能下载单图，
-    /// 在审核的时候，第一页应该要能够插入一些单图便于审核（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便审核
+    /// 注意，分解出 [isUnlockPicDownload] 只是为了 chk，chk 模式下只能下载图片，为了更简化就直接只能下载单图，
+    /// 在 chk 的时候，第一页应该要能够插入一些单图便于chk（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便 chk
     if ((post.type == PostType.photo || post.isPhotoAlbum) && user.isUnlockPicDownload || 
       post.type != PostType.photo && user.isUnlockVideoDownload ) {
       return [
@@ -351,6 +353,31 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             : Text('已关注', style: TextStyle(fontSize: sp(14), color: Colors.white54)),
         ),
     );
+  }
+
+  /// 屏蔽此贴文
+  _unSeenPostButton(Post post, BuildContext context) {
+    return [
+      GestureDetector(
+        onTap: () async {
+          var isConfirmed = await showConfirmDialogWithoutContext(
+            content: '是否屏蔽此帖文', 
+            confirmBtnTxt: '确定', 
+            cancelBtnTxt: '不了');
+          if (isConfirmed) {
+            if (context.mounted) PostUnseenNotification(post.shortcode).dispatch(context);
+          }
+        },
+        child: Column(
+          children: [
+            Icon(Ionicons.eye_off_outline, size: sp(28),),
+            SizedBox(height: sp(4)),
+            Text('屏蔽', style: TextStyle(fontSize: sp(14))),
+          ],
+        ),
+      ),
+      SizedBox(height: sp(26))
+    ];
   }
 
   Widget _imgCreator(String url, double width, double aspectRatio) {
@@ -447,4 +474,3 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   }
 
 }
-

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appbase/appbase.dart';
 import 'package:easy_debounce/easy_throttle.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +120,14 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return PostFullScreenView(post: post, postIndex: index);
+            return NotificationListener<PostUnseenNotification>(
+              onNotification: (notification) {
+                debugPrint('received the PostUnseenNotification, and try to remove post ${notification.shortcode}');
+                removePost(notification.shortcode);
+                return true;  // 不再向上冒泡了
+              },
+              child: PostFullScreenView(post: post, postIndex: index)
+            );
           },
         ),
       );
@@ -303,6 +312,17 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
     } else {
       failCallback();
     }
+  }
+
+  /// 将某个帖子从 posts 中删除，对应的是屏蔽功能
+  void removePost(String shortcode) {
+    GlobalLoading.show('正在屏蔽中...');
+    Timer(Duration(milliseconds: Random.randomInt(800, 2800)), () async { 
+      // TODO add the unseen posts into local cache
+      setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
+      GlobalLoading.close();
+      // showInfoToast(msg: '屏蔽成功', location: ToastLocation.TOP);
+    });    
   }
 
 }
