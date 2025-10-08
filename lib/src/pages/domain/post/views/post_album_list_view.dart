@@ -53,12 +53,36 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   @override
   void initState() {
     super.initState();
-     pagingController = PagingController(
+    initPageController();
+    initAutoScrollController();
+    listenEvents();
+  }
+
+  initPageController() {
+    pagingController = PagingController(
       firstPageKey: 1, 
       /// invisibleItemsThreshold 当滑动到还剩下多少个不可见 items 的时候加载下一页，默认是 3 个
       /// 备注：之前这个值设置为了 6，结果初始情况下就会加在 2 页；因此我怀疑，在 [PostAlbumListView] 中是不是按照行数来计算的？
       invisibleItemsThreshold: 3
     );
+    // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
+    pagingController.addPageRequestListener((pageNum) async {
+      debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
+      await Paging.nextPage(pageNum, widget.postPager, pagingController, context);
+      removedRevantPostsFromBlockedProfiles();
+      if (pageNum != 1) UserService.sendReloadUserEvent();
+    });
+    /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
+    /// 因此这里就没有必要自己手动的去触发加载第一页了；
+    // WidgetsBinding.instance.addPostFrameCallback( (_) async {
+    //   if (mounted) {
+    //     debugPrint('$PostAlbumList, after cached posts added, then fetch the first page immediatelly');
+    //     await nextPage(1);  // 注意这里才开始正式加载远程第 1 页面
+    //   }
+    // });    
+  }
+
+  initAutoScrollController() {
     /// 想了想，如果 isEnabaledAutoScroll 为 false 这里初始化它无妨，大不了这里初始化了以后不使用即可
     autoScrollController = AutoScrollController(
       /// 这里设置的是当返回此页面后，窗口的边界位置；比如如果内容已经延伸到 bottom appbar 的位置了，那么可以
@@ -68,24 +92,9 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
       viewportBoundaryGetter: () => const Rect.fromLTRB(0, 0, 0, 0),
       axis: Axis.vertical
     ); // 核心到底使用什么样的 scrollController 由实现类提供
-    
-    // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
-    pagingController.addPageRequestListener((pageNum) async {
-      debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
-      await Paging.nextPage(pageNum, widget.postPager, pagingController, context);
-      removeBlockedProfilesFromPagingController();
-      if (pageNum != 1) UserService.sendReloadUserEvent();
-    });
+  }
 
-    /// 误删，标记一下：上面的 pageRequestListener 会触发首页的加载，然后这里又会触发一次首页的加载，结果会导致数据重复
-    /// 因此这里就没有必要自己手动的去触发加载第一页了；
-    // WidgetsBinding.instance.addPostFrameCallback( (_) async {
-    //   if (mounted) {
-    //     debugPrint('$PostAlbumList, after cached posts added, then fetch the first page immediatelly');
-    //     await nextPage(1);  // 注意这里才开始正式加载远程第 1 页面
-    //   }
-    // });
-
+  listenEvents() {
     HBaseStateManager hbaseState = Get.find();
     ever(hbaseState.unseenPostEvent, (Post? p) async {
       debugPrint('unseen post event received, block profile: ${p?.shortcode}');
@@ -93,8 +102,8 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     });    
     ever(hbaseState.blockProfileEvent, (Profile? p) async {
       debugPrint('$PostAlbumListView, block profile event received, block profile: ${p?.code}');
-      /// 这里即便是调用了 [removeBlockedProfilesFromPagingController] 也无效，因为页面无法刷新，因此只能 pullRefresh
-      pullRefresh();
+      removedRevantPostsFromBlockedProfiles();
+      setState((){});
     });
   }
   
@@ -232,9 +241,10 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     return posts;
   }  
 
-  removeBlockedProfilesFromPagingController() async {
+  removedRevantPostsFromBlockedProfiles() async {
     final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
-    pagingController.itemList?.removeWhere((p) => blockedProfiles.contains(p));
+    final blockedProfileCodes = blockedProfiles.map((p) => p.code).toList();
+    pagingController.itemList?.removeWhere((p) => blockedProfileCodes.contains(p.profileCode));
   }  
 
   removeUnseenPostHandler(String shortcode) async {

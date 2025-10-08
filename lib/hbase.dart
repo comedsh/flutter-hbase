@@ -22,7 +22,6 @@ export 'src/pages/domain/post/pages/category_post_album_list_view_page.dart';
 export 'src/pages/domain/post/pages/category_post_full_screen_list_view_page.dart';
 export 'src/pages/domain/post/pages/post_submit_page.dart';
 export 'src/pages/domain/post/model/post_page_changed_notification.dart';
-export 'src/pages/domain/post/model/post_unseen_notification.dart';
 export 'src/pages/domain/post/service/post_page_service.dart';
 export 'src/pages/domain/profile/widgets/profile_avatar.dart';
 export 'src/pages/domain/profile/widgets/follow.dart';
