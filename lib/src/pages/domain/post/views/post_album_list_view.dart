@@ -73,6 +73,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await Paging.nextPage(pageNum, widget.postPager, pagingController, context);
+      removeBlockedProfilesFromPagingController();
       if (pageNum != 1) UserService.sendReloadUserEvent();
     });
 
@@ -84,6 +85,13 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     //     await nextPage(1);  // 注意这里才开始正式加载远程第 1 页面
     //   }
     // });
+
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('block profile event received, block profile: ${p?.code}');
+      /// 这里即便是调用了 [removeBlockedProfilesFromPagingController] 也无效，因为页面无法刷新，因此只能 pullRefresh
+      pullRefresh();
+    });    
   }
   
   @override
@@ -218,6 +226,11 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
       debugPrint('$PostAlbumListView.__filterPosts, after filter duplicates, get totally ${posts.length} remote posts');
     }
     return posts;
+  }  
+
+  removeBlockedProfilesFromPagingController() async {
+    final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    pagingController.itemList?.removeWhere((p) => blockedProfiles.contains(p));
   }  
 
 }
