@@ -1,7 +1,7 @@
 class Profile {
   final String code;
   final String name;
-  final String avatar;
+  final String avatar; // 头像 url
   final String? description;
   final int followerCount;  // 粉丝数量
   final int followedCount;  // 关注数量

@@ -28,6 +28,7 @@ export 'src/pages/domain/profile/widgets/profile_avatar.dart';
 export 'src/pages/domain/profile/widgets/follow.dart';
 export 'src/pages/domain/profile/views/profile_list_view.dart';
 export 'src/pages/domain/profile/pages/profile_page.dart';
+export 'src/pages/domain/profile/model/block_profile_notification.dart';
 export 'src/pages/domain/search/search_bar_callbacks.dart';
 
 export 'src/pages/nav_pages/hotspot/views/hotspot_profile_card_swiper_view.dart';
@@ -54,6 +55,7 @@ export 'src/domain/post/post_pager.dart';
 export 'src/domain/post/post_service.dart';
 export 'src/domain/profile/profile.dart';
 export 'src/domain/profile/profile_pager.dart';
+export 'src/domain/profile/profile_service.dart';
 export 'src/domain/channel/channel.dart';
 export 'src/domain/channel/channel_tag.dart';
 export 'src/domain/user/user_service.dart';
@@ -67,3 +69,4 @@ export 'src/domain/download/download_cache.dart';
 
 export 'src/core/hbase_appconfig.dart';
 export 'src/core/hbase_response_handler.dart';
+export 'src/core/hbase_state_manager.dart';

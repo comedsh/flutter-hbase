@@ -69,6 +69,12 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
         : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
       PostPageChangedNotification(index).dispatch(context);
     });
+
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('block profile event received, block profile: ${p?.code}');
+      await removeRelvantPostsWhenProfileGetBlocked();
+    });          
   }
 
   @override
@@ -333,11 +339,21 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
     });
   }
 
-  /// 该方法中过滤掉了屏蔽的 posts
+  removeRelvantPostsWhenProfileGetBlocked() async {
+    var blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    var blockedProfileCodes = blockedProfiles.map((p) => p.code).toList();
+    setState(() => posts.removeWhere((Post p) => blockedProfileCodes.contains(p.profileCode)));
+  }
+
+  /// 该方法中过滤掉了屏蔽的 posts 以及关联 blocked profiles 的 posts
   appendPosts(List<Post> newPosts) async {
     var unSeenPosts = await PostUnseenService.loadUnseenPosts();
+    var blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    var blockedProfileCodes = blockedProfiles.map((p) => p.code).toList();
     // 注意直接从源 newPosts 中进行了删除
-    newPosts.removeWhere((p) => unSeenPosts.contains(p.shortcode));
+    newPosts.removeWhere((p) => 
+      unSeenPosts.contains(p.shortcode) || blockedProfileCodes.contains(p.profileCode)
+    );
     posts.addAll(newPosts);
   }
 

@@ -25,6 +25,13 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
   void initState() {
     super.initState();
 
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('block profile event received, block profile: ${p?.code}');
+      await removeBlockedProfilesFromProfileGroup();
+      setState((){});
+    });          
+
     /// 远程初始化 profile group
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await initProfileGroup();
@@ -99,6 +106,7 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
         pageSize: 7
       );
       profileGroup = await profileGroupPager.nextPage();
+      await removeBlockedProfilesFromProfileGroup();
       setState(() {
         loading = false;
         hasError = false;
@@ -231,4 +239,10 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
     ).toList();
   }
 
+  removeBlockedProfilesFromProfileGroup() async {
+    final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    for (var profiles in profileGroup) {
+      profiles.removeWhere((p) => blockedProfiles.contains(p));
+    }
+  }  
 }

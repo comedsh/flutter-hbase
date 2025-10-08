@@ -3,6 +3,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+// ignore: unused_import
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DemoInitializer extends Initializer {
@@ -18,6 +19,7 @@ class DemoInitializer extends Initializer {
   @override
   initSubGetxServices() {
     Get.put(ScoreStateManager());
+    Get.put(HBaseStateManager());
   }
   
   @override
@@ -39,8 +41,8 @@ class DemoInitializer extends Initializer {
     // });
     
     Get.changeTheme(AppServiceManager.appConfig.appTheme.darkTheme);
-    // var pref = await SharedPreferences.getInstance();    
-    // await pref.clear();
+    var pref = await SharedPreferences.getInstance();    
+    await pref.clear();
   }
 
   @override

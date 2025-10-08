@@ -21,11 +21,19 @@ class _ProfileListViewState extends State<ProfileListView> {
   void initState() {
     super.initState();
 
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('block profile event received, block profile: ${p?.code}');
+      /// 这里即便是调用了 [removeBlockedProfilesFromPagingController] 也无效，因为页面无法刷新，因此只能 pullRefresh
+      pullRefresh();
+    });      
+
     /// 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
     /// 唯一需要特别注意的是 PagingController 会自动触发第一页的加载，因此无需手动的去触发第一页加载；
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await Paging.nextPage(pageNum, widget.pager, pagingController, context);
+      removeBlockedProfilesFromPagingController();
       if (pageNum != 1) UserService.sendReloadUserEvent();
     });
   }
@@ -136,5 +144,8 @@ class _ProfileListViewState extends State<ProfileListView> {
     pagingController.refresh();
   }  
 
-
+  removeBlockedProfilesFromPagingController() async {
+    final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    pagingController.itemList?.removeWhere((p) => blockedProfiles.contains(p));
+  }
 }
