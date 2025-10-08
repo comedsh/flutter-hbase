@@ -42,7 +42,10 @@ class PostFullScreenListView extends StatefulWidget {
 
 class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   /// 只有异步加载第一分页需要 loading
-  bool isFirstPageLoading = false;  
+  /// 记录一个 BUG：在当前情况下即是从 [_loadPreparedFirstPage] 中加载的第一页也要先将此参数设置为 true，目的是
+  /// 为了避免 pageController 提前被 [PageView] 拿来初始化了，从而导致从 album -> 此页面定位失败；
+  /// 且要注意的是 pageController 必须是在第一个分页加载好以后，通过 [PageController.initialPage] 的定位才会准确。
+  bool isFirstPageLoading = true;  
   /// 如果第一分页加载失败，会使用 FailRetrier 进行重试
   bool isFirstPageLoadFail = false; 
   final List<Post> posts = [];
@@ -55,33 +58,15 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   @override
   void initState() {
     super.initState();
-    // if (widget.firstPagePosts == null) {
-    //   isFirstPageLoading = true;
-    //   isFirstPageLoadFail = false; 
-    // }
-    initPageController();
     loadFirstPage();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      /// 因为 onPageChanged 事件不会在第一个页面被触发，从而导致 PostPageChangedNotification 在第一个页面的时候被
-      /// dispatch，但是 PostPageChangedNotification 又需要监听改事件，因此只能在 initState 中再发送一次了
-      var index = widget.chosedPost == null 
-        ? 0 
-        : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
-      PostPageChangedNotification(index).dispatch(context);
-    });
-
-    HBaseStateManager hbaseState = Get.find();
-    ever(hbaseState.blockProfileEvent, (Profile? p) async {
-      debugPrint('block profile event received, block profile: ${p?.code}');
-      await removeRelvantPostsWhenProfileGetBlocked();
-    });          
+    listenEvents();
   }
 
   @override
   Widget build(BuildContext context) {
     return 
     isFirstPageLoadFail 
-    ? FailRetrier(callback: _doGetFirstPage) 
+    ? FailRetrier(callback: _loadRemoteFirstPage) 
     : isFirstPageLoading 
       ? const Center(child: CircularProgressIndicator())
       /// 使用 Listener 来监听用户手指的 up drag 事件；其目的是当用户翻到最后一页后，能够判断用户的拖拽事件以决定是否追加下一个分页的内容；
@@ -126,14 +111,7 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return NotificationListener<PostUnseenNotification>(
-              onNotification: (notification) {
-                debugPrint('received the PostUnseenNotification, and try to remove post ${notification.shortcode}');
-                removePost(notification.shortcode);
-                return true;  // 不再向上冒泡了
-              },
-              child: PostFullScreenView(post: post, postIndex: index)
-            );
+            return PostFullScreenView(post: post, postIndex: index);
           },
         ),
       );
@@ -148,14 +126,78 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
     return page;
   }
 
+  /// 需要处理首次加载的逻辑，如果第一页是传入的 posts 则直接使用，否则获取最新的分页
+  void loadFirstPage() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // 如果第一页是通过传值传入，那么直接渲染
+      // ignore: curly_braces_in_flow_control_structures
+      if (widget.firstPagePosts != null) await _loadPreparedFirstPage();
+      // 否则则异步获取第一页的数据，然后渲染它
+      // ignore: curly_braces_in_flow_control_structures
+      else await _loadRemoteFirstPage();
+      initPageController();
+      /// 因为 onPageChanged 事件不会在第一个页面被 [PageView.onPageChanged] 触发，因此这里需要弥补这个缺陷，即是
+      /// 在初始化后的第一个页面也要触发，避免依赖 [PostPageChangedNotification] 事件的方法出现 bug，典型的就是从
+      /// PostFullScreenListView -> PostFullScreenListViewPage -> PostAlbumListView 页面过程中返回定位丢失；
+      var index = widget.chosedPost == null 
+        ? 0 
+        : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
+      // debugPrint('$PostFullScreenListView, inital index: $index');
+      PostPageChangedNotification(index).dispatch(context);      
+    });
+  }  
+
+  /// 从参数 [firstPagePost] 中加载第一页
+  _loadPreparedFirstPage() async {
+    assert(widget.firstPagePosts != null && widget.firstPagePosts!.isNotEmpty);
+    await appendPosts(widget.firstPagePosts!);
+    setState(() {
+      isFirstPageLoading = false;
+      isFirstPageLoadFail = false;
+    });
+  }
+
+  /// 注意如果第一页失败重试也会重用该句柄
+  _loadRemoteFirstPage() async {
+    try {
+      List<Post> page =  await nextPage();
+      // 如果加载时间过长，用户退出该页面后该请求返回，然后调用 setState 会因为该组件已经从 tree 中移除而报错；错误描述如下，
+      // flutter: Error: setState() called after dispose(): _PostPageFullScreenListState#7161c(lifecycle state: defunct, not mounted)
+      // flutter: This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree
+      // 因此为了避免这样的情况，使用 mounted 来判断该组件是否依然被挂载在 tree 中
+      if (mounted) {
+        // posts.addAll(posts_);          
+        await appendPosts(page);
+        initPageController();
+        setState((){
+          isFirstPageLoading = false;
+          isFirstPageLoadFail = false;
+          debugPrint('posts.length: ${posts.length}');
+        });
+     }    
+    } catch (e, stacktrace) {
+      debugPrint('$e, statcktrace below: $stacktrace');
+      if (mounted) {
+        setState((){
+          isFirstPageLoading = false;
+          isFirstPageLoadFail = true;
+        });
+      }
+      rethrow;
+    }
+  }  
+
+  /// 注意：pageController 必须是在第一个分页加载好以后，通过 [PageController.initialPage] 的跳转定位才会准确。
   void initPageController() {
 
     // 设置 initialPage
     pageController = PageController(
       // 通过 initialPage 初始化第一页；如果 chosedPost 被选中，那么第一次跳转的页面就是 chosedPost
       // 对应的页面，因此这里返回其对应的下标；      
-      initialPage: widget.chosedPost == null ? 0 : 
-        widget.firstPagePosts!.indexWhere((p) => p.shortcode == widget.chosedPost!.shortcode),
+      initialPage: widget.chosedPost == null 
+        ? 0 
+        : widget.firstPagePosts!.indexWhere((p) => p.shortcode == widget.chosedPost!.shortcode),
+      // initialPage: 1
     );
 
     /// 下面是测试有关 PageController listener 的相关试验代码，不要删除
@@ -168,6 +210,7 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
     /// flutter: pageView 滑动的距离 1864.0  索引 2.0
     /// 可以看到索引值是随着页面逐步进入的，当完整进入后，索引值为整数
     /// 利用 PageController.scrollToPosition 还可以直接跳转到某个页面
+    /*
     pageController.addListener(() { 
       // ignore: unused_local_variable
       double initialOffset = pageController.initialScrollOffset;
@@ -178,58 +221,10 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
       // ignore: unused_local_variable
       double page = pageController.page!;
 
-      // debugPrint("pageView 滑动的距离 $offset 页面索引 $page 初始 offset: $initialOffset");
+      debugPrint("pageView 滑动的距离 $offset 页面索引 $page 初始 offset: $initialOffset");
     });
-
+    */
   }
-
-  /// 需要处理首次加载的逻辑，如果第一页是传入的 posts 则直接使用，否则获取最新的分页
-  void loadFirstPage() {
-    // 如果第一页是通过传值传入，那么直接渲染
-    if (widget.firstPagePosts != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        // posts.addAll(widget.firstPagePosts!);
-        await appendPosts(widget.firstPagePosts!);
-        setState(() {
-          isFirstPageLoading = false;
-          isFirstPageLoadFail = false;
-        });
-      });
-    }
-    // 否则则异步获取第一页的数据，然后渲染它
-    else {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _doGetFirstPage();
-      });      
-    }
-  }  
-
-  /// 单独提取出这个方法的初衷是，失败重试也可以重用该句柄
-  void _doGetFirstPage() {
-    nextPage().then((posts_) async {
-      // 如果加载时间过长，用户退出该页面后该请求返回，然后调用 setState 会因为该组件已经从 tree 中移除而报错；错误描述如下，
-      // flutter: Error: setState() called after dispose(): _PostPageFullScreenListState#7161c(lifecycle state: defunct, not mounted)
-      // flutter: This error happens if you call setState() on a State object for a widget that no longer appears in the widget tree
-      // 因此为了避免这样的情况，使用 mounted 来判断该组件是否依然被挂载在 tree 中
-      if (mounted) {
-        // posts.addAll(posts_);          
-        await appendPosts(posts_);
-        setState((){
-          isFirstPageLoading = false;
-          isFirstPageLoadFail = false;
-          debugPrint('posts.length: ${posts.length}');
-        });
-      }
-    }).catchError((err) {
-      debugPrint('Error: $err');
-      if (mounted) {
-        setState((){
-          isFirstPageLoading = false;
-          isFirstPageLoadFail = true;
-        });
-      }
-    });    
-  }  
 
   /// [index] 当前 post 的下标
   /// [loadNextPageCallback] 当遇到 preload post 的时候执行该回调
@@ -328,18 +323,26 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
     }
   }
 
-  /// 将某个帖子从 posts 中删除，对应的是屏蔽功能
-  removePost(String shortcode) {
-    GlobalLoading.show('正在屏蔽中...');
-    Timer(Duration(milliseconds: Random.randomInt(800, 2800)), () async { 
-      await PostUnseenService.saveUnseenPost(shortcode);
-      setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
-      GlobalLoading.close();
-      // showInfoToast(msg: '屏蔽成功', location: ToastLocation.TOP);
+  listenEvents() {
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.unseenPostEvent, (Post? p) async {
+      debugPrint('$PostFullScreenListView, unseen post event received, block profile: ${p?.shortcode}');
+      await removeUnseenPostHandler(p!.shortcode);
     });
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('$PostFullScreenListView, block profile event received, unseen post: ${p?.code}');
+      await removeProfileEventHandler();
+    });    
   }
 
-  removeRelvantPostsWhenProfileGetBlocked() async {
+  /// 将某个帖子从 posts 中删除，对应的是屏蔽功能
+  removeUnseenPostHandler(String shortcode) async {
+    await PostUnseenService.saveUnseenPost(shortcode);
+    setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
+  }
+
+  /// 某个 profile 被拉黑的事件处理句柄，讲相关的 posts 清理掉
+  removeProfileEventHandler() async {
     var blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
     var blockedProfileCodes = blockedProfiles.map((p) => p.code).toList();
     setState(() => posts.removeWhere((Post p) => blockedProfileCodes.contains(p.profileCode)));

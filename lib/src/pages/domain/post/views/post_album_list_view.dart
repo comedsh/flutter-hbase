@@ -87,11 +87,15 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     // });
 
     HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.unseenPostEvent, (Post? p) async {
+      debugPrint('unseen post event received, block profile: ${p?.shortcode}');
+      await removeUnseenPostHandler(p!.shortcode);
+    });    
     ever(hbaseState.blockProfileEvent, (Profile? p) async {
-      debugPrint('block profile event received, block profile: ${p?.code}');
+      debugPrint('$PostAlbumListView, block profile event received, block profile: ${p?.code}');
       /// 这里即便是调用了 [removeBlockedProfilesFromPagingController] 也无效，因为页面无法刷新，因此只能 pullRefresh
       pullRefresh();
-    });    
+    });
   }
   
   @override
@@ -232,6 +236,13 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
     pagingController.itemList?.removeWhere((p) => blockedProfiles.contains(p));
   }  
+
+  removeUnseenPostHandler(String shortcode) async {
+    await PostUnseenService.saveUnseenPost(shortcode);
+    // setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
+    pagingController.itemList?.removeWhere((p) => p.shortcode == shortcode);
+    setState(() {});
+  }
 
 }
 

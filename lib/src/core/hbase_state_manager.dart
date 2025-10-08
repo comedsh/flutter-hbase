@@ -5,11 +5,14 @@ import 'package:hbase/hbase.dart';
 /// 要激活 [HBaseStateManager] 记得一定要在子项目中的 [initSubGetxServices] 方法将其注入
 class HBaseStateManager extends GetxService {
   Rx<Profile?> blockProfileEvent = Rx<Profile?>(null);
-  // Rx<int> blockProfileEvent = 0.obs;
+  Rx<Post?> unseenPostEvent = Rx<Post?>(null);  // unseen 译文为屏蔽，与字面意思吻合，因此取名 unseen
 
   updateBlockProfileEvent(Profile p) {
     blockProfileEvent.value = p;
-    // blockProfileEvent.value = DateTime.now().millisecond;
+  }
+
+  updateUnseenPostEvent(Post p) {
+    unseenPostEvent.value = p;
   }
 }
 
@@ -18,7 +21,11 @@ class HBaseStateService {
   static void triggerBlockProfileEvent(Profile p) {
     HBaseStateManager hsm = Get.find();
     hsm.updateBlockProfileEvent(p);
-    // hsm.updateBlockProfileEvent();
+  }
+
+  static void triggerUnseenPostEvent(Post p) {
+    HBaseStateManager hsm = Get.find();
+    hsm.updateUnseenPostEvent(p);
   }
 
 }

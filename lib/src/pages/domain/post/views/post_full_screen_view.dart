@@ -365,7 +365,12 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             confirmBtnTxt: '确定', 
             cancelBtnTxt: '不了');
           if (isConfirmed) {
-            if (context.mounted) PostUnseenNotification(post.shortcode).dispatch(context);
+            GlobalLoading.show('屏蔽中，请稍后...');
+            Timer(Duration(milliseconds: Random.randomInt(800, 2800)), () async {
+              HBaseStateService.triggerUnseenPostEvent(post);
+              GlobalLoading.close();
+              showInfoToast(msg: '已屏蔽', location: ToastLocation.CENTER);
+            });
           }
         },
         child: Column(
