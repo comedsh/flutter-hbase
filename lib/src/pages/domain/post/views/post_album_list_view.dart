@@ -98,12 +98,12 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     HBaseStateManager hbaseState = Get.find();
     ever(hbaseState.unseenPostEvent, (Post? p) async {
       debugPrint('unseen post event received, block profile: ${p?.shortcode}');
-      await removeUnseenPostHandler(p!.shortcode);
+      if(context.mounted) await removeUnseenPostHandler(p!.shortcode);
     });    
     ever(hbaseState.blockProfileEvent, (Profile? p) async {
       debugPrint('$PostAlbumListView, block profile event received, block profile: ${p?.code}');
       removedRevantPostsFromBlockedProfiles();
-      setState((){});
+      if(context.mounted) setState((){});
     });
   }
   

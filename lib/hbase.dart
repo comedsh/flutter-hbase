@@ -25,6 +25,7 @@ export 'src/pages/domain/post/model/post_page_changed_notification.dart';
 export 'src/pages/domain/post/service/post_page_service.dart';
 export 'src/pages/domain/profile/widgets/profile_avatar.dart';
 export 'src/pages/domain/profile/widgets/follow.dart';
+export 'src/pages/domain/profile/views/blocked_profile_list_view.dart';
 export 'src/pages/domain/profile/views/profile_list_view.dart';
 export 'src/pages/domain/profile/pages/profile_page.dart';
 export 'src/pages/domain/search/search_bar_callbacks.dart';
@@ -35,6 +36,7 @@ export 'src/pages/nav_pages/hotspot/pages/hotspot_profile_page.dart';
 export 'src/pages/nav_pages/hotspot/pages/hotspot_profile_list_view_page.dart';
 
 export 'src/pages/nav_pages/me/pages/me_page.dart';
+export 'src/pages/nav_pages/me/pages/sub/me_blocked_profiles_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_favorite_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_like_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/me_follow_page.dart';

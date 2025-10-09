@@ -134,7 +134,7 @@ class _ProfileListViewState extends State<ProfileListView> {
     ever(hbaseState.blockProfileEvent, (Profile? p) async {
       debugPrint('block profile event received, block profile: ${p?.code}');
       removePostsFromBlockedProfiles();
-      setState((){});
+      if(context.mounted) setState((){});
     });
   }
 

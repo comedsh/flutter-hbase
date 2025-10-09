@@ -49,7 +49,7 @@ class ProfilePage extends StatelessWidget {
             menuChildren: [
               MenuItemButton(
                 onPressed: () async {
-                  var isConfirmed = await showConfirmDialogWithoutContext(content: '确定拉黑该博主？', confirmBtnTxt: '确定', cancelBtnTxt: '不了');
+                  var isConfirmed = await showConfirmDialogWithoutContext(content: '确定拉黑该用户？', confirmBtnTxt: '确定', cancelBtnTxt: '不了');
                   if (isConfirmed) {
                     GlobalLoading.show('拉黑中，请稍后...');
                     Timer(Duration(milliseconds: Random.randomInt(800, 2800)), () async {

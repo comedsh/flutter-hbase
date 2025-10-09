@@ -33,6 +33,7 @@ class BlockProfileService {
     await _serialize(profiles);
   }
 
+  /// returns empty [] if no any data
   static Future<List<Profile>> getAllBlockedProfiles() async {
     var pref = await SharedPreferences.getInstance();
     List<String>? vals = pref.getStringList(BLOCKED_PROFILES);
