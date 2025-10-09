@@ -22,13 +22,13 @@ void main() {
 
 
   test('next ChannelPostPager', () async {
-    var pager = ChannelTagPostPager(chnCodes: ['hanbeauti'], isReelOnly: true);
+    var pager = ChannelTagPostPager(chnCodes: ['hanbeauti'], isReelOnly: true, pageLabel: PageLabel.homePage);
     List<Post> posts = await pager.nextPage();
     for(var post in posts) {
       debugPrint(post.toJson().toString());
     }
     debugPrint('===========================================================');
-    pager = ChannelTagPostPager(chnCodes: ['hanbeauti', 'star'], tagCodes: ['omei'], isReelOnly: true);
+    pager = ChannelTagPostPager(chnCodes: ['hanbeauti', 'star'], tagCodes: ['omei'], isReelOnly: true, pageLabel: PageLabel.homePage);
     posts = await pager.nextPage();
     for(var post in posts) {
       debugPrint(post.toJson().toString());

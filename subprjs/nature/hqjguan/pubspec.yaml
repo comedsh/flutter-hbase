@@ -36,6 +36,9 @@ dependencies:
   hbase: 
       path: ../../../
   proste_indexed_stack: ^0.2.4
+  visibility_detector: ^0.4.0+2
+  # 本地覆盖提供自定义属性配置
+  # liquid_glass_bottom_bar: ^0.0.6
   # icons_flutter: ^0.0.4
 
 dev_dependencies:
