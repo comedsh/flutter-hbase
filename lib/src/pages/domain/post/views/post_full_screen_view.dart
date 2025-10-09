@@ -40,7 +40,7 @@ class PostFullScreenView extends StatefulWidget{
   const PostFullScreenView({
     super.key, 
     required this.post,
-    required this.postIndex,
+    required this.postIndex
   });
 
   @override
@@ -53,13 +53,23 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   DateTime? userStayingEnd;
   /// 是否把这个值做成可配置的？不要，减少系统复杂性，如果有更好的值，下个版本更新。
   static const userStayedMillseconds = 2200; 
+  /// 解决控制面板定位会因为 [HBaseStateService.isBottomNavigationBarVisible] 通过 [VisibilityDetector] 检测延时
+  /// 过程中偏离的问题，通过 [visible] 参数先隐藏控制面板，等待 [HBaseStateService.isBottomNavigationBarVisible] 
+  /// 被准确赋值后，在展示；而这个等待很简单，就是通过一个 Timer 控制器等待 n 毫秒以后展示即可。
+  /// 
+  /// 而因为 PostFullScreenView 每次都会预先加载两个页面，因此只有第一次进入 [PostFullScreenListView] 页面的时候，才会
+  /// 有个 n 毫秒延迟展示，而之后向后滑动加载下一页的时候便不会有这个延迟了，因为下一页已经被预先加载了；
+  /// 
+  var visible = false.obs;
 
   var isShowEnterProfileTooltip = false.obs;
 
   @override
   void initState() {
     super.initState();
-    debugPrint('$PostFullScreenListView.initState calls');
+    debugPrint('$PostFullScreenListView.initState calls, route: ${Get.currentRoute}');
+    /// 见 [visible] 参数注解；在 iPhone 11 promax 真机上测试，等待如下的毫秒数比较稳妥；
+    Timer(const Duration(milliseconds: 550), () => visible.value = true);
   }
 
   @override
@@ -72,7 +82,6 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
 
   @override
   Widget build(BuildContext context) {
-
     /// VisibilityDetector 主要用来监视 UserStaying 事件的
     return VisibilityDetector(
       key: Key('${UniqueCode.uniqueShortCode}_${widget.post.shortcode}'),
@@ -122,17 +131,24 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
             Obx(() => _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)),
         ),
-        Positioned(
-          bottom: sp(34),
-          left: sp(20),
-          child: leftPanel(widget.post, context)
-        ),
-        Positioned(
-          bottom: sp(34),
-          // right: sp(20),
-          right: 0,
-          child: rightPanel(widget.post, context)
-        )
+        
+        Obx(() => Visibility(
+          visible: visible.value,
+          child: Positioned(
+            bottom: sp(offsetBottom),
+            left: sp(20),
+            child: leftPanel(widget.post, context)
+          ),
+        )),
+        Obx(() => Visibility(
+          visible: visible.value,
+          child: Positioned(
+            bottom: sp(offsetBottom),
+            // right: sp(20),
+            right: 0,
+            child: rightPanel(widget.post, context)
+          ),
+        ))
       ],
     );
   }
@@ -408,7 +424,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
       return BlurrableVideoPlayer(
         width: width, 
-        aspectRatio: aspectRatio, 
+        aspectRatio: aspectRatio,
         videoUrl: videoUrl,
         coverImgUrl: coverImgUrl,
         blurDepth: widget.post.blurDepth, 
@@ -429,7 +445,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     } else if (!user.isUnlockBlur && widget.post.blur == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
         width: width, 
-        aspectRatio: aspectRatio, 
+        aspectRatio: aspectRatio,
         videoUrl: videoUrl, 
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
@@ -440,7 +456,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     } else {
       return CachedVideoPlayer(
         width: width, 
-        aspectRatio: aspectRatio, 
+        aspectRatio: aspectRatio,
         videoUrl: videoUrl,
         coverImgUrl: coverImgUrl,
         fit: fit,
@@ -459,6 +475,33 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       isShowEnterProfileTooltip.value = true;
     }
   }
+
+  /// 之前试图通过 GlobalKey 的方式来检测是否可见，使用了 Google 的结果，失败；也因此最后通过 GetX state 结合 [VisibilityDetector]
+  /// 的方式来解决的，详情参考：[HBaseStateService.isBottomNavigationBarVisible]
+  bool get isBottomNavigationBarVisible => throw Exception('unImplemented');
+
+  /// 注意，返回的 offsetTop 是以左上角开始即 (0,0) 开始
+  double get bottomNavigationBarOffsetTop {
+    /// 只要 BottomNavigationBar 在 tree 中无论是否可见，[bottomNavigationBarKey.currentContext] 都不会返回 null
+    if (bottomNavigationBarKey.currentContext != null) {
+      final RenderBox renderBox = bottomNavigationBarKey.currentContext!.findRenderObject() as RenderBox;
+      final Offset globalPosition = renderBox.localToGlobal(Offset.zero);
+
+      // globalPosition.dx and globalPosition.dy will give you the x and y coordinates
+      // of the top-left corner of the widget relative to the screen.
+      debugPrint('bottomAppBarKey Global Position: $globalPosition, screen height: ${Screen.height(context)}');
+      return globalPosition.dy;
+    }
+    throw Exception('bottomAppBarOffsetTop is not in the tree which means it is not used in current page');
+  }
+
+  /// 正如 [HBaseStateService.isBottomNavigationBarVisible] 中所描述的那样，因为可见性是通过 [VisibilityDetector] 来控制的
+  /// 这是有延迟的，因此如果没有延时展示机制的话，会先看到控制面板开始定位偏离，稍后可以被 Obx 修正。
+  double get offsetBottom => HBaseStateService.isBottomNavigationBarVisible() 
+    ? (Screen.height(context) - bottomNavigationBarOffsetTop) // 结果是 bottom appbar offset bottom
+      // 在模拟器上测试 SE 小屏幕下要偏移 20 否则和 bottom appbar 边缘有重叠，可能是像素计算方式的问题导致的，微调一下
+      + (Device.isSmallSizeScreen(context) ? 20.0 : 16.0)  
+    : 34.0; 
 
   /// 逻辑非常的简单，休眠 3 秒钟后，将 unBlur 的权限注入即可；此时通过 GetX 的状态更新即可更新界面
   // ignore: unused_element

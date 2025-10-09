@@ -539,7 +539,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.1+5"
   hive:
     dependency: transitive
     description:
@@ -1277,10 +1277,10 @@ packages:
     dependency: transitive
     description:
       name: sycomponents
-      sha256: "89216247efe13e381cd08d3d9536b1429976b9f284f336667518d4617904ad2a"
+      sha256: "6b0907f334b33529a4dce4e5471765beb34f23880d16257e37396f8c51b55abe"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.6+11"
+    version: "2.1.6+13"
   synchronized:
     dependency: transitive
     description:

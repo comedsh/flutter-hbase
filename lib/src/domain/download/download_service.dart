@@ -108,8 +108,8 @@ class DownloadService {
                   children: ListTile.divideTiles(
                     context: context,
                     tiles:[
-                      /// 注意在七颜第一次上线的时候，in-app-purchase consumable iap product 没有审核通过，导致展示失败
-                      /// 如果审核没有通过这里的 pd 为 null 也就不展示即可，因此 pd != null 是为了兼容这种情况
+                      /// 注意在七颜第一次上线的时候，in-app-purchase consumable iap product 没有 chk 通过，导致展示失败
+                      /// 如果 chk 没有通过这里的 pd 为 null 也就不展示即可，因此 pd != null 是为了兼容这种情况
                       ds.payToDownload != null && pd != null
                         ? DownloadWidget.listTileItem(
                             icon: Icon(MaterialIcons.save_alt, size: sp(26)),

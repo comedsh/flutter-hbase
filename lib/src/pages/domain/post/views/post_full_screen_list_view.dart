@@ -42,8 +42,9 @@ class PostFullScreenListView extends StatefulWidget {
 
 class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   /// 只有异步加载第一分页需要 loading
-  /// 记录一个 BUG：在当前情况下即是从 [_loadPreparedFirstPage] 中加载的第一页也要先将此参数设置为 true，目的是
-  /// 为了避免 pageController 提前被 [PageView] 拿来初始化了，从而导致从 album -> 此页面定位失败；
+  /// 记录一个 BUG：在当前情况下即便是从 [_loadPreparedFirstPage] 中加载的第一页也要先将此参数设置为 true，目的是
+  /// 为了避免未经过 [initPageController] 方法所初始化的 [pageController] 提前被 [PageView] 拿来初始化自己了，
+  /// 从而导致从 album page 进入此页面 post 跳转定位失败；
   /// 且要注意的是 pageController 必须是在第一个分页加载好以后，通过 [PageController.initialPage] 的定位才会准确。
   bool isFirstPageLoading = true;  
   /// 如果第一分页加载失败，会使用 FailRetrier 进行重试
@@ -130,11 +131,11 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
   void loadFirstPage() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // 如果第一页是通过传值传入，那么直接渲染
-      // ignore: curly_braces_in_flow_control_structures
-      if (widget.firstPagePosts != null) await _loadPreparedFirstPage();
-      // 否则则异步获取第一页的数据，然后渲染它
-      // ignore: curly_braces_in_flow_control_structures
-      else await _loadRemoteFirstPage();
+      if (widget.firstPagePosts != null) {
+        await _loadPreparedFirstPage();
+      } else {
+        await _loadRemoteFirstPage();
+      }
       initPageController();
       /// 因为 onPageChanged 事件不会在第一个页面被 [PageView.onPageChanged] 触发，因此这里需要弥补这个缺陷，即是
       /// 在初始化后的第一个页面也要触发，避免依赖 [PostPageChangedNotification] 事件的方法出现 bug，典型的就是从
@@ -143,7 +144,8 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
         ? 0 
         : PostPageService.getIndex(widget.firstPagePosts!, widget.chosedPost!)!;
       // debugPrint('$PostFullScreenListView, inital index: $index');
-      PostPageChangedNotification(index).dispatch(context);      
+      // ignore: use_build_context_synchronously
+      PostPageChangedNotification(index).dispatch(context);
     });
   }  
 

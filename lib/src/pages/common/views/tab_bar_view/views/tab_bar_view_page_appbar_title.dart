@@ -75,7 +75,7 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
             );
           }
         ).toList()),
-        extendBodyBehindAppBar: true,
+        extendBodyBehindAppBar: isExtendBodyBehindAppBar
       ),
     );
   }

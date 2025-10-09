@@ -17,6 +17,7 @@ class HQJGuanInitializer extends Initializer {
   @override
   initSubGetxServices() {
     Get.put(ScoreStateManager());
+    Get.put(HBaseStateManager());
   }
   
   @override

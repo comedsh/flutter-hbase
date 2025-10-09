@@ -119,7 +119,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
                     padding: const EdgeInsets.all(12),
                     onPressed: () async {
                       if (isSubmitted) {
-                        // await showAlertDialogWithoutContext(content: '正在等待审核，不可追加新的作品');
+                        // await showAlertDialogWithoutContext(content: '正在等待 chk ，不可追加新的作品');
                         return;
                       }
                       if (postSlots.length > widget.limit!) {
@@ -156,7 +156,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
                     padding: const EdgeInsets.all(12),
                     onPressed: () async {
                       if (isSubmitted) {
-                        // await showAlertDialogWithoutContext(content: '正在等待审核，不可追加新的作品');
+                        // await showAlertDialogWithoutContext(content: '正在等待 chk ，不可追加新的作品');
                         return;
                       }
                       if (postSlots.length > widget.limit!) {
@@ -226,7 +226,7 @@ class _PostSubmitPageState extends State<PostSubmitPage> {
               borderRadius: BorderRadius.circular(30.0),
               onPressed: () {  },
               child: Text(
-                '等待审核中...', 
+                '等待 chk 中...', 
                 style: TextStyle(
                   fontSize: sp(18), 
                   fontWeight: FontWeight.bold,                                                                                                                        
