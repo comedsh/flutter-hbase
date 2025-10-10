@@ -416,7 +416,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   @Deprecated('已经被 {PostCarouselService.imageCreator} 方法所取代')
   Widget _imgCreator(String url, double width, double aspectRatio) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && widget.post.blurType == BlurType.blur) {
         return BlurrableImage(
           blurDepth: widget.post.blurDepth,
           onTap: () => Get.to(() => SalePage(
@@ -436,7 +436,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   // ignore: unused_element  
   Widget _videoCreator(String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && widget.post.blurType == BlurType.blur) {
       return BlurrableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio,
@@ -457,7 +457,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
       );
-    } else if (!user.isUnlockBlur && widget.post.blur == BlurType.limitPlay) {
+    } else if (!user.isUnlockBlur && widget.post.blurType == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio,

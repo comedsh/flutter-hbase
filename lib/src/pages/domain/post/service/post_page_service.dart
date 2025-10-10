@@ -23,7 +23,7 @@ class PostCarouselService {
     required double aspectRatio
   }) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && post.blurType == BlurType.blur) {
         return BlurrableImage(
           blurDepth: post.blurDepth,
           onTap: () => Get.to(() => SalePage(
@@ -48,7 +48,7 @@ class PostCarouselService {
     required BoxFit fit
   }) {
     var user = HBaseUserService.user;
-    if (!user.isUnlockBlur && post.blur == BlurType.blur) {
+    if (!user.isUnlockBlur && post.blurType == BlurType.blur) {
       return BlurrableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio,
@@ -69,12 +69,13 @@ class PostCarouselService {
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
       );
-    } else if (!user.isUnlockBlur && post.blur == BlurType.limitPlay) {
+    } else if (!user.isUnlockBlur && post.blurType == BlurType.limitPlay) {
       return DurationLimitableVideoPlayer(
         width: width, 
         aspectRatio: aspectRatio,
-        videoUrl: videoUrl, 
+        videoUrl: videoUrl,
         coverImgUrl: coverImgUrl,
+        millsecondsToPlay: post.limitPlayMilliseconds!,
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,

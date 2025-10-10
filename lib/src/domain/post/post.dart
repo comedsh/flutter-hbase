@@ -30,8 +30,9 @@ class Post {
   bool isLiked;
   bool isFavorited;
   final List<PostSlot> slots;
-  final BlurType blur;
+  final BlurType blurType;
   final BlurDepth? blurDepth;
+  final int? limitPlayMilliseconds;
   final Profile profile;
 
   Post({
@@ -51,8 +52,9 @@ class Post {
     required this.isLiked, 
     required this.isFavorited,
     required this.slots,
-    required this.blur,
+    required this.blurType,
     this.blurDepth,
+    this.limitPlayMilliseconds,
     required this.profile
   });
   
@@ -73,8 +75,9 @@ class Post {
       isLiked = json['isLiked'],
       isFavorited = json['isFavorited'],
       slots = json['slots'].map<PostSlot>((s) => PostSlot.fromJson(s)).toList(),
-      blur = BlurType.values.byName(json['blur']),
+      blurType = BlurType.values.byName(json['blurType']),
       blurDepth = json['blurDepth'] != null ? BlurDepth.values.byName(json['blurDepth']) : null,
+      limitPlayMilliseconds = json['limitPlayMilliseconds'],
       profile = Profile.fromJson(json['profile']);
 
   Map<String, dynamic> toJson() => 
@@ -94,7 +97,7 @@ class Post {
       'isPinned': isPinned,
       'isLiked': isLiked,
       'isFavorited': isFavorited,
-      'blur': blur.name,
+      'blur': blurType.name,
       'blurDepth': blurDepth?.name
     };  
 

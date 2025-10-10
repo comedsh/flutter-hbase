@@ -204,7 +204,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
     }
     // 然后创建 img
     dynamic img = CachedImage(imgUrl: post.thumbnail, width: width);
-    if (!HBaseUserService.user.isUnlockBlur && post.blur == BlurType.blur) { 
+    if (!HBaseUserService.user.isUnlockBlur && post.blurType == BlurType.blur) { 
       img = BlurrableImage(child: img, unlockable: false, blurDepth: post.blurDepth);
       /// 误删，以下代码是为了验证 blur 情况下拖动 album 会有图片边缘一个像素的线条抖动的问题；通过下面直接使用 blur 代码的方式
       /// 可以确认是 Blur 框架的问题；看来要彻底解决这个问题，就必须自己写 Blur 的代码逻辑了；
