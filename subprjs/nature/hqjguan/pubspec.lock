@@ -1293,10 +1293,10 @@ packages:
     dependency: transitive
     description:
       name: sypages
-      sha256: "6472ab804d980cea01f25040680080c002b140f9895352fa9823dcda51e030d0"
+      sha256: "091ab643530e85a71657a096cf4cd3a54bc9fed0eecd0ff7ff27b6ff9a4f604c"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.0+9"
+    version: "2.0.0+10"
   sypayment:
     dependency: transitive
     description:

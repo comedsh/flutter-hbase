@@ -21,6 +21,9 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
   var loading = true;
   var hasError = false;
   late List<List<Profile>> profileGroup;
+  /// viewportFraction 是指该 [PageView] 单个 page 最多能够占用的屏幕的宽度
+  final controller = PageController(viewportFraction: 0.8, keepPage: true);
+
   @override
   void initState() {
     super.initState();
@@ -40,8 +43,6 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
 
   @override
   Widget build(BuildContext context) {
-    /// viewportFraction 是指该 page 最多能够占用的屏幕的宽度
-    final controller = PageController(viewportFraction: 0.8, keepPage: true);
     
     return SizedBox(
       height: sp(500),

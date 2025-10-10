@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
             child: HotspotProfilePage(
               chnCodes: display.chnCodes,
               tags: display.hotTags,
+              showHotPosts: true, // TODO 通过后台配置是否要展示
             )
           ),
           /// 搜索页

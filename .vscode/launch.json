@@ -75,5 +75,14 @@
                 "--dart-define=APP_ENV=dev"
             ]
         },
+        {
+            "name": "hqjguan-prod",
+            "cwd": "subprjs/nature/hqjguan",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define=APP_ENV=prod"
+            ]
+        },        
     ]
 }

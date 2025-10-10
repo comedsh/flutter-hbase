@@ -30,6 +30,7 @@ export 'src/pages/domain/profile/views/profile_list_view.dart';
 export 'src/pages/domain/profile/pages/profile_page.dart';
 export 'src/pages/domain/search/search_bar_callbacks.dart';
 
+export 'src/pages/nav_pages/hotspot/views/hotspot_post_card_swiper_view.dart';
 export 'src/pages/nav_pages/hotspot/views/hotspot_profile_card_swiper_view.dart';
 export 'src/pages/nav_pages/hotspot/views/hotspot_profile_list_view.dart';
 export 'src/pages/nav_pages/hotspot/pages/hotspot_profile_page.dart';

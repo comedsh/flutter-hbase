@@ -17,7 +17,7 @@ class HBaseDisplay extends Display {
   final List<String> chnCodes;
   /// 总分类标签
   final List<ChannelTag> tags;
-  /// 热榜页面的 tags
+  /// 热榜页面的 tags，根据现在 model，如果这个值不存在那么返回的是一个空数组
   final List<ChannelTag> hotTags; 
   final List<String>? searchHotKeywords;
 
