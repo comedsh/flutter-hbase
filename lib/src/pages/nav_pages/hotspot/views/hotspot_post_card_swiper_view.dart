@@ -93,19 +93,21 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
       slots: post.slots, 
       indicatorPaddingBottom: 10, 
       imageCreator: (String url, double width, double aspectRatio) => 
-        CachedImage(
+        PostCarouselService.imageCreator(
+          post: post, 
+          url: url, 
           width: width, 
-          imgUrl: url, 
-          aspectRatio: aspectRatio,
-        ),
+          aspectRatio: aspectRatio
+        ) ,
       videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
-        CachedVideoPlayer(
+        PostCarouselService.videoCreator(
+          post: post, 
+          videoUrl: videoUrl, 
+          coverImgUrl: coverImgUrl, 
           width: width, 
           aspectRatio: cardWidth / cardHeight,
-          videoUrl: videoUrl,
-          coverImgUrl: coverImgUrl,
           // 特别注意：不能设置为 cover，否则向上拖拽的时候，视频会溢出出 Card 
-          fit: BoxFit.contain
+          fit: BoxFit.contain,
         ),
     );
   }

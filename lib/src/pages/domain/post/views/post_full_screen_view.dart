@@ -127,9 +127,21 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           slots: widget.post.slots, 
           indicatorPaddingBottom: 10, 
           imageCreator: (String url, double width, double aspectRatio) => 
-            Obx(() => _imgCreator(url, width, aspectRatio)),
+            Obx(() => PostCarouselService.imageCreator(
+              post: widget.post, 
+              url: url, 
+              width: width, 
+              aspectRatio: aspectRatio
+            )),
           videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
-            Obx(() => _videoCreator(videoUrl, coverImgUrl, width, aspectRatio, fit)),
+            Obx(() => PostCarouselService.videoCreator(
+              post: widget.post, 
+              videoUrl: videoUrl, 
+              coverImgUrl: coverImgUrl, 
+              width: width, 
+              aspectRatio: aspectRatio, 
+              fit: fit
+            )),
         ),
         
         Obx(() => Visibility(
@@ -401,6 +413,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     ];
   }
 
+  @Deprecated('已经被 {PostCarouselService.imageCreator} 方法所取代')
   Widget _imgCreator(String url, double width, double aspectRatio) {
     var user = HBaseUserService.user;
     if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
@@ -419,6 +432,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     }
   }
 
+  @Deprecated('已经被 {PostCarouselService.videoCreator} 方法所取代')
+  // ignore: unused_element  
   Widget _videoCreator(String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) {
     var user = HBaseUserService.user;
     if (!user.isUnlockBlur && widget.post.blur == BlurType.blur) {
