@@ -80,7 +80,7 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
                   });
                   await loadHotPosts();
               })
-              : createPostCard(posts[index])
+              : createPostCard(posts[index], index)
 
           );
         }
@@ -88,7 +88,20 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
     );
   }
 
-  Widget createPostCard(Post post) {
+  Widget createPostCard(Post post, int index) {
+    return Stack(
+      children: [
+        _createCarousel(post),
+        Positioned(
+          left: sp(16),
+          bottom: sp(30),
+          child: SimplePorifleIntroPanel(postIndex: index, post: post)
+        )
+      ]
+    );
+  }
+
+  Widget _createCarousel(Post post) {
     return AutoKnockDoorShowCaseCarousel(
       slots: post.slots, 
       indicatorPaddingBottom: 10, 
@@ -118,6 +131,6 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
 
   double get cardWidth => pageWidth - cardMarginRight;
   
-  double get cardHeight => sp(380.0);
+  double get cardHeight => sp(420.0);
 
 }

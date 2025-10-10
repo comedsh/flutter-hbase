@@ -40,18 +40,20 @@ class HotspotProfilePage extends StatelessWidget {
               , // 核心：两个并排的 if 必须使用 , 隔断否则语法报错
               if (showHotPosts == true)
                 ... [
-                  // SliverToBoxAdapter(child: 
-                  //   Center(
-                  //     child: Padding(
-                  //       padding: EdgeInsets.symmetric(vertical: sp(22)),
-                  //       child: Text('热门帖子', style: TextStyle(
-                  //         fontSize: sp(20.0), 
-                  //         fontWeight: FontWeight.bold, 
-                  //         color: Colors.amber)
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  // 当且仅当要展示 HotspotProfileCardSwiperView 组件的时候才需要展示热门帖子 title
+                  if (isHotspotProfileCardSwiperViewVisible)
+                    SliverToBoxAdapter(child: 
+                      Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: sp(22)),
+                          child: Text('热门帖子', style: TextStyle(
+                            fontSize: sp(20.0), 
+                            fontWeight: FontWeight.bold, 
+                            color: Colors.amber)
+                          ),
+                        ),
+                      ),
+                    ),
                   SliverToBoxAdapter(child: HotspotPostCardSwiperView(chnCodes: chnCodes,)),
                   SliverToBoxAdapter(child: SizedBox(height: sp(20)))
                 ]

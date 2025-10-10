@@ -13,6 +13,7 @@ export 'src/pages/domain/post/widgets/caption.dart';
 export 'src/pages/domain/post/widgets/like.dart';
 export 'src/pages/domain/post/widgets/favorite.dart';
 export 'src/pages/domain/post/widgets/jubao.dart';
+export 'src/pages/domain/post/widgets/simple_profile_intro_panel.dart';
 export 'src/pages/domain/post/views/post_list_view.dart';
 export 'src/pages/domain/post/views/post_album_list_view.dart';
 export 'src/pages/domain/post/views/post_full_screen_view.dart';

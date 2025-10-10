@@ -74,12 +74,14 @@ class PostCarouselService {
         width: width, 
         aspectRatio: aspectRatio,
         videoUrl: videoUrl, 
+        coverImgUrl: coverImgUrl,
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
-        ))
+        )),
+        fit: fit
       );      
     } else {
       return CachedVideoPlayer(
