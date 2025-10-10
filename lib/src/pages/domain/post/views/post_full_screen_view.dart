@@ -447,6 +447,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         width: width, 
         aspectRatio: aspectRatio,
         videoUrl: videoUrl, 
+        unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           initialSaleGroupId: SaleGroupIdEnum.subscr,
