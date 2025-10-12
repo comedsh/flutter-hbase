@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:hbase/hbase.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:ionicons/ionicons.dart';
@@ -235,6 +236,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
             ],
           ),
           SizedBox(height: sp(26)),
+          /// Caption 区域
           if (post.captionRaw != null)
             // 添加背景色使得文字可以突出展示
             Container(
@@ -271,6 +273,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                     ));
                   }
                 },
+                // tailer 中的文本样式务必保证和 Caption 中的一致；
+                tailer: uploadTsDisplayText(post)
               ),
           )
         ],
@@ -536,5 +540,20 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
       });                 
     });
   }
+
+  Widget uploadTsDisplayText(Post post) =>
+    Text(
+      (AppServiceManager.appConfig.display as HBaseDisplay).uploadTsDisplayMode == UploadTsDisplayMode.datetime
+      ? DateFormat('yyyy-MM-dd HH:mm').format(post.uploadTs.toLocal())
+      /// 1. 需要注意的是 GetTimeAgo 是按照 UTC 时间来比对的，因此下面的转换千万不要使用 .toLocal 转换成本地时间呢
+      /// 2. 如果时间超过一段时间了，就不会一 time ago 的方式展示了，估计 3、5 个月之前的吧，他会按照 [pattern] 所制定的格式展示了
+      /// 3. 如果设置 DateTime.now 之后的时间，不会显示刚刚，算法是：我猜测 GetTimeAgo 取的是绝对值，因为如果往后设置 2 个小时，显
+      ///    示 2 个小时前；因此最好不要像火酷那样提前预置 1 个小时，使得发布的内容可以提前一个小时展示“刚刚“
+      : GetTimeAgo.parse(post.uploadTs, locale: 'zh', pattern: 'yyyy-MM-dd HH:mm'),
+      /// 注意样式必须和 Caption 中的字体样式保持一致
+      style: TextStyle(
+        fontSize: sp(14), 
+        color: Colors.white)
+    );
 
 }

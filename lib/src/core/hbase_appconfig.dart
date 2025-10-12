@@ -9,11 +9,11 @@ abstract class HBaseAppConfig extends AppConfig {
   Widget get salePageBackgroundImage;
 }
 
-
 class HBaseDisplay extends Display {
   final bool showJubao;
   final bool showMeHomeScore;
   final bool showPostSubmit;
+  final UploadTsDisplayMode uploadTsDisplayMode;
   final List<String> chnCodes;
   /// 总分类标签
   final List<ChannelTag> tags;
@@ -28,6 +28,7 @@ class HBaseDisplay extends Display {
     required this.showJubao,    
     required this.showMeHomeScore, 
     required this.showPostSubmit,
+    required this.uploadTsDisplayMode,
     required this.chnCodes, 
     required this.tags, 
     required this.hotTags,
@@ -42,5 +43,11 @@ class HBaseDisplay extends Display {
       searchHotKeywords = json['searchHotKeywords']?.map<String>((s) => s.toString()).toList(),
       showMeHomeScore = json['showMeHomeScore'],
       showPostSubmit = json['showPostSubmit'],
+      uploadTsDisplayMode = UploadTsDisplayMode.values.byName(json['uploadTsDisplayMode']),
       super.fromJson();
+}
+
+enum UploadTsDisplayMode {
+  datetime,
+  timeAgo
 }

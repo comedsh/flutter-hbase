@@ -525,6 +525,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.2"
+  get_time_ago:
+    dependency: transitive
+    description:
+      name: get_time_ago
+      sha256: cd111914562ca2b938afbc73f715fab1f37795cc053924d08f6de59878781388
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   gradient_borders:
     dependency: transitive
     description:
@@ -539,7 +547,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "1.0.1+7"
+    version: "1.0.1+8"
   hive:
     dependency: transitive
     description:
