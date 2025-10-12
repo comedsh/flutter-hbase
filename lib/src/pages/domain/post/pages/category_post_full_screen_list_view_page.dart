@@ -35,6 +35,7 @@ class CategoryPostFullScreenListViewPage extends StatelessWidget {
         return PostFullScreenListView(
           postPager: postPager, 
           distanceCountToPreLoad: postPager.pageSize - 6,
+          isShowUploadTs: tab.id == 'latest', // 前后端必须约定好为 latest.
         );
       },
     );

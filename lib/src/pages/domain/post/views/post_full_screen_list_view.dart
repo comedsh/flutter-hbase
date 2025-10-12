@@ -9,6 +9,12 @@ import 'package:sycomponents/components.dart';
 
 /// 之所以将其定义为抽象类是为了能够让子系统拥有最大的自定义的灵活性，相关的实现嘞参考 [DemoPostFullScreenListPage]
 class PostFullScreenListView extends StatefulWidget {
+  /// throttle id 可以限制多个相同的 throttle
+  static const String loadNextThrottleName = 'load-next-page'; 
+  /// 时间尽量设置长一些，避免 preload 与 final page load 争用，试想，如果用户滑动非常快，在 preload
+  /// 还没有返回的时候，已经触达了最后一页，那么如果没有 Throttle 设置的话，两者会并发加载分页，造成争用；
+  /// 因此为了避免这种情况发生，throttle 时长应该尽量长；
+  static const int loadNextPageThrottleMilseconds = 3000;
   /// 预加载第一页数据，通常伴随 [chosedPost] 一起使用；当然，这里的第一页并不局限于一页 12/24 的数据，而是指
   /// 初始化 [PostFullScreenListView] 时候传入的第一页数据，可能上百条；
   final List<Post>? firstPagePosts;
@@ -20,12 +26,7 @@ class PostFullScreenListView extends StatefulWidget {
   final int distanceCountToPreLoad;
   /// 当滑动到新的分页所执行的回调方法
   final ValueChanged<int>? onPageChanged;
-  /// throttle id 可以限制多个相同的 throttle
-  static const String loadNextThrottleName = 'load-next-page'; 
-  /// 时间尽量设置长一些，避免 preload 与 final page load 争用，试想，如果用户滑动非常快，在 preload
-  /// 还没有返回的时候，已经触达了最后一页，那么如果没有 Throttle 设置的话，两者会并发加载分页，造成争用；
-  /// 因此为了避免这种情况发生，throttle 时长应该尽量长；
-  static const int loadNextPageThrottleMilseconds = 3000;
+  final bool isShowUploadTs;
 
   const PostFullScreenListView({
     super.key, 
@@ -33,7 +34,8 @@ class PostFullScreenListView extends StatefulWidget {
     this.chosedPost, 
     required this.postPager,
     required this.distanceCountToPreLoad,
-    this.onPageChanged
+    this.onPageChanged,
+    this.isShowUploadTs = false
   });
 
   @override
@@ -112,7 +114,7 @@ class _PostFullScreenListViewState extends State<PostFullScreenListView> {
           /// 要准确的获得 current page post 需要使用到 [onPageChanged] 方法
           itemBuilder: (BuildContext context, int index) {
             var post = posts[index];
-            return PostFullScreenView(post: post, postIndex: index);
+            return PostFullScreenView(post: post, postIndex: index, isShowUploadTs: widget.isShowUploadTs,);
           },
         ),
       );

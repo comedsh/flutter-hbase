@@ -10,12 +10,14 @@ class PostFullScreenListViewPage extends StatelessWidget {
   final Post? post;  
   final Pager<Post> postPager;
   final String? title;
+  final bool isShowUploadTs;
   const PostFullScreenListViewPage({
     super.key, 
     required this.postPager,
     this.posts, 
     this.post, 
-    this.title
+    this.title,
+    this.isShowUploadTs = false,
   });
 
   @override
@@ -41,6 +43,7 @@ class PostFullScreenListViewPage extends StatelessWidget {
           chosedPost: post, 
           postPager: postPager, 
           distanceCountToPreLoad: postPager.pageSize - 6,
+          isShowUploadTs: isShowUploadTs,
         )
       ),
     );

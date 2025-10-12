@@ -35,7 +35,7 @@ class ChannelTagPostPager extends Pager<Post> {
 
 class ProfilePostPager extends Pager<Post> {
   final String profileCode;
-  /// 只能是 'new'|'hot' 后台查询的时候会进行判断
+  /// 只能是 'latest'|'hot' 后台查询的时候会进行判断
   final String sortBy;
 
   ProfilePostPager({

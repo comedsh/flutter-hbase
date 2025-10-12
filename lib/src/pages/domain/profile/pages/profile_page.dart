@@ -19,7 +19,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var tabDatas = [ 
       TabData(id: 'hot', name: '热门'), 
-      TabData(id: 'new', name: "最新", isDefault: true)
+      TabData(id: 'latest', name: "最新", isDefault: true)
     ];
     return Scaffold(
       appBar: AppBar(
@@ -88,7 +88,8 @@ class ProfilePage extends StatelessWidget {
                     posts: posts, 
                     post: post, 
                     postPager: postPager,
-                    title: post.profile.name
+                    title: post.profile.name,
+                    isShowUploadTs: tab.id == 'latest',
                   ))
             );
           },

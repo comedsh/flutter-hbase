@@ -42,7 +42,8 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
                 posts: posts, 
                 post: post, 
                 postPager: postPager,
-                title: tab.name
+                title: tab.name,
+                isShowUploadTs: tab.id == 'latest',
               )) 
         );
       },

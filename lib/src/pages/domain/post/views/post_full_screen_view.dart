@@ -23,6 +23,8 @@ class PostFullScreenView extends StatefulWidget{
   final Post post;
   /// 通常 [PostFullScreenView] 是在列表中展示，这里的 [postIndex] 即表示该 post 在此列表中的下标
   final int postIndex;
+  /// 根据现在的业务要求（学抖音的做法）仅在最新的页面中展示，包含分类页中的最新以及 Profile 的最新页面中
+  final bool isShowUploadTs;
 
   /// 解锁 blur 和 translation 逻辑的重要说明
   /// 1. 前言：因为现在解锁逻辑只会放到 [PostFullScreenView] 中，因此将此重要说明放到这里也是合情合理的。
@@ -41,7 +43,8 @@ class PostFullScreenView extends StatefulWidget{
   const PostFullScreenView({
     super.key, 
     required this.post,
-    required this.postIndex
+    required this.postIndex,
+    this.isShowUploadTs = false
   });
 
   @override
@@ -274,7 +277,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                   }
                 },
                 // tailer 中的文本样式务必保证和 Caption 中的一致；
-                tailer: uploadTsDisplayText(post)
+                tailer: widget.isShowUploadTs ? uploadTsDisplayText(post) : null
               ),
           )
         ],
