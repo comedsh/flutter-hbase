@@ -1,7 +1,7 @@
 enum UserAuthority {
   unlockBlur,
-  unlockPicDownload,
-  unlockVideoDownload,
+  showPicDownload,
+  showVideoDownload,
   unlockSingleSale,
   unlockSubscrSale,
   unlockPointSale,
