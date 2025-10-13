@@ -78,11 +78,22 @@ class DownloadService {
 
   static showBottomSheet(BuildContext context, DownloadStrategy ds, Post post) async {
 
+    if (
+      ds.unlimitToDownload == false &&
+      ds.payToDownload == null && 
+      ds.pointToDownload == null &&
+      ds.purchasePointDesc == null &&
+      ds.purchaseSubscrDesc == null &&
+      ds.quotaToDownload == null &&
+      ds.scoreToDownload == null
+    ) debugPrint('WARNING: 没有一个 DownloadStrategy 是有效的，check backend conf');
+
     /// 如果支持付费下载，那么这里需要提前解析出必要参数 pd
     ProductDetails? pd;
     if (ds.payToDownload != null) {
       var iapProductId = ds.payToDownload!.iapProductId;
       pd = await PaymentParser.parseSingle(iapProductId);
+      debugPrint("WARNING: iapProductId $iapProductId is not ready for sale, check your configuration from AppleStore Connect");
     }
 
     /// 构建下载 items
