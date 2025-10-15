@@ -131,9 +131,9 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
           ]
         ],
       ),
-      /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
       Wrap(children: [
         // Text('从 ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.start.toLocal())} 开始至 ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.end.toLocal())} 结束'),
+        /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
         Text('${HBaseUtils.dateFormatterHhmm.format(user.subscr!.start.toLocal())} - ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.end.toLocal())}'),
       ],),
       /// 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
