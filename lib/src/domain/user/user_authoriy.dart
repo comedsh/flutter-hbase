@@ -4,6 +4,8 @@ enum UserAuthority {
   showVideoDownload,
   unlockSingleSale,
   unlockSubscrSale,
+  unlockAdvancedSubscrSale,
+  unlockNonRenewingSubscrSale,
   unlockPointSale,
   unlockTranslation,
   /// 一种随机性的打分；比如在用户翻页、打开 app 后的普通行为中产生

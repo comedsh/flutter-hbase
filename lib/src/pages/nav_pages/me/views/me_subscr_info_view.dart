@@ -194,9 +194,21 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
   /// BigButton 展示逻辑非常的简单，unlockSubscrSale 的展示优先级高于 unlockPointSale 
   Widget? bigButton() {
     var user = HBaseUserService.user;
-    if (user.isUnlockSubscrSale) {
+    /// 优先展示会员的展示方式
+    /// 三种方式：立即开通，升级订阅，更换订阅
+    /// 显示逻辑也非常的简单，因为怎么展示都是由后台的 Authorities 进行配置的，因此展示逻辑如下所述，
+    /// 1. 如果用户有 unlockSubscrSale 权限或者 unlockNonRenewingSubscrSale 那么展示“立即开通“
+    /// 2. 如果用户只有 unlockAdvancedSubscrSale 那么展示“升级订阅”（后台配置可以确保普通有效订阅权限中才包含，因此确保了只有有效期内会员才可以）
+    if (user.isUnlockSubscrSale || user.isUnlockAdvancedSubscrSale || user.isUnlockNonRenewingSubscrSale) {
+      var text = '';
+      if (user.isUnlockSubscrSale || user.isUnlockNonRenewingSubscrSale) {
+        text = '立即开通';
+      }
+      else {
+        text = '升级订阅';
+      }
       return __bigButton(
-        text: '立即开通', 
+        text: text, 
         width: sp(144.0), 
         fontSize: sp(16.0), 
         clickCallback: () => Get.to(() => SalePage(
@@ -205,6 +217,7 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         ))
       );
     }
+    /// 如果不能展示会员的，那么展示积分
     else if (user.isUnlockPointSale) {
       return __bigButton(
         text: '购买积分', 
