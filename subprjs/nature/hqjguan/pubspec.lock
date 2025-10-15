@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: appbase
-      sha256: a9a2d9cd6df0ef736cc04c68cc930a65e52327773f6441f25814ef73d00087b0
+      sha256: "8be1b7d86bbb5d44fd6623cf46c1412702c973a1671f8383ec02b73a431082b8"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+59"
+    version: "1.0.0+60"
   archive:
     dependency: transitive
     description:
@@ -547,7 +547,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "1.0.1+8"
+    version: "1.0.1+11"
   hive:
     dependency: transitive
     description:

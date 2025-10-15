@@ -31,6 +31,8 @@ class HBaseUser extends User {
   bool get isShowPicDownload => authorities.contains(UserAuthority.showPicDownload);
   bool get isShowVideoDownload => authorities.contains(UserAuthority.showVideoDownload);
   bool get isUnlockSubscrSale => authorities.contains(UserAuthority.unlockSubscrSale);
+  bool get isUnlockAdvancedSubscrSale => authorities.contains(UserAuthority.unlockAdvancedSubscrSale);
+  bool get isUnlockNonRenewingSubscrSale => authorities.contains(UserAuthority.unlockNonRenewingSubscrSale);
   bool get isUnlockPointSale => authorities.contains(UserAuthority.unlockPointSale);
   bool get isUnlockTranslation => authorities.contains(UserAuthority.unlockTranslation);
   bool get isUnlockScoreSimple => authorities.contains(UserAuthority.unlockScoreSimple);

@@ -50,18 +50,18 @@ class HBaseUserService {
 
   /// 根据 [UserAuthority.unlockSubscrSale] 和 [UserAuthority.unlockPointSale] 过滤出
   /// 可用的 saleGroups
-  @Deprecated('已经从后台进行过滤了')
-  static List<SaleGroup> getAvailableSaleGroups() {
-    var user = HBaseUserService.user;
-    List<SaleGroup> saleGroups = [];
-    for (var sg in AppServiceManager.appConfig.saleGroups) {
-      if (sg.type == SaleGroupType.subscr || sg.type == SaleGroupType.noRenewalSubscr) {
-        if (user.isUnlockSubscrSale) saleGroups.add(sg);
-      }
-      if (sg.type == SaleGroupType.points) {
-        if (user.isUnlockPointSale) saleGroups.add(sg);
-      }
-    }
-    return saleGroups;
-  }
+  // @Deprecated('已经从后台进行过滤了')
+  // static List<SaleGroup> getAvailableSaleGroups() {
+  //   var user = HBaseUserService.user;
+  //   List<SaleGroup> saleGroups = [];
+  //   for (var sg in AppServiceManager.appConfig.saleGroups) {
+  //     if (sg.type == SaleGroupType.subscr || sg.type == SaleGroupType.nonRenewingSubscr) {
+  //       if (user.isUnlockSubscrSale) saleGroups.add(sg);
+  //     }
+  //     if (sg.type == SaleGroupType.points) {
+  //       if (user.isUnlockPointSale) saleGroups.add(sg);
+  //     }
+  //   }
+  //   return saleGroups;
+  // }
 }
