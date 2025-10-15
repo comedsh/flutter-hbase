@@ -271,7 +271,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                   if (isConfirmed) {
                     Get.to(() => SalePage(
                       saleGroups: AppServiceManager.appConfig.saleGroups,
-                      initialSaleGroupId: SaleGroupIdEnum.subscr,
+                      initialSaleGroupType: SaleGroupType.subscr,
                       backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                     ));
                   }
@@ -430,7 +430,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           blurDepth: widget.post.blurDepth,
           onTap: () => Get.to(() => SalePage(
             saleGroups: AppServiceManager.appConfig.saleGroups,
-            initialSaleGroupId: SaleGroupIdEnum.subscr,
+            initialSaleGroupType: SaleGroupType.subscr,
             backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
           )),
           unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
@@ -462,7 +462,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
-          initialSaleGroupId: SaleGroupIdEnum.subscr,
+          initialSaleGroupType: SaleGroupType.subscr,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
       );
@@ -474,7 +474,7 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
-          initialSaleGroupId: SaleGroupIdEnum.subscr,
+          initialSaleGroupType: SaleGroupType.subscr,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         ))
       );      

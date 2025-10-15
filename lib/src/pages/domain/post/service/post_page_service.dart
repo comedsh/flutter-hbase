@@ -28,7 +28,7 @@ class PostCarouselService {
           blurDepth: post.blurDepth,
           onTap: () => Get.to(() => SalePage(
             saleGroups: AppServiceManager.appConfig.saleGroups,
-            initialSaleGroupId: SaleGroupIdEnum.subscr,
+            initialSaleGroupType: SaleGroupType.subscr,
             backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
           )),
           unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
@@ -65,7 +65,7 @@ class PostCarouselService {
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
-          initialSaleGroupId: SaleGroupIdEnum.subscr,
+          initialSaleGroupType: SaleGroupType.subscr,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
       );
@@ -79,7 +79,7 @@ class PostCarouselService {
         unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
         onTap: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
-          initialSaleGroupId: SaleGroupIdEnum.subscr,
+          initialSaleGroupType: SaleGroupType.subscr,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         )),
         fit: fit

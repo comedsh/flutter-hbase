@@ -176,7 +176,7 @@ class DownloadService {
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => SalePage(
                                     saleGroups: AppServiceManager.appConfig.saleGroups,
-                                    initialSaleGroupId: SaleGroupIdEnum.subscr,
+                                    initialSaleGroupType: SaleGroupType.subscr,
                                     backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                                   ),
                                 ),
@@ -255,7 +255,7 @@ class DownloadService {
                                 MaterialPageRoute<void>(
                                   builder: (BuildContext context) => SalePage(
                                     saleGroups: AppServiceManager.appConfig.saleGroups,
-                                    initialSaleGroupId: SaleGroupIdEnum.points,
+                                    initialSaleGroupType: SaleGroupType.points,
                                     backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
                                   ),
                                 ),
