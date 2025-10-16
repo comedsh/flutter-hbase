@@ -1,11 +1,6 @@
+import 'package:appbase/appbase.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
-
-enum PostType {
-  photo,
-  album,
-  video,
-}
 
 enum BlurType {
   blur,
@@ -112,20 +107,5 @@ class Post {
   @override
   int get hashCode => shortcode.hashCode;
 
-  // 如果是图册，且图册中不包含视频则为纯图片图册
-  bool get isPhotoAlbum => slots.length > 1 && slots.where((slot) => slot.video != null).isEmpty; 
-
-  // 如果是图册，且图册中包含视频则为包含视频的图册
-  bool get isVideoAlbum => slots.length > 1 && slots.where((slot) => slot.video != null).isNotEmpty; 
-
-  String get typeName {
-    if (type == PostType.video) {
-      return '视频';
-    } else if (type == PostType.album) {
-      return isPhotoAlbum ? '图册' : '视频图册';
-    } else {
-      return '图片';
-    }
-  }
-
+  String get typeName => PostHelper.getTypeName(type);
 }

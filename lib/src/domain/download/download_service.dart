@@ -414,6 +414,7 @@ class DownloadHandler {
         // 该 post 请求会再次检查当前用户的配额是否够用并同时保存下载记录，如果配额不足，则会返回通知类型异常 580，由框架处理
         var r = await dio.post('/u/download/quota', data: {
           'shortcode': post.shortcode,
+          'postType': post.type.name
         });
         GlobalLoading.close();  // 需要放到 Download widget 之前关闭，否则可能无法关闭
         var isSuccess = await DownloadService.triggerDownload(context, post); 

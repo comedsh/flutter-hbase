@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: appbase
-      sha256: "8be1b7d86bbb5d44fd6623cf46c1412702c973a1671f8383ec02b73a431082b8"
+      sha256: "6963393417ce015c130198016b565da56a1372c6b7aaf03efc9aef48fb44a835"
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+60"
+    version: "1.0.1+3"
   archive:
     dependency: transitive
     description:
@@ -1309,10 +1309,10 @@ packages:
     dependency: transitive
     description:
       name: sypayment
-      sha256: "3868bc5c0e0f9481154492c0be1b1394a479bc2844afd8d6937f022c8878fd98"
+      sha256: "335f11ce1b0690ffa151dd338dbd02da0f917819eb52cc0313e1c1f1cf9e5a60"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.2+3"
+    version: "2.1.3+1"
   syrequest:
     dependency: transitive
     description:
