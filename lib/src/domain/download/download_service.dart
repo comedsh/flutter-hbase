@@ -50,6 +50,11 @@ class DownloadService {
 
     var ds = await DownloadService.getDownloadStrategy(post.type);
 
+    if (ds.failNotification != null) {
+      showInfoToast(msg: ds.failNotification!, showInSecs: 4);
+      return;
+    }
+
     /// 如果用户拥有无限次下载权限
     if (ds.unlimitToDownload == true) {
       await triggerDownload(context, post);
@@ -59,8 +64,7 @@ class DownloadService {
 
     // 检查用户是否有每日的下载配额，如果有则发起下载
     if (ds.quotaToDownload != null) {
-      var quotaRemains = ds.quotaToDownload?.quotaRemains;
-      await DownloadHandler.spendQuota2Download(context, quotaRemains!, post);
+      await DownloadHandler.spendQuota2Download(context, ds.quotaToDownload!, post);
       return;
     }
 
@@ -77,16 +81,6 @@ class DownloadService {
   }
 
   static showBottomSheet(BuildContext context, DownloadStrategy ds, Post post) async {
-
-    if (
-      ds.unlimitToDownload == false &&
-      ds.payToDownload == null && 
-      ds.pointToDownload == null &&
-      ds.purchasePointDesc == null &&
-      ds.purchaseSubscrDesc == null &&
-      ds.quotaToDownload == null &&
-      ds.scoreToDownload == null
-    ) debugPrint('WARNING: 没有一个 DownloadStrategy 是有效的，check backend conf');
 
     /// 如果支持付费下载，那么这里需要提前解析出必要参数 pd
     ProductDetails? pd;
@@ -402,9 +396,13 @@ class DownloadHandler {
 
   /// 同 [spendPoint2Download] 一样，在发起下载前依然要再次检查配额
   /// 测试说明：使用后台 beaut/trade-test.test.ts 快速模拟创建和删除会员交易
-  static spendQuota2Download(BuildContext context, int quotaRemains, Post post) async {
+  static spendQuota2Download(BuildContext context, QuotaToDownload quotaToDownload, Post post) async {
+    // 注意如果 postType 参数为 null 则表示该 quota 配额是作用在所有资源类型上的
+    var resName = quotaToDownload.postType != null 
+      ? [PostType.photo, PostType.picAlbum].contains(quotaToDownload.postType) ? "图片帖子" : "视频帖子"
+      : "";
     var isConfirmed = await showConfirmDialogWithoutContext(
-      content: '今天剩余下载配额 $quotaRemains 次，是否使用？',
+      content: '今日下载$resName剩 ${quotaToDownload.quotaRemains} 次，是否使用？',
       confirmBtnTxt: '使用',
       cancelBtnTxt: '不了'
     );

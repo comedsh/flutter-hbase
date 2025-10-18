@@ -117,9 +117,6 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
   }
 
   List<Widget> subscrDescs(HBaseUser user) {
-    var subscrRuleDescs = [... user.subscr!.ruleDescs];  // Shadow copy
-    /// 因为 HBaseUser 的属性 dailyQuotaRemains 一定是今日下载剩余配额，因此直接硬编码 ruleDesc 是可以的
-    if (user.dailyQuotaRemains != null) subscrRuleDescs.add('今日剩余下载次数 ${user.dailyQuotaRemains} 次');
     return [
       SizedBox(height: sp(4)),
       Row(
@@ -136,34 +133,25 @@ class _MeSubscrInfoViewState extends State<MeSubscrInfoView> {
         /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
         Text('${HBaseUtils.dateFormatterHhmm.format(user.subscr!.start.toLocal())} - ${HBaseUtils.dateFormatterHhmm.format(user.subscr!.end.toLocal())}'),
       ],),
-      /// 展示方案二、只显示结束时间，然后通过详情按钮显示全部内容
-      // Text('${dateFormatter.format(user.subscr!.end)} 到期'),
-      // GestureDetector(
-      //   onTap: () => showAlertDialogWithoutContext(
-      //     content: '${dateFormatter.format(user.subscr!.start)} 开始至 ${dateFormatter.format(user.subscr!.end)} 结束',
-      //     confirmBtnTxt: '关闭'
-      //   ),
-      //   child: const Text('详情', style: TextStyle(color: Color.fromARGB(255, 14, 158, 230)))
-      // ),
-      SizedBox(height: sp(4)),
       /// 只有当用户处于有效订阅的情况下才展示条款，因为条款可能会发生变化，过期后的会员发现会员期间没有享受到变化的内容，可能会投诉；
       if (user.subscr?.isValid == true) 
         ... [
+          const Divider(thickness: 0.5, color: Colors.white24),
           const Text('会员权益', style: TextStyle(color: Colors.white30)),
           BulletList(
-            items: subscrRuleDescs,
+            items: user.subscr!.ruleDescs,
             bulletSize: sp(12), 
             bulletPaddingLeft: sp(4), 
             textPaddingLeft: sp(6),
             rowPaddingBottom: 0
-          )
+          ),
         ]
     ];
   }
 
   List<Widget> pointDescs(HBaseUser user) {
     return [
-      SizedBox(height: sp(4)),
+      const Divider(thickness: 0.5, color: Colors.white24),
       const Text('积分概要', style: TextStyle(color: Colors.white30)),
       BulletList(
         items: ['积分余额 ${user.point?.remainPoints}'],

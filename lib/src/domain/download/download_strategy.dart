@@ -1,3 +1,5 @@
+import 'package:appbase/appbase.dart';
+
 class DownloadStrategy {
   final PayToDownload? payToDownload;
   final PointToDownload? pointToDownload;
@@ -6,6 +8,7 @@ class DownloadStrategy {
   final String? purchasePointDesc;
   final String? purchaseSubscrDesc;
   final ScoreToDownload? scoreToDownload;
+  final String? failNotification;
 
   DownloadStrategy({
     this.payToDownload, 
@@ -14,7 +17,8 @@ class DownloadStrategy {
     this.unlimitToDownload = false, 
     this.purchasePointDesc, 
     this.purchaseSubscrDesc, 
-    this.scoreToDownload
+    this.scoreToDownload,
+    this.failNotification
   });
 
   DownloadStrategy.fromJson(Map<String, dynamic> json) 
@@ -24,7 +28,8 @@ class DownloadStrategy {
       unlimitToDownload = json['unlimitToDownload'] ?? false,
       purchasePointDesc = json['purchasePointDesc'],
       purchaseSubscrDesc = json['purchaseSubscrDesc'],
-      scoreToDownload = json['scoreToDownload'] != null ? ScoreToDownload.fromJson(json['scoreToDownload']) : null;
+      scoreToDownload = json['scoreToDownload'] != null ? ScoreToDownload.fromJson(json['scoreToDownload']) : null,
+      failNotification = json['failNotification'];
 }
 
 class PayToDownload {
@@ -44,9 +49,11 @@ class PointToDownload {
 /// 是指购买了配额会员，即每天可以享有的下载配额的情况
 class QuotaToDownload {
   final int quotaRemains;
-  QuotaToDownload({required this.quotaRemains});
+  final PostType? postType;
+  QuotaToDownload({required this.quotaRemains, this.postType});
   QuotaToDownload.fromJson(Map<String, dynamic> json)
-    : quotaRemains = json['quotaRemains'];
+    : quotaRemains = json['quotaRemains'],
+      postType = json['postType'] != null ? PostType.values.byName(json['postType']) : null;
 }
 
 class ScoreToDownload {
@@ -59,4 +66,3 @@ class ScoreToDownload {
       content = json['content'],
       btnText = json['btnText'];
 }
-

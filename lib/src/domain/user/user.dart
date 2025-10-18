@@ -3,21 +3,17 @@ import 'package:hbase/hbase.dart';
 
 class HBaseUser extends User {
   final List<UserAuthority> authorities;
-  /// 每日下载剩余配额，仅用于条款展示，下载的时候是实时通过后台验证实现的。
-  final int? dailyQuotaRemains;
 
   HBaseUser({
     required super.accessToken,
     required super.createTs,  
     super.subscr,
     super.point,
-    required this.authorities,
-    this.dailyQuotaRemains
+    required this.authorities
   });
 
   HBaseUser.fromJson(super.json)
     : authorities = json['authorities'].map<UserAuthority>((auth) => UserAuthority.values.byName(auth)).toList(),
-      dailyQuotaRemains = json['dailyQuotaRemains'],
       super.fromJson();
 
   @override
