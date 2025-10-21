@@ -42,5 +42,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# 全局去掉这部分代码，避免项目被交叉签名，导致关联账号..
 **/Runner.xcodeproj/
 **/Runner.xcworkspace/
