@@ -191,11 +191,16 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
         location: BadgeIconLocation.leftTop, 
         icon: const Icon(Icons.push_pin, color: Colors.white, size: 26)));
     }
-    if (post.type == PostType.album) {
+    else if (post.type == PostType.picAlbum) {
       badgeIcons.add(BadgeIcon(
         location: BadgeIconLocation.rightTop, 
         icon: const Icon(IconFont.icon_sy_images, color: Colors.white)));
       // return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+    }
+    else if (post.type == PostType.videoAlbum) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_videos, color: Colors.white)));
     }
     else if (post.type == PostType.video) {
       badgeIcons.add(BadgeIcon(

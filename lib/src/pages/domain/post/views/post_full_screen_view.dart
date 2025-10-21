@@ -325,8 +325,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     /// 注意，分解出 [isUnlockPicDownload] 只是为了 chk，chk 模式下只能下载图片，为了更简化就直接只能下载单图，
     /// 在 chk 的时候，第一页应该要能够插入一些单图便于chk（可以硬插），因此下面的逻辑有点怪怪的，都是为了方便 chk
     if (
-        ((post.type == PostType.photo || post.isPhotoAlbum) && user.isShowPicDownload) || 
-        ((post.type == PostType.video || post.isVideoAlbum) && user.isShowVideoDownload) 
+        ((post.type == PostType.photo || post.type == PostType.picAlbum) && user.isShowPicDownload) || 
+        ((post.type == PostType.video || post.type == PostType.videoAlbum) && user.isShowVideoDownload) 
     ) {
       return [
         GestureDetector(
