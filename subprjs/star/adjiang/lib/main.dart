@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:appbase/appbase.dart' hide UserService, Initializer;
 
 import 'src/core/appconfig.dart';
@@ -8,9 +9,9 @@ import 'src/pages/skeleton.dart';
 
 main() async {
 
-  HQJGuanInitializer initializer = HQJGuanInitializer();
+  AdJiangInitializer initializer = AdJiangInitializer();
   HQJGuanUserService userService = HQJGuanUserService();
-  HQJGuanAppConfig appConfig = HQJGuanAppConfig();
+  AdJiangAppConfig appConfig = AdJiangAppConfig();
   HQJGuanResponseHandler responseHandler = HQJGuanResponseHandler();
 
   await Runner.run(

@@ -6,28 +6,28 @@ import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 
-class HQJGuanAppConfig extends HBaseAppConfig {
+class AdJiangAppConfig extends HBaseAppConfig {
 
   /// Below singleton
-  HQJGuanAppConfig._internal();
+  AdJiangAppConfig._internal();
 
-  static final HQJGuanAppConfig _instance = HQJGuanAppConfig._internal();
+  static final AdJiangAppConfig _instance = AdJiangAppConfig._internal();
 
-  factory HQJGuanAppConfig() {
+  factory AdJiangAppConfig() {
     return _instance;
   }
 
   @override
-  String get appName => '环球景观';
+  String get appName => '爱豆酱';
 
   @override
   String get beianNum => 'demo123456';
 
   @override
-  String get platformCode => 'nature';
+  String get platformCode => 'nature';  // FIXME
 
   @override
-  String get sysCode => 'hqjguan';
+  String get sysCode => 'hqjguan'; // FIXME
   
   @override
   AppTheme get appTheme => DemoAppTheme();

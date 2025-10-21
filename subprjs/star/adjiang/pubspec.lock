@@ -468,7 +468,7 @@ packages:
     source: hosted
     version: "2.0.26"
   flutter_staggered_grid_view:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
@@ -749,7 +749,7 @@ packages:
     source: hosted
     version: "2.0.5"
   infinite_scroll_pagination:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: infinite_scroll_pagination
       sha256: b68bce20752fcf36c7739e60de4175494f74e99e9a69b4dd2fe3a1dd07a7f16a

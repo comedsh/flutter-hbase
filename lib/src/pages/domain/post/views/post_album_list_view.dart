@@ -66,6 +66,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
       invisibleItemsThreshold: 3
     );
     // 监听分页回调，注意参数 pageKey 就是 PageNum，只是该值现在由框架维护了，干脆直接将 pageKey 更名为 pageNum
+    // 特别注意的是，第一次页面初始化会自动触发该回调加载第一页内容
     pagingController.addPageRequestListener((pageNum) async {
       debugPrint('pagingController trigger the nextPage event with pageNum: $pageNum');
       await Paging.nextPage(pageNum, widget.postPager, pagingController, context);

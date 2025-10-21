@@ -4,13 +4,13 @@ import 'package:appbase/appbase.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 
-class HQJGuanInitializer extends Initializer {
+class AdJiangInitializer extends Initializer {
 
-  HQJGuanInitializer._internal();
+  AdJiangInitializer._internal();
 
-  static final HQJGuanInitializer _instance = HQJGuanInitializer._internal();
+  static final AdJiangInitializer _instance = AdJiangInitializer._internal();
 
-  factory HQJGuanInitializer() {
+  factory AdJiangInitializer() {
     return _instance;
   }
 
