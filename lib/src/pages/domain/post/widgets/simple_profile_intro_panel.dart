@@ -62,9 +62,14 @@ class SimplePorifleIntroPanel extends StatelessWidget {
                   ]
                 ),
               ),
-              child: Text(
-                post.profile.name, 
-                style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+              /// 使用 maxWidth 避免名字过长而越界
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: sp(160)),
+                child: Text(
+                  post.profile.name,
+                  style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             )
           ),

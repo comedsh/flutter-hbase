@@ -221,15 +221,12 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                           popupDirection: TooltipDirection.up,
                           showDurationMilsecs: 3200,
                           learnCount: 1,
-                          child: Text(
-                            post.profile.name+"jfdlkajflkajlfjdasfjldafjlakjfldasjflkasjfla", 
-                            style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
-                          ),
+                          child: _profileName(post),
                         )
-                      : Text(
-                          post.profile.name+"jfdlkajflkajlfjdasfjldafjlakjfldasjflkasjfla", 
-                          style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
-                        ), 
+                      : ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: sp(160.0)),
+                        child: _profileName(post),
+                      ), 
                     ),
                   )   
                 ),
@@ -346,6 +343,17 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
     }
     return [Container()];
   }
+
+  /// 使用 maxWidth 来控制 profile name 避免越界
+  _profileName(Post post) => ConstrainedBox(
+    constraints: BoxConstraints(maxWidth: sp(160.0)),
+    child: Text(
+      post.profile.name,
+      style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+      overflow: TextOverflow.ellipsis,
+    ),
+  );    
+  
 
   _followButton(Post post, BuildContext context) {
     return StatefulFollowButton(

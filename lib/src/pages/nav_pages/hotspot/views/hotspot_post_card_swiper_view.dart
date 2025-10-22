@@ -119,7 +119,7 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
           coverImgUrl: coverImgUrl, 
           width: width, 
           aspectRatio: cardWidth / cardHeight,
-          // 特别注意：不能设置为 cover，否则向上拖拽的时候，视频会溢出出 Card 
+          // 特别注意：不能设置为 cover，否则整个屏幕向上拖拽的时候，视频会溢出出 Card 
           fit: BoxFit.contain,
         ),
     );
