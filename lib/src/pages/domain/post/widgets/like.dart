@@ -6,7 +6,20 @@ import 'package:sycomponents/components.dart';
 
 class StatefulLikeButton extends StatefulWidget {
   final Post post;
-  const StatefulLikeButton({super.key, required this.post});
+  final bool? isVertical;
+  /// 设置图标的大小，默认值是 sp(30)
+  final double? iconSize;
+  /// 设置数字的文字大小，默认值是 sp(14)
+  final double? fontSize; 
+  final Color? activedColor;
+  const StatefulLikeButton({
+    super.key, 
+    required this.post, 
+    this.isVertical = true, 
+    this.iconSize, 
+    this.fontSize,
+    this.activedColor = Colors.redAccent
+  });
 
   @override
   State<StatefulLikeButton> createState() => _StatefulLikeButtonState();
@@ -50,13 +63,34 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
           showErrorToast(msg: '网络错误，操作失败', location: ToastLocation.CENTER);
         }
       },
-      child: Obx(() => Column(
-        children: [
-          Icon(isLiked.value ? Ionicons.heart : Ionicons.heart_outline, size: sp(30),),
-          SizedBox(height: sp(4)),
-          Text(compactFormat.format(widget.post.likes), style: TextStyle(fontSize: sp(14))),
-        ],
-      )),
+      child: Obx(() => widget.isVertical!
+      ? Column(
+          children: [
+            heartIcon(),
+            SizedBox(height: sp(4)),
+            likesNum(),
+          ],
+        )
+      : Row(
+          children: [
+            heartIcon(),
+            SizedBox(width: sp(4)),
+            likesNum()
+          ],
+        )
+      )  
     );
   }
+
+  Icon heartIcon() => Icon(
+    isLiked.value ? Ionicons.heart : Ionicons.heart_outline, 
+    color: isLiked.value ? widget.activedColor : null,
+    size: widget.iconSize ?? sp(30),
+  );
+
+  Text likesNum() => Text(
+    /// 注意这里的 compactFormat 必须在 10000 的时候才会缩放
+    compactFormat.format(widget.post.likes), 
+    style: TextStyle(fontSize: widget.fontSize ?? sp(14))
+  );
 }

@@ -222,12 +222,12 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                           showDurationMilsecs: 3200,
                           learnCount: 1,
                           child: Text(
-                            post.profile.name, 
+                            post.profile.name+"jfdlkajflkajlfjdasfjldafjlakjfldasjflkasjfla", 
                             style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         )
                       : Text(
-                          post.profile.name, 
+                          post.profile.name+"jfdlkajflkajlfjdasfjldafjlakjfldasjflkasjfla", 
                           style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
                         ), 
                     ),

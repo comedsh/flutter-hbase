@@ -1,4 +1,5 @@
 
+import 'package:adjiang/src/pages/commons/pages/tab_bar_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 
@@ -19,7 +20,7 @@ class CategoryPostGridListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TabBarViewAppBarTitlePage(
+    return TabBarViewPage(
       isExtendBodyBehindAppBar: true,
       tabs: tabs,
       tabBarViewContentBuilder: (context, tab) {

@@ -83,6 +83,15 @@
             "args": [
                 "--dart-define=APP_ENV=prod"
             ]
-        },        
+        },
+        {
+            "name": "adjiang",
+            "cwd": "subprjs/star/adjiang",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--dart-define=APP_ENV=dev"
+            ]
+        },                
     ]
 }

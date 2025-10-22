@@ -45,19 +45,18 @@ class AdJiangAppConfig extends HBaseAppConfig {
 class DemoAppTheme extends AppTheme {
 
   @override
-  ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      brightness: Brightness.dark,
-      colorSchemeSeed: seedColor,
-      tabBarTheme: TabBarTheme(labelColor: seedColor),
-    );
-  }
-
+  ThemeData get darkTheme => ThemeData(
+    useMaterial3: true,
+    brightness: Brightness.dark,
+    colorSchemeSeed: seedColor,
+    tabBarTheme: TabBarTheme(labelColor: seedColor),
+  );
+  
   @override
   ThemeData get lightTheme => ThemeData(
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(seedColor: seedColor),
+    tabBarTheme: TabBarTheme(labelColor: seedColor),
   );
 
   /// 这个值是以 deepPurple 为 seed color 不断微调出来的，感觉比较舒服的一个颜色

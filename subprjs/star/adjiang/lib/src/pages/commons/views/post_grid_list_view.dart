@@ -1,10 +1,11 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-// ignore: depend_on_referenced_packages
 import 'package:sycomponents/components.dart';
-// ignore: depend_on_referenced_packages
 import 'package:appbase/appbase.dart';
+import 'package:get/get.dart';
 
 class PostGridListView extends StatefulWidget {
   final Pager<Post> postPager;
@@ -70,14 +71,56 @@ class _PostGridListViewState extends State<PostGridListView> {
         ),
         Padding(
           padding: const EdgeInsets.all(6.0),
-          child: Text(
-            post.captionRaw ?? "",
-            // style: widget.style,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            softWrap: true
+          child: Column(
+            /// 为了保证整个组件不越界，在 Row 组件上添加了 SingleChildScrollView 控件，但是它会破坏默认的 start 布局；因此这里必须强制约束
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                post.captionRaw ?? "",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: sp(12), left: sp(6), right: sp(6)),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // 1) profile avatar and name
+                      GestureDetector(
+                        onTap: () => Get.to(() => ProfilePage(profile: post.profile)),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ProfileAvatar(
+                              profile: post.profile, 
+                              size: sp(28), 
+                              onTap: () => Get.to(() => ProfilePage(profile: post.profile)) 
+                            ),
+                            SizedBox(width: sp(8)),
+                            SizedBox(
+                              width: sp(96),
+                              child: Text(
+                                post.profile.name, 
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                // softWrap: true,                            
+                                style: TextStyle(fontSize: sp(13), fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      /// 点赞喜欢
+                      StatefulLikeButton(post: post, isVertical: false, iconSize: sp(22), fontSize: sp(13),),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),        
+        ),
       ],
     );
   }
