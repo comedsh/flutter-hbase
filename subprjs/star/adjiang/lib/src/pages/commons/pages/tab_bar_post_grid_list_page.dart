@@ -26,14 +26,17 @@ class TabBarPostGridListPage extends StatelessWidget {
       tabBarViewContentBuilder: (context, tab) {
         var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
         var postPager = ChannelTagPostPager(
-          chnCodes: chnCodes, 
-          tagCodes: tagCodes, 
+          chnCodes: chnCodes,
+          tagCodes: tagCodes,
           isReelOnly: false,
-          pageSize: 12,
+          /// 特别特别注意，这个值务必设置得大一些，否则“分类页” [PostAlbumListPage] 页面可能无法填充满一页，因为都是共用一个 [ChannelTagPostPager]
+          /// 即共享请求缓存；之前这里就是设定的 12 个，导致分类页只能填充 12 个导致无法分页了。
+          pageSize: 24,
           pageLabel: pageLabel
         );
         return PostGridListView(
           postPager: postPager, 
+          tab: tab,
         );
       },
     );

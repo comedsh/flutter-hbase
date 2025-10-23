@@ -137,7 +137,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
         crossAxisSpacing: 1,  
         builderDelegate: PagedChildBuilderDelegate<Post>(
           itemBuilder: (context, post, index) => cellCreator(post, index),
-          // 经过测试该回调只会被处罚一次
+          // 经过测试该回调只会被触发一次
           firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
           // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
           firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),           
