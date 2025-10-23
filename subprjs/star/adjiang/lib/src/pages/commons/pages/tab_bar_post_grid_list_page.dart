@@ -5,13 +5,13 @@ import 'package:hbase/hbase.dart';
 
 import '../views/post_grid_list_view.dart';
 
-class CategoryPostGridListPage extends StatelessWidget {
+class TabBarPostGridListPage extends StatelessWidget {
   final List<String> chnCodes;
   final List<TabData> tabs;
   /// 因为分页器 [ChannelTagPostPager] 目前会被多个页面共用，我想知道是哪个具体页面使用的，供后台子应用可以单独定制；
   final PageLabel pageLabel;
 
-  const CategoryPostGridListPage({
+  const TabBarPostGridListPage({
     super.key, 
     required this.chnCodes,
     required this.tabs,

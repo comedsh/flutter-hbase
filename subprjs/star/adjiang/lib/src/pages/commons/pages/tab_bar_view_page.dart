@@ -39,12 +39,11 @@ class TabBarViewPage extends StatelessWidget {
             TabBar(
               isScrollable: true,
               tabAlignment: TabAlignment.start, // 当 scrollable 的时候，设置第一个 tab 从最左侧开始显示，否则它会有一定的偏移。
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorColor: AppServiceManager.appConfig.appTheme.seedColor,
               labelStyle: TextStyle(fontSize: sp(20.0), fontWeight: FontWeight.bold),
               unselectedLabelStyle: TextStyle(fontSize: sp(14.0)),
               indicator: const BoxDecoration(), // 取消选中的下划线
               indicatorPadding: EdgeInsets.zero, // 取消任何的 padding
+              indicatorSize: TabBarIndicatorSize.tab,
               dividerHeight: 0.0, // 去掉贯穿整个屏幕的下划线
               tabs: tabs
                 .map((tab) => Tab(text: tab.name))

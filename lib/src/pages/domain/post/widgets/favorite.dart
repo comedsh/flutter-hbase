@@ -6,7 +6,18 @@ import 'package:sycomponents/components.dart';
 
 class StatefulFavoriteButton extends StatefulWidget {
   final Post post;
-  const StatefulFavoriteButton({super.key, required this.post});
+  /// 设置不变的文本颜色（like num），默认为 null 即是可以兼容 dark/light theme；
+  /// 这个参数是为了适配 [PostFullScreenView] 在 light theme 下需要固定使用白色的需求而设定的
+  final Color? concretedFontColor;
+  final Color? unactivedIconColor;
+  final Color? activedIconColor;
+  const StatefulFavoriteButton({
+    super.key, 
+    required this.post, 
+    this.concretedFontColor, 
+    this.unactivedIconColor, 
+    this.activedIconColor = Colors.amber,
+  });
 
   @override
   State<StatefulFavoriteButton> createState() => _StatefulFavoriteButtonState();
@@ -52,9 +63,19 @@ class _StatefulFavoriteButtonState extends State<StatefulFavoriteButton> {
       },
       child: Obx(() => Column(
         children: [
-          Icon(isFavorited.value ? Ionicons.star : Ionicons.star_outline, size: sp(30),),
+          Icon(
+            isFavorited.value ? Ionicons.star : Ionicons.star_outline, 
+            color: isFavorited.value ? widget.activedIconColor : widget.unactivedIconColor,            
+            size: sp(30),
+          ),
           SizedBox(height: sp(4)),
-          Text(compactFormat.format(widget.post.favorites), style: TextStyle(fontSize: sp(14))),
+          Text(
+            compactFormat.format(widget.post.favorites), 
+            style: TextStyle(
+              color: widget.concretedFontColor,
+              fontSize: sp(14)
+            )
+          ),
         ],
       )),
     );

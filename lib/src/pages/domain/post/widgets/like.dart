@@ -10,15 +10,21 @@ class StatefulLikeButton extends StatefulWidget {
   /// 设置图标的大小，默认值是 sp(30)
   final double? iconSize;
   /// 设置数字的文字大小，默认值是 sp(14)
-  final double? fontSize; 
-  final Color? activedColor;
+  final double? fontSize;
+  /// 设置不变的文本颜色（like num），默认为 null 即是可以兼容 dark/light theme；
+  /// 这个参数是为了适配 [PostFullScreenView] 在 light theme 下需要固定使用白色的需求而设定的
+  final Color? concretedFontColor;
+  final Color? unactivedIconColor;
+  final Color? activedIconColor;
   const StatefulLikeButton({
     super.key, 
     required this.post, 
     this.isVertical = true, 
     this.iconSize, 
     this.fontSize,
-    this.activedColor = Colors.redAccent
+    this.concretedFontColor,
+    this.unactivedIconColor,
+    this.activedIconColor = Colors.redAccent
   });
 
   @override
@@ -84,13 +90,16 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
 
   Icon heartIcon() => Icon(
     isLiked.value ? Ionicons.heart : Ionicons.heart_outline, 
-    color: isLiked.value ? widget.activedColor : null,
+    color: isLiked.value ? widget.activedIconColor : widget.unactivedIconColor,
     size: widget.iconSize ?? sp(30),
   );
 
   Text likesNum() => Text(
     /// 注意这里的 compactFormat 必须在 10000 的时候才会缩放
     compactFormat.format(widget.post.likes), 
-    style: TextStyle(fontSize: widget.fontSize ?? sp(14))
+    style: TextStyle(
+      color: widget.concretedFontColor,
+      fontSize: widget.fontSize ?? sp(14),      
+    )
   );
 }

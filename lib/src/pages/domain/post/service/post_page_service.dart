@@ -96,3 +96,37 @@ class PostCarouselService {
   }  
 
 }
+
+class PostCoverService {
+
+  /// [isPaintPinned] 是否渲染 pin badgedIcon
+  static Widget attachBadgedIcon({required Post post, required CachedImage img, bool isPaintPinned = true}) {
+    // 首先构建 badgeIcons
+    var badgeIcons = <BadgeIcon>[];
+    if (post.isPinned == true && isPaintPinned) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.leftTop, 
+        icon: const Icon(Icons.push_pin, color: Colors.white, size: 26)));
+    }
+    else if (post.type == PostType.picAlbum) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_images, color: Colors.white)));
+      // return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
+    }
+    else if (post.type == PostType.videoAlbum) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_videos, color: Colors.white)));
+    }
+    else if (post.type == PostType.video) {
+      badgeIcons.add(BadgeIcon(
+        location: BadgeIconLocation.rightTop, 
+        icon: const Icon(IconFont.icon_sy_video, color: Colors.white)));
+    }
+
+    return badgeIcons.isNotEmpty 
+      ? BadgedImage(img: img, badgeIcons: badgeIcons)
+      : img;
+  }
+}

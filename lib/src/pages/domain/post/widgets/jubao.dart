@@ -78,9 +78,11 @@ class _JuBaoState extends State<JuBao> {
       ),
       child: Column(
         children: [
-          Icon(Ionicons.alert_circle_outline, size: sp(30)),
+          /// 因为举报 icon 只会在 [PostFullScreenView] 页面中展示，因此固定为白色
+          Icon(Ionicons.alert_circle_outline, size: sp(30), color: Colors.white,),
           SizedBox(height: sp(4)),
-          Text('举报', style: TextStyle(fontSize: sp(14))),
+          /// 因为举报 icon 只会在 [PostFullScreenView] 页面中展示，因此固定为白色
+          Text('举报', style: TextStyle(fontSize: sp(14), color: Colors.white)),
         ],
       ),
     );

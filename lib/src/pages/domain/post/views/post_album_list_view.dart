@@ -185,29 +185,6 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
   ///      导致图片的长宽被压缩只有文本大小而导致布局的问题，建议是加上 width/height.
   Widget getCell(Post post) {
     final width = Math.round(Screen.width(context) / 3, fractionDigits: 2);
-    // 首先构建 badgeIcons
-    var badgeIcons = <BadgeIcon>[];
-    if (post.isPinned == true) {
-      badgeIcons.add(BadgeIcon(
-        location: BadgeIconLocation.leftTop, 
-        icon: const Icon(Icons.push_pin, color: Colors.white, size: 26)));
-    }
-    else if (post.type == PostType.picAlbum) {
-      badgeIcons.add(BadgeIcon(
-        location: BadgeIconLocation.rightTop, 
-        icon: const Icon(IconFont.icon_sy_images, color: Colors.white)));
-      // return BadgedImage(imgUrl: post.thumbnail, imgWidth: width, imgHeight: height, badgeIcons: [badgeIcon]);
-    }
-    else if (post.type == PostType.videoAlbum) {
-      badgeIcons.add(BadgeIcon(
-        location: BadgeIconLocation.rightTop, 
-        icon: const Icon(IconFont.icon_sy_videos, color: Colors.white)));
-    }
-    else if (post.type == PostType.video) {
-      badgeIcons.add(BadgeIcon(
-        location: BadgeIconLocation.rightTop, 
-        icon: const Icon(IconFont.icon_sy_video, color: Colors.white)));
-    }
     // 然后创建 img
     dynamic img = CachedImage(imgUrl: post.thumbnail, width: width);
     if (!HBaseUserService.user.isUnlockBlur && post.blurType == BlurType.blur) { 
@@ -223,8 +200,7 @@ class _PostAlbumListViewState extends State<PostAlbumListView> {
       //   // child: CachedNetworkImage(imageUrl: post.thumbnail,)
       // );
     }
-    if (badgeIcons.isNotEmpty) img = BadgedImage(img: img, badgeIcons: badgeIcons);
-    return img;
+    return PostCoverService.attachBadgedIcon(post: post, img: img);
   }
 
   scrollTo(index) {

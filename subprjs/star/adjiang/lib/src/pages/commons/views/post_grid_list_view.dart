@@ -67,7 +67,11 @@ class _PostGridListViewState extends State<PostGridListView> {
       children: [
         ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-          child: CachedImage(width: coverImg.width, aspectRatio: coverImg.width / coverImg.height, imgUrl: coverImg.pic)
+          child: PostCoverService.attachBadgedIcon(
+            post: post, 
+            img: CachedImage(width: coverImg.width, aspectRatio: coverImg.width / coverImg.height, imgUrl: coverImg.pic), 
+            isPaintPinned: false
+          )
         ),
         Padding(
           padding: const EdgeInsets.all(6.0),

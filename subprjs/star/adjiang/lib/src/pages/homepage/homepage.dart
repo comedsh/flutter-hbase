@@ -6,7 +6,7 @@ import 'package:appbase/appbase.dart';
 import 'package:hbase/hbase.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 
-import '../commons/pages/category_post_grid_list_page.dart';
+import '../commons/pages/tab_bar_post_grid_list_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
             isDefaultDarkMode: true,
             lightTheme: AppServiceManager.appConfig.appTheme.lightTheme,
             darkTheme: AppServiceManager.appConfig.appTheme.darkTheme
-          ),          
+          ),
           IconButton(
             icon: const Icon(FeatherIcons.search), 
             onPressed: () {          
@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      body: CategoryPostGridListPage(
+      body: TabBarPostGridListPage(
         chnCodes: display.chnCodes,
         tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
         pageLabel: PageLabel.homePage,

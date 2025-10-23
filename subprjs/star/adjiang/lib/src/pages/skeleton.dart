@@ -121,7 +121,7 @@ class _SkeletonState extends State<Skeleton> {
             const LiquidGlassBottomBarItem(
               activeIcon: Ionicons.apps,
               icon: Ionicons.apps_outline,
-              label: '分类',
+              label: '发现',
             ),
             const LiquidGlassBottomBarItem(
               activeIcon: Ionicons.person,

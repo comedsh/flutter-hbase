@@ -300,9 +300,9 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Column(
           children: [
-            StatefulLikeButton(post: post),
+            StatefulLikeButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
             SizedBox(height: sp(26)),
-            StatefulFavoriteButton(post: post),
+            StatefulFavoriteButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
             SizedBox(height: sp(26)),
             ... _unSeenPostButton(post, context),
             ... _downloadButton(post),
@@ -332,9 +332,9 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           },
           child: Column(
             children: [
-              Icon(Ionicons.cloud_download_outline, size: sp(30),),
+              Icon(Ionicons.cloud_download_outline, size: sp(30), color: Colors.white),
               SizedBox(height: sp(4)),
-              Text('下载', style: TextStyle(fontSize: sp(14))),
+              Text('下载', style: TextStyle(fontSize: sp(14), color: Colors.white)),
             ],
           ),
         ),
@@ -420,9 +420,9 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         },
         child: Column(
           children: [
-            Icon(Ionicons.eye_off_outline, size: sp(28),),
+            Icon(Ionicons.eye_off_outline, size: sp(28), color: Colors.white,),
             SizedBox(height: sp(4)),
-            Text('屏蔽', style: TextStyle(fontSize: sp(14))),
+            Text('屏蔽', style: TextStyle(fontSize: sp(14), color: Colors.white)),
           ],
         ),
       ),
