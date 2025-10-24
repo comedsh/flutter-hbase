@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hbase/hbase.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
@@ -26,6 +27,7 @@ class _PostGridListViewState extends State<PostGridListView> {
     super.initState();
     initPageController();
     initAutoScrollController();
+    listenEvents();
   }
 
   @override
@@ -62,31 +64,50 @@ class _PostGridListViewState extends State<PostGridListView> {
       viewportBoundaryGetter: () => const Rect.fromLTRB(0, 0, 0, 0),
       axis: Axis.vertical
     ); // 核心到底使用什么样的 scrollController 由实现类提供
+  }
+
+  listenEvents() {
+    HBaseStateManager hbaseState = Get.find();
+    ever(hbaseState.unseenPostEvent, (Post? p) async {
+      debugPrint('unseen post event received, block profile: ${p?.shortcode}');
+      if(context.mounted) await removeUnseenPostHandler(p!.shortcode);
+    });    
+    ever(hbaseState.blockProfileEvent, (Profile? p) async {
+      debugPrint('$PostAlbumListView, block profile event received, block profile: ${p?.code}');
+      removedRevantPostsFromBlockedProfiles();
+      if(context.mounted) setState((){});
+    });
   }  
 
   @override
   Widget build(BuildContext context) {
-    return PagedMasonryGridView.count(
-      // 解决 [PostGridListView] 的 items 太少导致 Pull Refresh（下拉更新）不会被触发的问题，参考
-      // https://stackoverflow.com/questions/57519765/refresh-indicator-doesnt-work-when-list-doesnt-fill-the-whole-page
-      physics: const AlwaysScrollableScrollPhysics(),      
-      pagingController: pagingController,
-      scrollController: autoScrollController,
-      crossAxisCount: 2,  // 设置多少列
-      mainAxisSpacing: 6,  // 设置纵向两个元素间间隔
-      crossAxisSpacing: 8,  // 设置横向两个元素间间隔
-      builderDelegate: PagedChildBuilderDelegate<Post>( 
-        itemBuilder: (context, post, index) => getCell(post, index),
-        // 经过测试该回调只会被触发一次
-        firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
-        // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
-        firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
-        newPageErrorIndicatorBuilder: (context) => 
-          NewPageErrorIndicator(
-            errMsg: '网络异常，点击重试',
-            onTap: () => pagingController.retryLastFailedRequest()),
-        noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),)
-      )
+    return RefreshIndicator(
+      onRefresh: () async {
+        await HapticFeedback.heavyImpact();  // 给一个震动反馈。
+        await pullRefresh();
+      },      
+      child: PagedMasonryGridView.count(
+        // 解决 [PostGridListView] 的 items 太少导致 Pull Refresh（下拉更新）不会被触发的问题，参考
+        // https://stackoverflow.com/questions/57519765/refresh-indicator-doesnt-work-when-list-doesnt-fill-the-whole-page
+        physics: const AlwaysScrollableScrollPhysics(),      
+        pagingController: pagingController,
+        scrollController: autoScrollController,
+        crossAxisCount: 2,  // 设置多少列
+        mainAxisSpacing: 6,  // 设置纵向两个元素间间隔
+        crossAxisSpacing: 8,  // 设置横向两个元素间间隔
+        builderDelegate: PagedChildBuilderDelegate<Post>( 
+          itemBuilder: (context, post, index) => getCell(post, index),
+          // 经过测试该回调只会被触发一次
+          firstPageProgressIndicatorBuilder: (_) => const Center(child: CircularProgressIndicator()), // 自定义第一页 loading 组件
+          // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
+          firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
+          newPageErrorIndicatorBuilder: (context) => 
+            NewPageErrorIndicator(
+              errMsg: '网络异常，点击重试',
+              onTap: () => pagingController.retryLastFailedRequest()),
+          noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),)
+        )
+      ),
     );
   }
 
@@ -193,6 +214,27 @@ class _PostGridListViewState extends State<PostGridListView> {
       autoScrollController.scrollToIndex(index);
       autoScrollController.highlight(index);
     }
+  }
+
+  /// 核心就是 [pagingController.refresh] 会触发 [pagingController.addPageRequestListener] 然后立刻调用 [nextPage]
+  /// 后去加载第一页数据；其背后逻辑是，[pagingController.refresh] 中会调用语句 `pagingController.itemList = null` 导致
+  /// [pagingController.addPageRequestListener] 被触发
+  pullRefresh() {
+    widget.postPager.reset();
+    pagingController.refresh();
+  }
+
+  removedRevantPostsFromBlockedProfiles() async {
+    final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
+    final blockedProfileCodes = blockedProfiles.map((p) => p.code).toList();
+    pagingController.itemList?.removeWhere((p) => blockedProfileCodes.contains(p.profileCode));
+  }  
+
+  removeUnseenPostHandler(String shortcode) async {
+    await PostUnseenService.saveUnseenPost(shortcode);
+    // setState(() => posts.removeWhere((Post p) => p.shortcode == shortcode));
+    pagingController.itemList?.removeWhere((p) => p.shortcode == shortcode);
+    setState(() {});
   }  
 
 }
