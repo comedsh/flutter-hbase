@@ -64,6 +64,7 @@ class _SkeletonState extends State<Skeleton> {
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
               keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
               searchResultPageCreator: (String keyword) => searchResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
+              hintText: '请输入爱豆的名字...',
             )
           ),
           /// 分类页
