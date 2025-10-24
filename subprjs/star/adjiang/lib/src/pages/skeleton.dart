@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:adjiang/src/pages/adjiang_scaffold.dart';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
@@ -45,14 +46,16 @@ class _SkeletonState extends State<Skeleton> {
         children: [
           /// 首页
           IndexedStackChild(
-            child: HomePage(),
+            child: const AdJiangScaffold(child: HomePage()),
           ),
           /// 热榜页
           IndexedStackChild(
-            child: HotspotProfilePage(
-              chnCodes: display.chnCodes,
-              tags: display.hotTags,
-              showHotPosts: true,
+            child: AdJiangScaffold(
+              child: HotspotProfilePage(
+                chnCodes: display.chnCodes,
+                tags: display.hotTags,
+                showHotPosts: true,
+              ),
             )
           ),
           /// 搜索页
@@ -69,11 +72,13 @@ class _SkeletonState extends State<Skeleton> {
           ),
           /// 分类页
           IndexedStackChild(
-            child: CategoryPostAlbumListViewPage(
-              chnCodes: display.chnCodes,
-              tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
-              isReelOnly: false,
-              pageLabel: PageLabel.classifyPage,
+            child: AdJiangScaffold(
+              child: CategoryPostAlbumListViewPage(
+                chnCodes: display.chnCodes,
+                tabs: display.tags.map<TabData>((tag) => TabData(id: tag.code, name: tag.name)).toList(),
+                isReelOnly: false,
+                pageLabel: PageLabel.classifyPage,
+              ),
             ),
           ),
           /// 用户中心页

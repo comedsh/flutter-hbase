@@ -21,6 +21,7 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TabBarViewAppBarTitlePage(
+      isExtendBodyBehindAppBar: true,
       tabs: tabs,
       tabBarViewContentBuilder: (context, tab) {
         var tagCodes = tab.id == 'rcmd' ? null : [tab.id];
