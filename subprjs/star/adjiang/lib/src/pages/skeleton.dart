@@ -11,6 +11,8 @@ import 'package:visibility_detector/visibility_detector.dart';
 
 import 'homepage/homepage.dart';
 import 'hotspot/hotspot_view.dart';
+import 'myspace/myspace_page.dart';
+import 'commons/services/page_service.dart';
 
 
 class Skeleton extends StatefulWidget {
@@ -40,8 +42,7 @@ class _SkeletonState extends State<Skeleton> {
     var display = AppServiceManager.appConfig.display as HBaseDisplay;
     return Scaffold(
       key: mainScaffoldKey,
-      // MeHome 暂时不能支持 extendBody 否则 ListView 的样式会有问题
-      extendBody: _current != 4,
+      extendBody: true,
       body: ProsteIndexedStack(
         index: _current,
         children: [
@@ -83,7 +84,16 @@ class _SkeletonState extends State<Skeleton> {
           ),
           /// 用户中心页
           IndexedStackChild(
-            child: const MePage()
+            child: AdJiangScaffold(
+              actions: [
+                PageService.darkModeSwicher,
+                IconButton(
+                  icon: const Icon(Ionicons.ellipsis_horizontal),
+                  onPressed: () {  },
+                )
+              ],
+              child: const MyspacePage(),
+            )
           ),
         ]
       ),

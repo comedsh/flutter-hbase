@@ -58,7 +58,7 @@ class _ProfileListViewState extends State<ProfileListView> {
                 // 注意因为 index 从 0 开始，因此要使得间隔第二行出现跳色，那么是计算的是奇数才对
                 color: !dark 
                   ? index % 2 != 0 ? Colors.grey.shade200 : null
-                  : null,
+                  : null,   
                 borderRadius: const BorderRadius.all(Radius.circular(12.0),),
               ),              
               child: Padding(
