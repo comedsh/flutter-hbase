@@ -29,13 +29,14 @@ class HotspotView extends StatelessWidget {
             titleSpacing: 0, // title 左边的 spacing 置为 0
             forceElevated: innerBoxIsScrolled,
             backgroundColor: Theme.of(context).cardColor,
+            toolbarHeight: sp(36),
           ),
         ];
       },
-        body: DefaultTabController(
-          length: 1,
-          child: ProfileListView(pager: HotestProfilePager(chnCodes: chnCodes)),
-        ),
+      body: DefaultTabController(
+        length: 1,
+        child: ProfileListView(pager: HotestProfilePager(chnCodes: chnCodes)),
+      ),
 
     );
   }
