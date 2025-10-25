@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+import 'package:soft_edge_blur/soft_edge_blur.dart';
 import 'package:sycomponents/components.dart';
 
 class TabBarViewAppBarTitlePage extends StatelessWidget {
@@ -31,7 +32,8 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
           shadowColor: isExtendBodyBehindAppBar ? Colors.transparent : null,  // 透明 appbar 必填
           backgroundColor: isExtendBodyBehindAppBar ? Colors.transparent : null, // 透明 appbar 必填
           scrolledUnderElevation: isExtendBodyBehindAppBar ? 0 : null,  // 如果不设置，拽动页面 appbar 会出现阴影；
-          flexibleSpace: isExtendBodyBehindAppBar ? MyAppBar.appbarMask(context) : null,
+          /// 使用了 [soft_edge_blur] 以后就不再需要使用灰色的 flexibleSpace 了
+          // flexibleSpace: isExtendBodyBehindAppBar ? MyAppBar.appbarMask(context) : null,
           
           title:
             /*
@@ -67,17 +69,44 @@ class TabBarViewAppBarTitlePage extends StatelessWidget {
                 .toList()
             ),
         ),
-        body: TabBarView(
-          children: tabs.map((tab) {
-            /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
-            return KeepAliveWrapper(
-              child: tabBarViewContentBuilder(context, tab)
-            );
-          }
-        ).toList()),
+        body: buildBlurredEdge(
+          context: context,
+          child: TabBarView(
+            children: tabs.map((tab) {
+              /// 使用 [KeepAliveWrapper] 的目的是为了避免在切换 tab 的时候重新创建 TabView
+              return KeepAliveWrapper(
+                child: tabBarViewContentBuilder(context, tab)
+              );
+            }
+          ).toList()),
+        ),
         extendBodyBehindAppBar: isExtendBodyBehindAppBar
       ),
     );
   }
   
+  SoftEdgeBlur buildBlurredEdge({required BuildContext context, required Widget child}) {
+    return SoftEdgeBlur(
+      edges: [
+        EdgeBlur(
+          type: EdgeType.topEdge,
+          size: 60,
+          sigma: 20,
+          tintColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.4),
+          controlPoints: [
+            ControlPoint(
+              position: 0.5,
+              type: ControlPointType.visible,
+            ),
+            ControlPoint(
+              position: 1.0,
+              type: ControlPointType.transparent,
+            ),
+          ],
+        )
+      ],
+      child: child,
+    );
+  }
+
 }

@@ -10,6 +10,7 @@ import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import 'homepage/homepage.dart';
+import 'hotspot/hotspot_view.dart';
 
 
 class Skeleton extends StatefulWidget {
@@ -51,10 +52,9 @@ class _SkeletonState extends State<Skeleton> {
           /// 热榜页
           IndexedStackChild(
             child: AdJiangScaffold(
-              child: HotspotProfilePage(
+              child: HotspotView(
                 chnCodes: display.chnCodes,
-                tags: display.hotTags,
-                showHotPosts: true,
+                tags: display.hotTags
               ),
             )
           ),

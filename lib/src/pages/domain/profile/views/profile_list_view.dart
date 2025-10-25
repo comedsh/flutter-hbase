@@ -46,22 +46,14 @@ class _ProfileListViewState extends State<ProfileListView> {
         await HapticFeedback.heavyImpact();  // 给一个震动反馈。
         await pullRefresh();
       },
-      child: PagedListView<int, Profile>(
-        pagingController: pagingController,
-        builderDelegate: PagedChildBuilderDelegate<Profile>(
-          // 加载第一页时候的使用的 loading 组件
-          firstPageProgressIndicatorBuilder: (context) => const Center(child: CircularProgressIndicator()),
-          // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
-          firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
-          // 如果加载下一页失败后使用的 reloading 组件
-          newPageErrorIndicatorBuilder: (context) => 
-            NewPageErrorIndicator(
-              errMsg: '网络异常，点击重试',
-              onTap: () => pagingController.retryLastFailedRequest()),
-          // 第一页就没有数据时候所使用的组件
-          noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),),
-          itemBuilder: (context, profile, index) => 
-            Container(
+      child: Card(
+        elevation: 20, // Controls the shadow size
+        shadowColor: Colors.black,
+        margin: EdgeInsets.only(left: sp(14), right: sp(14)),
+        child: PagedListView<int, Profile>(
+          pagingController: pagingController,
+          builderDelegate: PagedChildBuilderDelegate<Profile>(
+            itemBuilder: (context, profile, index) => Container(
               decoration: BoxDecoration(
                 // 注意因为 index 从 0 开始，因此要使得间隔第二行出现跳色，那么是计算的是奇数才对
                 color: !dark 
@@ -70,13 +62,14 @@ class _ProfileListViewState extends State<ProfileListView> {
                 borderRadius: const BorderRadius.all(Radius.circular(12.0),),
               ),              
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: sp(7), horizontal: sp(22)),
+                // padding: EdgeInsets.symmetric(vertical: sp(7), horizontal: sp(4)),
+                padding: EdgeInsets.all(sp(8.0)),
                 child: Row(
                   children: [
                     /// 头像
-                    ProfileAvatar(profile: profile, size: sp(66), onTap: () {
-                       Get.to(() => ProfilePage(profile: profile));
-                       ScoreService.notifyScoreSimple();
+                    ProfileAvatar(profile: profile, size: sp(64), onTap: () {
+                        Get.to(() => ProfilePage(profile: profile));
+                        ScoreService.notifyScoreSimple();
                     }),
                     SizedBox(width: sp(8)),
                     /// 名字和描述
@@ -140,7 +133,20 @@ class _ProfileListViewState extends State<ProfileListView> {
                   ],
                 ),
               ),
-            )
+            ),
+            // 加载第一页时候的使用的 loading 组件
+            firstPageProgressIndicatorBuilder: (context) => const Center(child: CircularProgressIndicator()),
+            // 直接使用 pagingController.refresh 即可重新触发 firstPageProgressIndicatorBuilder 的 loading 过程
+            firstPageErrorIndicatorBuilder: (context) => FailRetrier(callback: pagingController.refresh),
+            // 如果加载下一页失败后使用的 reloading 组件
+            newPageErrorIndicatorBuilder: (context) => 
+              NewPageErrorIndicator(
+                errMsg: '网络异常，点击重试',
+                onTap: () => pagingController.retryLastFailedRequest()),
+            // 第一页就没有数据时候所使用的组件
+            noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),),
+        
+          ),
         ),
       ),
     );

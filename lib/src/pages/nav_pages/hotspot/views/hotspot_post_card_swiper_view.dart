@@ -62,11 +62,12 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
         /// [index] 来实现一一对应
         itemBuilder: (_, index) {
           return Card(
+            elevation: 6, // Controls the shadow size
+            shadowColor: Colors.black,
             clipBehavior: Clip.hardEdge,  // 务必设置，否则填充的图片视频的 border 圆角会失败
-            elevation: 5, // Controls the shadow size
-            margin: EdgeInsets.only(right: cardMarginRight), // Adds margin between cards
+            margin: EdgeInsets.only(left: cardMarginSize, right: cardMarginSize, bottom: cardMarginSize), // Adds margin between cards
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0), // Adjust radius as needed
+              borderRadius: BorderRadius.circular(13.0), // Adjust radius as needed
             ),
             child: loading 
             ? const Center(child: CircularProgressIndicator(strokeWidth: 2.0,))
@@ -118,19 +119,23 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
           videoUrl: videoUrl, 
           coverImgUrl: coverImgUrl, 
           width: width, 
-          aspectRatio: cardWidth / cardHeight,
+          aspectRatio: coverWidth / coverHeight,
           // 特别注意：不能设置为 cover，否则整个屏幕向上拖拽的时候，视频会溢出出 Card 
           fit: BoxFit.contain,
         ),
     );
   }
 
+  /// 也就是 card width
   double get pageWidth => Screen.width(context) * 0.8;
 
-  double get cardMarginRight => sp(14.0);
-
-  double get cardWidth => pageWidth - cardMarginRight;
-  
   double get cardHeight => sp(420.0);
+
+  double get cardMarginSize => sp(14.0);
+
+  double get coverWidth => pageWidth - cardMarginSize * 2;
+
+  /// 需减去 bottom margin size.  
+  double get coverHeight => cardHeight - cardMarginSize;
 
 }

@@ -11,7 +11,7 @@ class HotspotProfileCardSwiperView extends StatefulWidget {
   final List<String> chnCodes;
   final List<ChannelTag> tags;
   
-  const HotspotProfileCardSwiperView({super.key, required this.chnCodes, required this.tags, });
+  const HotspotProfileCardSwiperView({super.key, required this.chnCodes, required this.tags,});
 
   @override
   State<HotspotProfileCardSwiperView> createState() => _HotspotProfileCardSwiperViewState();
@@ -45,7 +45,7 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
   Widget build(BuildContext context) {
     
     return SizedBox(
-      height: sp(500),
+      height: sp(522),
       child: PageView.builder(
         // 关键，不用在 Card 的两侧额外添加 padding；如果不设置为 false，第一张 Card 会居中展示；
         padEnds: false, 
@@ -57,12 +57,14 @@ class _HotspotProfileCardSwiperViewState extends State<HotspotProfileCardSwiperV
         itemBuilder: (_, index) {
           var tag = widget.tags[index];
           return Card(
-            elevation: 5, // Controls the shadow size
-            margin: EdgeInsets.symmetric(horizontal: sp(14)), // Adds margin between cards
+            elevation: 6, // Controls the shadow size
+            shadowColor: Colors.black,
+            /// horizontal: adds margin between cards, vertical: 注意这个值必须填写，否则在 light mode 下无法显示 card 阴影
+            margin: EdgeInsets.only(left: sp(14), right: sp(14), bottom: sp(14)), 
             /// 使用 SingleChildScrollView 的目的是为了避免在小尺寸屏幕上可能会越界的问题
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: sp(14.0)),
+                padding: EdgeInsets.only(left: sp(14.0), right: sp(14.0)),
                 child: Column(
                   mainAxisSize: MainAxisSize.max, // Make column take minimum height
                   children: [

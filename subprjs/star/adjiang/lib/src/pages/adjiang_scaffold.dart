@@ -17,6 +17,7 @@ class AdJiangScaffold extends StatelessWidget {
         title: const Text('爱豆酱'),
         centerTitle: false,
         automaticallyImplyLeading: false,
+        elevation: 4.0,
         actions: [
           DarkModeSwitcher(
             scale: 0.8,

@@ -7,6 +7,7 @@ class HotspotProfilePage extends StatelessWidget {
   final List<String> chnCodes;
   /// 作为 [HotspotProfileCardSwiperView] 组件的核心构造参数，如果该数组为空，则表示不展示该组件
   final List<ChannelTag> tags;
+  final bool? hideAppBar;
   /// 像 nature 这样的应用，因为 tags 数不足，因此无法展示 [HotspotProfileCardSwiperView] 组价，为了使得
   /// 该页面不那么的空，因此通过 [showHotPosts] 来控制是否展示 [HotspotPostCardSwiperView] 组件；
   final bool? showHotPosts;
@@ -15,13 +16,14 @@ class HotspotProfilePage extends StatelessWidget {
     super.key, 
     required this.chnCodes, 
     required this.tags,
+    this.hideAppBar = false,
     this.showHotPosts = false
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('热榜'),),
+      appBar: hideAppBar! ? null : AppBar(title: const Text('热榜'),),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget> [
@@ -49,7 +51,8 @@ class HotspotProfilePage extends StatelessWidget {
                           child: Text('热门帖子', style: TextStyle(
                             fontSize: sp(20.0), 
                             fontWeight: FontWeight.bold, 
-                            color: Colors.amber)
+                            // color: Colors.amber
+                            )
                           ),
                         ),
                       ),
