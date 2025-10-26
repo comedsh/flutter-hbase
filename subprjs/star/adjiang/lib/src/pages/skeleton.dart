@@ -66,9 +66,10 @@ class _SkeletonState extends State<Skeleton> {
               appBarAutomaticallyImplyLeading: false,
               isEmptyFocusToShowKeywordListPage: false,
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
-              keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
-              searchResultPageCreator: (String keyword) => searchResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
-              hintText: '请输入爱豆的名字...',
+              // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
+              searchResultPageCreator: (String keyword) => searchProfileResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
+              isShowSearchResultDuringInput: true,
+              hintText: '请输入爱豆的名字或者 IG id...',  // TODO configure this.
             )
           ),
           /// 分类页

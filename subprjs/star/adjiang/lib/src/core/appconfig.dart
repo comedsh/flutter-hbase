@@ -24,10 +24,10 @@ class AdJiangAppConfig extends HBaseAppConfig {
   String get beianNum => 'demo123456';
 
   @override
-  String get platformCode => 'beaut';  // FIXME
+  String get platformCode => 'stars';
 
   @override
-  String get sysCode => 'hyou1';  // FIXME
+  String get sysCode => 'adjiang';
   
   @override
   AppTheme get appTheme => DemoAppTheme();

@@ -52,7 +52,21 @@ Widget flashPageCreator(TextEditingController textEditingController) {
   List<Widget> _getHotSearchKeywords(BuildContext context) {
     // return __getMockHotSearchKeywords(context);
     List<String> searchHotKeywords = (AppServiceManager.appConfig.display as HBaseDisplay).searchHotKeywords!;
-    return searchHotKeywords.map((word) => 
+    late List<String> searchKeyWordsToDisplay;
+
+    /// 如果超过了 12 个热门搜索关键词，那么随机从中抽取 12 个关键词以展示
+    if (searchHotKeywords.length > 12) {
+      // Create a copy of the list to avoid modifying the original
+      List<String> shuffledItems = List.from(searchHotKeywords);
+      // Shuffle the list randomly
+      shuffledItems.shuffle();
+      int numberOfRandomElements = 12;
+      searchKeyWordsToDisplay = shuffledItems.take(numberOfRandomElements).toList();    
+    } else {
+      searchKeyWordsToDisplay = searchHotKeywords;
+    }
+
+    return searchKeyWordsToDisplay.map((word) => 
       OutlinedButton(
         onPressed: () {
           triggerKeywordChosedSearchResultNotification(
@@ -143,8 +157,8 @@ KeywordsListPage mockKeywordListPage(TextEditingController controller) {
   );
 }
 
-Widget? searchResultPageCreator({required String keyword, List<String>? chnCodes}) {
-  debugPrint('searchResultPageCreator, keyword: $keyword');
+Widget? searchPostResultPageCreator({required String keyword, List<String>? chnCodes}) {
+  debugPrint('searchPostResultPageCreator, keyword: $keyword');
   var postPager = SearchPostPager(
     token: keyword,
     chnCodes: chnCodes, 
@@ -166,8 +180,21 @@ Widget? searchResultPageCreator({required String keyword, List<String>? chnCodes
   );  
 }
 
+Widget? searchProfileResultPageCreator({required String keyword, List<String>? chnCodes}) {
+  debugPrint('searchProfileResultPageCreator, keyword: $keyword');
+  var profilePager = SearchProfilePager(
+    token: keyword,
+    chnCodes: chnCodes,
+    pageSize: 24,
+  );
+
+  /// 下面的 key 是随着输入显示查询结果能够更新视图的关键，否则 Flutter 会认为 key 相同而不予更新视图，进而
+  /// 无法动态的更新视图
+  return ProfileListView(pager: profilePager, key: Key("PLV_${DateTime.timestamp()}"));  
+}
+
 Widget? mockSearchResultPageCreator(String keyword) {
-  debugPrint('searchResultPageCreator has been called with keyword: $keyword');
+  debugPrint('mockSearchResultPageCreator has been called with keyword: $keyword');
 
   return Container(
     padding: const EdgeInsets.all(10.0),

@@ -35,7 +35,10 @@ class HotspotView extends StatelessWidget {
       },
       body: DefaultTabController(
         length: 1,
-        child: ProfileListView(pager: HotestProfilePager(chnCodes: chnCodes)),
+        child: ProfileListView(
+          pager: HotestProfilePager(chnCodes: chnCodes),
+          margin: EdgeInsets.only(left: sp(14), right: sp(14))
+        ),
       ),
 
     );

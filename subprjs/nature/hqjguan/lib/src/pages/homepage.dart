@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
               isEmptyFocusToShowKeywordListPage: false,
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
               keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
-              searchResultPageCreator: (String keyword) => searchResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
+              searchResultPageCreator: (String keyword) => searchPostResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
             )
           ),
           /// 分类页

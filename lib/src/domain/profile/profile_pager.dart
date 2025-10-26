@@ -1,6 +1,7 @@
 
 
 import 'package:appbase/appbase.dart';
+import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 
 class HotestPerTagsProfileGroupPager extends Pager<List<Profile>> {
@@ -20,7 +21,10 @@ class HotestPerTagsProfileGroupPager extends Pager<List<Profile>> {
     var profileGroupData = r.data;
     List<List<Profile>> profileGroup = [];
     for (var rawProfiles in profileGroupData) {
-      profileGroup.add(rawProfiles.map<Profile>((data) => Profile.fromJson(data)).toList());
+      profileGroup.add(rawProfiles.map<Profile>((data) { 
+        debugPrint('try parse profile ${data['code']}');
+        return Profile.fromJson(data); 
+      }).toList());
     }
     return profileGroup;
   }
@@ -54,6 +58,30 @@ class HotestProfilePager extends Pager<Profile> {
     var chnCodesStr = chnCodes?.join(',');
     var tagCodesStr = tagCodes?.join(',');
     var r = await dio.get('/profile/hot/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
+    return r.data.map<Profile>((data) => Profile.fromJson(data)).toList();
+  }
+
+}
+
+class SearchProfilePager extends Pager<Profile> {
+  final String token;
+  final List<String>? chnCodes;
+
+  SearchProfilePager({
+    super.pageNum,
+    super.pageSize,
+    required this.token,
+    this.chnCodes
+  });
+
+  @override
+  Future<List<Profile>> fetchNextPage() async {
+    var r = await dio.post('/search/profiles', data: {
+      'pageNum': pageNum,
+      'pageSize': pageSize,
+      'token': token,
+      'chnCodes': chnCodes
+    });
     return r.data.map<Profile>((data) => Profile.fromJson(data)).toList();
   }
 

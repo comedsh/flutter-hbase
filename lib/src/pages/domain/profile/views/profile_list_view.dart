@@ -8,7 +8,8 @@ import 'package:sycomponents/components.dart';
 
 class ProfileListView extends StatefulWidget {
   final Pager<Profile> pager;
-  const ProfileListView({super.key, required this.pager});
+  final EdgeInsets? margin;
+  const ProfileListView({super.key, required this.pager, this.margin});
 
   @override
   State<ProfileListView> createState() => _ProfileListViewState();
@@ -49,7 +50,7 @@ class _ProfileListViewState extends State<ProfileListView> {
       child: Card(
         elevation: 20, // Controls the shadow size
         shadowColor: Colors.black,
-        margin: EdgeInsets.only(left: sp(14), right: sp(14)),
+        margin: widget.margin,
         child: PagedListView<int, Profile>(
           pagingController: pagingController,
           builderDelegate: PagedChildBuilderDelegate<Profile>(
@@ -60,7 +61,7 @@ class _ProfileListViewState extends State<ProfileListView> {
                   ? index % 2 != 0 ? Colors.grey.shade200 : null
                   : null,   
                 borderRadius: const BorderRadius.all(Radius.circular(12.0),),
-              ),              
+              ),
               child: Padding(
                 // padding: EdgeInsets.symmetric(vertical: sp(7), horizontal: sp(4)),
                 padding: EdgeInsets.all(sp(8.0)),
