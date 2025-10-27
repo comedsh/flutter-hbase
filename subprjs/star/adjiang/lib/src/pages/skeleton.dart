@@ -64,6 +64,7 @@ class _SkeletonState extends State<Skeleton> {
             child: SearchBarInAppBar(
               // 想了想还是展示 leading button 吧，这样布局上好看些。
               appBarAutomaticallyImplyLeading: false,
+              appBarLeadingCreator: () => const Icon(Ionicons.airplane),  // FIXME change this to app logo
               isEmptyFocusToShowKeywordListPage: false,
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
               // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
