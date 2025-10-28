@@ -1,9 +1,9 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:get/get.dart';
 import 'package:appbase/appbase.dart';
-import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
 

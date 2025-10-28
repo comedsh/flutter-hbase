@@ -44,7 +44,6 @@ class _MyspacePageState extends State<MyspacePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: MyspacePage.horizontalPaddingSize, vertical: MyspacePage.verticalPaddingSize),
       /// 必须设置 height 否则在大尺寸屏幕下底部会留空...
       height: Screen.height(context),
       decoration: !dark 
@@ -66,30 +65,33 @@ class _MyspacePageState extends State<MyspacePage> {
       : null,  
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            /// 用户信息 panel
-            const UserProfileView(),
-            SizedBox(height: MyspacePage.verticalGapSize),
-            /// 订阅 Panel
-            const SubscribeInfoView(),
-            // SizedBox(height: MyspacePage.verticalGapSize),
-            // const PointInfoView(),
-            SizedBox(height: MyspacePage.verticalGapSize),
-            /// 用户常用工具：喜欢、收藏、浏览历史等
-            MyToolsView(isDark: dark,),
-            SizedBox(height: MyspacePage.verticalGapSize),
-            /// 其它工具设置项
-            const MyOtherToolsView(),
-            SizedBox(height: MyspacePage.verticalGapSize),
-            /// Tailer
-            Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
-            SizedBox(height: MyspacePage.verticalGapSize),
-            if ((AppServiceManager.appConfig.display as HBaseDisplay).showBeianNum) 
-              Center(child: Text(AppServiceManager.appConfig.beianNum)),
-            SizedBox(height: sp(80),),
-          ]
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: MyspacePage.horizontalPaddingSize, vertical: MyspacePage.verticalPaddingSize),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              /// 用户信息 panel
+              const UserProfileView(),
+              SizedBox(height: MyspacePage.verticalGapSize),
+              /// 订阅 Panel
+              const SubscribeInfoView(),
+              // SizedBox(height: MyspacePage.verticalGapSize),
+              // const PointInfoView(),
+              SizedBox(height: MyspacePage.verticalGapSize),
+              /// 用户常用工具：喜欢、收藏、浏览历史等
+              MyToolsView(isDark: dark,),
+              SizedBox(height: MyspacePage.verticalGapSize),
+              /// 其它工具设置项
+              const MyOtherToolsView(),
+              SizedBox(height: MyspacePage.verticalGapSize),
+              /// Tailer
+              Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
+              SizedBox(height: MyspacePage.verticalGapSize),
+              if ((AppServiceManager.appConfig.display as HBaseDisplay).showBeianNum) 
+                Center(child: Text(AppServiceManager.appConfig.beianNum)),
+              SizedBox(height: sp(80),),
+            ]
+          ),
         ),
       )
     );
