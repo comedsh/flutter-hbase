@@ -1,7 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:adjiang/src/pages/myspace/constants.dart';
-import 'package:adjiang/src/pages/myspace/my_tool/my_tool_icon_button.dart';
+import 'package:adjiang/src/pages/myspace/my_tools/my_tool_icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -24,8 +24,9 @@ class MyToolsView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 MyToolIconButton(
-                  iconData: Ionicons.time_outline,
-                  text: '浏览记录', 
+                  iconData: Ionicons.bookmark_outline, 
+                  iconLightModeColor: Colors.blue.shade900, 
+                  text: '我的关注', 
                   isDark: isDark,
                 ),
                 MyToolIconButton(
@@ -41,9 +42,8 @@ class MyToolsView extends StatelessWidget {
                   isDark: isDark,
                 ),
                 MyToolIconButton(
-                  iconData: Ionicons.bookmark_outline, 
-                  iconLightModeColor: Colors.blue.shade900, 
-                  text: '我的关注', 
+                  iconData: Ionicons.time_outline,
+                  text: '浏览记录', 
                   isDark: isDark,
                 ),
               ],

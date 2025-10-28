@@ -85,10 +85,10 @@ class _MePageState extends State<MePage> {
               ),
               ListTile(
                 leading: const Icon(Ionicons.eye_off_outline),
-                title: Text('我拉黑的用户', style: TextStyle(fontSize: sp(18))),
+                title: Text('拉黑的用户', style: TextStyle(fontSize: sp(18))),
                 trailing: const Icon(Ionicons.chevron_forward_outline),
                 onTap: () => Get.to(() => const MeBlockedProfilesPage())
-              ),              
+              ),
             ]),
             /// 使用 Obx 监听用户状态的变化，然后更新界面展示
             Obx(() {

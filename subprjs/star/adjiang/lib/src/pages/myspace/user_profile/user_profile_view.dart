@@ -59,8 +59,8 @@ class _UserProfileViewState extends State<UserProfileView> {
                 )                
               ],
             ),
-            SizedBox(width: sp(32)),
-            IconButton(onPressed: null, icon: const Icon(Ionicons.chevron_forward_outline), iconSize: sp(42),),
+            SizedBox(width: sp(42)),
+            Icon(Ionicons.chevron_forward_outline, size: sp(38),)
           ],
         ),
         Row(
