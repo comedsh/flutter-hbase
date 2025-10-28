@@ -1,6 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:adjiang/src/pages/adjiang_scaffold.dart';
+import 'package:adjiang/src/pages/myspace/settings/my_settings_view.dart';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
@@ -88,12 +89,17 @@ class _SkeletonState extends State<Skeleton> {
           IndexedStackChild(
             child: AdJiangScaffold(
               actions: [
-                PageService.darkModeSwicher,
-                IconButton(
-                  icon: const Icon(Ionicons.ellipsis_horizontal),
-                  onPressed: () {  },
+                AdJiangPageService.darkModeSwicher,
+                Builder(
+                  builder: (context) {
+                    return IconButton(
+                      icon: const Icon(Ionicons.ellipsis_horizontal),
+                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                    );
+                  }
                 )
               ],
+              endDrawer: const MySettingsView(),
               child: const MyspacePage(),
             )
           ),

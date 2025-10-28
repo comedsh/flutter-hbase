@@ -1,5 +1,7 @@
 library hbase;
 
+export 'src/pages/page_service.dart';
+
 export 'src/pages/_core/paging/paging.dart';
 export 'src/pages/_core/paging/paging_indicators.dart';
 
@@ -49,6 +51,7 @@ export 'src/pages/nav_pages/me/pages/sub/point_page/point_receipt_page.dart';
 export 'src/pages/nav_pages/me/pages/sub/point_page/model/point.dart';
 export 'src/pages/nav_pages/me/pages/sub/point_page/model/point_pager.dart';
 export 'src/pages/nav_pages/me/views/card_list_tiles.dart';
+export 'src/pages/nav_pages/me/widgets/clear_cache_list_tile.dart';
 
 export 'src/domain/page_label.dart';
 export 'src/domain/keys.dart';

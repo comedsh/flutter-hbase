@@ -3,7 +3,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:sycomponents/components.dart';
 
-class PageService {
+class AdJiangPageService {
 
   static DarkModeSwitcher get darkModeSwicher => DarkModeSwitcher(
     scale: 0.8,

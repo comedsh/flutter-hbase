@@ -11,7 +11,9 @@ class AdJiangScaffold extends StatelessWidget {
   final Widget child;
   /// 提供自定义的 appbar actions
   final List<Widget>? actions;
-  const AdJiangScaffold({super.key, required this.child, this.actions});
+  /// 通过调用 `Scaffold.of(context).openEndDrawer()` 唤醒
+  final Widget? endDrawer; 
+  const AdJiangScaffold({super.key, required this.child, this.actions, this.endDrawer});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,13 @@ class AdJiangScaffold extends StatelessWidget {
         actions: actions ?? defautlActions
       ),
       body: child,
+      /// 通过调用 [Scaffold.of(context).openEndDrawer()] 可以打开
+      endDrawer: endDrawer,
     );
   }
 
   List<Widget> get defautlActions => [
-    PageService.darkModeSwicher,
+    AdJiangPageService.darkModeSwicher,
     IconButton(
       icon: const Icon(FeatherIcons.search), 
       onPressed: () {          

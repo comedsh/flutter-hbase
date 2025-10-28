@@ -57,6 +57,8 @@ class _MyspacePageState extends State<MyspacePage> {
               Colors.red.shade100,
               Colors.red.shade200,
               Colors.red.shade300,
+              // Colors.amber,
+              Colors.amber.shade800,
               // Colors.red.shade500
             ]
           ),
@@ -67,16 +69,21 @@ class _MyspacePageState extends State<MyspacePage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
+            /// 用户信息 panel
             const UserProfileView(),
             SizedBox(height: MyspacePage.verticalGapSize),
+            /// 订阅 Panel
             const SubscribeInfoView(),
             // SizedBox(height: MyspacePage.verticalGapSize),
             // const PointInfoView(),
             SizedBox(height: MyspacePage.verticalGapSize),
+            /// 用户常用工具：喜欢、收藏、浏览历史等
             MyToolsView(isDark: dark,),
             SizedBox(height: MyspacePage.verticalGapSize),
-            MyOtherToolsView(),
+            /// 其它工具设置项
+            const MyOtherToolsView(),
             SizedBox(height: MyspacePage.verticalGapSize),
+            /// Tailer
             Center(child: Obx(() => Text('软件版本：${version.toString()}'))),
             SizedBox(height: MyspacePage.verticalGapSize),
             if ((AppServiceManager.appConfig.display as HBaseDisplay).showBeianNum) 

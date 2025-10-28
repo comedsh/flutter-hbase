@@ -18,7 +18,7 @@ class MyToolIconButton extends StatelessWidget {
       children: [
         Icon(iconData, size: iconSize ?? sp(28), color: !isDark ? iconLightModeColor : Colors.white),
         SizedBox(height: sp(4)),
-        Text(text, style: TextStyle(fontSize: fontSize ?? sp(13)))
+        Text(text, style: TextStyle(fontSize: fontSize ?? sp(14)))
       ]
     );
   }

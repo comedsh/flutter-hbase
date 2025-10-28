@@ -45,15 +45,15 @@ class MyOtherToolsView extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Ionicons.mail_outline),
-              title: Text('联系我们', style: TextStyle(fontSize: sp(18))),
+              title: Text('联系我们', style: TextStyle(fontSize: sp(16))),
               trailing: const Icon(Ionicons.chevron_forward_outline),
               onTap: () => Window.openWebView(title: '联系我们', url: AppServiceManager.appConfig.docs.contactUsUrl)
             ),
             ListTile(
               leading: const Icon(Ionicons.settings_outline),
-              title: Text('设置', style: TextStyle(fontSize: sp(18))),
+              title: Text('设置', style: TextStyle(fontSize: sp(16))),
               trailing: const Icon(Ionicons.chevron_forward_outline),
-              onTap: () => null
+              onTap: () => Scaffold.of(context).openEndDrawer()
             ),            
           ]
         ),
