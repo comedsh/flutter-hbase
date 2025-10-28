@@ -16,8 +16,8 @@ class ProfileListView extends StatefulWidget {
 }
 
 class _ProfileListViewState extends State<ProfileListView> {
+  late bool dark;
   final PagingController<int, Profile> pagingController = PagingController(firstPageKey: 1);
-  bool dark = false;
 
   @override
   void initState() {

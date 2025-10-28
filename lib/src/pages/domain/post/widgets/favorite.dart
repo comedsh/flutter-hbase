@@ -16,7 +16,7 @@ class StatefulFavoriteButton extends StatefulWidget {
     required this.post, 
     this.concretedFontColor, 
     this.unactivedIconColor, 
-    this.activedIconColor = Colors.amber,
+    this.activedIconColor,
   });
 
   @override
@@ -65,7 +65,7 @@ class _StatefulFavoriteButtonState extends State<StatefulFavoriteButton> {
         children: [
           Icon(
             isFavorited.value ? Ionicons.star : Ionicons.star_outline, 
-            color: isFavorited.value ? widget.activedIconColor : widget.unactivedIconColor,            
+            color: isFavorited.value ? widget.activedIconColor ?? Colors.amber.shade800 : widget.unactivedIconColor,            
             size: sp(30),
           ),
           SizedBox(height: sp(4)),

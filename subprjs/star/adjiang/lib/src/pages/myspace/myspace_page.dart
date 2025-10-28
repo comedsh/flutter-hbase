@@ -1,12 +1,17 @@
 // ignore_for_file: depend_on_referenced_packages
+import 'package:adjiang/src/pages/myspace/subscribe_info/subscribe_info_view.dart';
 import 'package:flutter/material.dart';
 import 'package:sycomponents/components.dart';
+import 'package:get/get.dart';
 
+import 'my_tool/my_tool_view.dart';
+import 'point_info/point_info_view.dart';
 import 'user_profile/user_profile_view.dart';
 
 class MyspacePage extends StatefulWidget {
   static double get horizontalPaddingSize => sp(12.0);
   static double get verticalPaddingSize => sp(24.0);
+  static double get verticalGapSize => sp(24);
 
   const MyspacePage({super.key});
 
@@ -15,10 +20,11 @@ class MyspacePage extends StatefulWidget {
 }
 
 class _MyspacePageState extends State<MyspacePage> {
-  bool dark = false;
+  late bool dark;
 
   @override
   void initState() {
+    dark = Get.isDarkMode;
     EventBus().on(EventConstants.themeChanged, themeChangedHandler);
     super.initState();
   }
@@ -50,7 +56,13 @@ class _MyspacePageState extends State<MyspacePage> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          const UserProfileView()
+          const UserProfileView(),
+          SizedBox(height: MyspacePage.verticalGapSize),
+          const SubscribeInfoView(),
+          // SizedBox(height: MyspacePage.verticalGapSize),
+          // const PointInfoView(),
+          SizedBox(height: MyspacePage.verticalGapSize),
+          MyToolsView(isDark: dark,),
         ]
       )
     );
