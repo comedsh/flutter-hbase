@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:appbase/appbase.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
+import 'package:intl/intl.dart';
 
 import '../constants.dart';
 
@@ -93,7 +94,18 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
           fontWeight: FontWeight.bold
         ),
       );
-    }    
+    } 
+    else if (user.hasPurchasedSubscr()) {
+      return Text(
+        user.subscr!.title, 
+        style: TextStyle(
+          color: widget.isDark ? Colors.amber[200] : const Color.fromARGB(255, 252, 80, 1), 
+          // color: AppServiceManager.appConfig.appTheme.seedColor,
+          fontSize: sp(22), 
+          fontWeight: FontWeight.bold
+        ),
+      );
+    }   
   }
 
   Widget? subTitle() {
@@ -103,11 +115,60 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
       children: [
         if (!user.hasPurchasedSubscr() && user.isUnlockSubscrSale) 
           Text('解锁会员权限 >', style: TextStyle(color: widget.isDark ? Colors.amber[200] : const Color.fromARGB(255, 252, 80, 1))),
-        // if (user.hasPurchasedSubscr()) ...subscrDescs(user),
+        if (user.hasPurchasedSubscr()) ...subscrDescs(user),
         // if (user.point?.hasPurchasedPoint == true) ...pointDescs(user)
       ],
     );
   }
+
+  List<Widget> subscrDescs(HBaseUser user) {
+    /// 备注，start 和 end 都是 utc date，因此直接使用 toLocal 既可以转换成本地时间进行展示
+    var subscrStart = user.subscr!.start.toLocal();
+    var subscrEnd = user.subscr!.end.toLocal();
+    return [
+      SizedBox(height: sp(4)),
+      Row(
+        children: [
+          Text('会员有效期', style: TextStyle(color: widget.isDark ? Colors.white38 : Colors.black54)),
+          if (user.subscr?.isValid == false) ... [
+            SizedBox(width: sp(4)),
+            const Text('(已过期)', style: TextStyle(color: Colors.deepOrange))
+          ]
+        ],
+      ),
+      SizedBox(height: sp(2)),
+      Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          Text(DateFormat('yyyy-MM-dd', 'zh_CN').format(subscrStart), style: TextStyle(fontWeight: FontWeight.bold, fontSize: sp(14))),
+          SizedBox(width: sp(2)),
+          Text(DateFormat('HH:mm').format(subscrStart), style: TextStyle(fontSize: sp(8.0))),
+          SizedBox(width: sp(2)), 
+          const Text('-'),
+          SizedBox(width: sp(2)),
+          Text(DateFormat('yyyy-MM-dd', 'zh_CN').format(subscrEnd), style: TextStyle(fontWeight: FontWeight.bold, fontSize: sp(14))),
+          SizedBox(width: sp(2)),
+          Text(DateFormat('HH:mm').format(subscrEnd), style: TextStyle(fontSize: sp(8.0))),
+        ],
+      ),
+      /// 只有当用户处于有效订阅的情况下才展示条款，因为条款可能会发生变化，过期后的会员发现会员期间没有享受到变化的内容，可能会投诉；
+      if (user.subscr?.isValid == true) 
+        ... [
+          Divider(thickness: 0.5, color: widget.isDark ? Colors.white24 : Colors.black12),
+          Text('会员权益', style: TextStyle(color: widget.isDark ? Colors.white38 : Colors.black54)),
+          SizedBox(height: sp(2)),
+          BulletList(
+            items: user.subscr!.ruleDescs,
+            bulletSize: sp(12), 
+            fontSize: sp(14),
+            fontColor: widget.isDark ? null : Colors.black87,
+            bulletPaddingLeft: sp(4), 
+            textPaddingLeft: sp(6),
+            rowPaddingBottom: 0
+          ),
+        ]
+    ];
+  }  
 
   /// BigButton 展示逻辑非常的简单，unlockSubscrSale 的展示优先级高于 unlockPointSale 
   Widget? bigButton() {
@@ -117,35 +178,18 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
     /// 显示逻辑也非常的简单，因为怎么展示都是由后台的 Authorities 进行配置的，因此展示逻辑如下所述，
     /// 1. 如果用户有 unlockSubscrSale 权限或者 unlockNonRenewingSubscrSale 那么展示“立即开通“
     /// 2. 如果用户只有 unlockAdvancedSubscrSale 那么展示“升级订阅”（后台配置可以确保普通有效订阅权限中才包含，因此确保了只有有效期内会员才可以）
-    if (user.isUnlockSubscrSale || user.isUnlockAdvancedSubscrSale || user.isUnlockNonRenewingSubscrSale) {
-      var text = '';
-      if (user.isUnlockSubscrSale || user.isUnlockNonRenewingSubscrSale) {
-        text = '立即开通';
-      }
-      else {
-        text = '升级订阅';
-      }
+    bool isSubscrible = user.isUnlockSubscrSale || user.isUnlockAdvancedSubscrSale || user.isUnlockNonRenewingSubscrSale;
+    if (isSubscrible) {
+      var text = user.isUnlockSubscrSale || user.isUnlockNonRenewingSubscrSale ? '立即开通': '升级订阅';
       return __bigButton(
         text: text, 
-        width: sp(144.0), 
+        width: sp(128.0), 
         fontSize: sp(16.0), 
         clickCallback: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
           backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
         ))
       );
-    }
-    /// 如果不能展示会员的，那么展示积分
-    else if (user.isUnlockPointSale) {
-      return __bigButton(
-        text: '购买积分', 
-        width: sp(144.0), 
-        fontSize: sp(16.0), 
-        clickCallback: () => Get.to(() => SalePage(
-          saleGroups: AppServiceManager.appConfig.saleGroups,
-          backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
-        ))
-      );        
     }
     return null;
   }

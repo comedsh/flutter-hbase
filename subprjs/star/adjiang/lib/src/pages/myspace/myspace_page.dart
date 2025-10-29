@@ -73,6 +73,7 @@ class _MyspacePageState extends State<MyspacePage> {
               SizedBox(height: MyspacePage.verticalGapSize),
               /// 订阅 Panel
               SubscribeInfoView(isDark: dark),
+              /// 定了，爱豆酱不会有单次付费也不会有积分售卖，只有会员
               // SizedBox(height: MyspacePage.verticalGapSize),
               // const PointInfoView(),
               SizedBox(height: MyspacePage.verticalGapSize),
