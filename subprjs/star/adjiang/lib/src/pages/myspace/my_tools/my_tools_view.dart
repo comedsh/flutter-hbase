@@ -3,7 +3,9 @@
 import 'package:adjiang/src/pages/myspace/constants.dart';
 import 'package:adjiang/src/pages/myspace/my_tools/my_tool_icon_button.dart';
 import 'package:flutter/material.dart';
+import 'package:hbase/hbase.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:get/get.dart';
 
 class MyToolsView extends StatelessWidget {
   final bool isDark;
@@ -28,23 +30,27 @@ class MyToolsView extends StatelessWidget {
                   iconLightModeColor: Colors.blue.shade900, 
                   text: '我的关注', 
                   isDark: isDark,
+                  onTapCallback: () => Get.to(() => const MeFollowPage()),
                 ),
                 MyToolIconButton(
                   iconData: Ionicons.heart_outline, 
                   iconLightModeColor: Colors.red.shade700, 
                   text: '我的喜欢', 
                   isDark: isDark,
+                  onTapCallback: () => Get.to(() => const MeLikePage()),
                 ),
                 MyToolIconButton(
                   iconData: Ionicons.star_outline, 
                   iconLightModeColor: Colors.amber.shade900, 
                   text: '我的收藏', 
                   isDark: isDark,
+                  onTapCallback: () => Get.to(() => const MeFavoritePage()),
                 ),
                 MyToolIconButton(
                   iconData: Ionicons.time_outline,
                   text: '浏览记录', 
                   isDark: isDark,
+                  onTapCallback: () => Get.to(() => const MeViewhisPage()),
                 ),
               ],
             ),

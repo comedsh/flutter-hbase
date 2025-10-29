@@ -99,8 +99,9 @@ class PostCarouselService {
 
 class PostCoverService {
 
-  /// [isPaintPinned] 是否渲染 pin badgedIcon
-  static Widget attachBadgedIcon({required Post post, required CachedImage img, bool isPaintPinned = true}) {
+  /// [isPaintPinned] 是否渲染 pin badgedIcon；
+  /// [img] 为了能够同时兼容 [BlurrableImage] 和 [CachedImage] 两种类型，因此必须使用类型 Widget.
+  static Widget attachBadgedIcon({required Post post, required Widget img, bool isPaintPinned = true}) {
     // 首先构建 badgeIcons
     var badgeIcons = <BadgeIcon>[];
     if (post.isPinned == true && isPaintPinned) {
