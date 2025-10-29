@@ -56,9 +56,7 @@ class _MyspacePageState extends State<MyspacePage> {
               Colors.red.shade100,
               Colors.red.shade200,
               Colors.red.shade300,
-              // Colors.amber,
               Colors.amber.shade800,
-              // Colors.red.shade500
             ]
           ),
         )
@@ -74,7 +72,7 @@ class _MyspacePageState extends State<MyspacePage> {
               const UserProfileView(),
               SizedBox(height: MyspacePage.verticalGapSize),
               /// 订阅 Panel
-              const SubscribeInfoView(),
+              SubscribeInfoView(isDark: dark),
               // SizedBox(height: MyspacePage.verticalGapSize),
               // const PointInfoView(),
               SizedBox(height: MyspacePage.verticalGapSize),
