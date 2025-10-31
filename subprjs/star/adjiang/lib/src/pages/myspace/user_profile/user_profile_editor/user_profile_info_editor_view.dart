@@ -5,9 +5,9 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:sycomponents/components.dart';
 import 'package:get/get.dart';
-
-import 'widget/user_profile_birthday_editor_widget.dart';
 import 'package:appbase/appbase.dart';
+import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 
 
 const List<String> list = <String>['保密', '男生', '女生'];
@@ -34,6 +34,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
   );
 
   String dropdownValue = list.first;  
+  DateTime? birthDay;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +45,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
         // Add TextFormFields and ElevatedButton here.
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// ✅用户名 /// 
           Row(
             children: [
               SizedBox(
@@ -61,7 +63,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                         color: Get.isDarkMode ? Colors.white24 : const Color(0xFF000000),
                         width: 0.1, // Thickness of the underline
                       ),
-                    ),             
+                    ),
                   ),
                   /// The validator receives the text that the user has entered.
                   /// TODO https://pub.dev/packages/async_textformfield 弥补 [TextFormField] 不支持 async/await 
@@ -80,6 +82,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
               ),
             ],
           ),
+          /// ✅性别 /// 
           Row(
             children: [
               SizedBox(
@@ -103,16 +106,42 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                 textStyle: Theme.of(context).textTheme.bodyLarge,
               ),
             ]
-          ),   
+          ),
+          /// ✅出生日期 /// 
           Row(
             children: [
               SizedBox(
                 width: labelWidth, 
                 child: const Align(alignment: Alignment.centerRight, child: Text('出生日期：'))
               ),
-              const Expanded(child: AdJiangDatePicker())
+              Expanded(child: GestureDetector(
+                onTap: () async {
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    locale: const Locale.fromSubtags(languageCode: 'zh'),
+                    initialDate: birthDay ?? DateTime.now(),
+                    firstDate: DateTime(1960),  // 设置能够选择的最小范围
+                    lastDate: DateTime.now(),   // 设置能够选择的最大值
+                  );
+                  if (pickedDate != null) setState(() => birthDay = pickedDate);
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Text(
+                      birthDay != null
+                        ? DateFormat('yyyy-MM-dd', 'zh_CN').format(birthDay!)
+                        : '请选择',
+                      style: Theme.of(context).textTheme.bodyLarge
+                    ),
+                    const SizedBox(width: 6),
+                    const Icon(Ionicons.create_outline, size: 20,)
+                  ],
+                ),
+              ))
             ],
           ),
+          /// ✅个性签名 ///
           Row(
             children: [
               SizedBox(
@@ -142,6 +171,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
             ]
           ),
           const SizedBox(height: 60),
+          /// 保存 ///
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
