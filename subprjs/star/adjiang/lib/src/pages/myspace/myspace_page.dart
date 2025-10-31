@@ -7,7 +7,6 @@ import 'package:sycomponents/components.dart';
 import 'package:get/get.dart';
 import 'package:appbase/appbase.dart';
 import 'my_tools/my_tools_view.dart';
-import 'point_info/point_info_view.dart';
 import 'user_profile/user_profile_view.dart';
 
 class MyspacePage extends StatefulWidget {

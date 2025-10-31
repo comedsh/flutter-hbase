@@ -54,7 +54,7 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
             ),
           ),
           ListTile(
-            contentPadding: EdgeInsets.symmetric(horizontal: sp(14)),
+            contentPadding: EdgeInsets.symmetric(horizontal: sp(8)),
             // visualDensity: Device.isSmallSizeScreen(context) ? const VisualDensity(horizontal: -2, vertical: -2) : null,
             /// visualDensity 使得 ListTile 的各个元素之间的间距显得更紧凑比如 leading 和 title/subTitle 之间，不像 [dense] 那样将字体缩小，
             /// 这里明显的是调整元素之间的间距
@@ -183,7 +183,7 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
       var text = user.isUnlockSubscrSale || user.isUnlockNonRenewingSubscrSale ? '立即开通': '升级订阅';
       return __bigButton(
         text: text, 
-        width: sp(128.0), 
+        width: sp(132.0), 
         fontSize: sp(16.0), 
         clickCallback: () => Get.to(() => SalePage(
           saleGroups: AppServiceManager.appConfig.saleGroups,
