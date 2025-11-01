@@ -1,6 +1,10 @@
-import 'package:adjiang/src/pages/myspace/user_profile/user_profile_editor/user_profile_info_editor_view.dart';
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:adjiang/src/pages/myspace/user_profile/user_profile_editor/views/user_profile_avatar_editor_view.dart';
+import 'package:adjiang/src/pages/myspace/user_profile/user_profile_editor/views/user_profile_info_editor_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sycomponents/components.dart';
 
 class UserProfileEditorPage extends StatefulWidget {
 
@@ -28,10 +32,16 @@ class UserProfileEditorPageState extends State<UserProfileEditorPage> {
         ),
         leadingWidth: 80,
       ),
-      body: const Column(
-        children: [
-          UserProfileInfoEditorView()
-        ],
+      body: Padding(
+        padding: EdgeInsets.only(top: 22, left: sp(15), right: sp(15)),
+        child: const Column(
+          children: [
+            UserProfileAvatarEditorView(),
+            Divider(thickness: 0.4,),
+            SizedBox(height: 12),
+            UserProfileInfoEditorView()
+          ],
+        ),
       )
     );
   }

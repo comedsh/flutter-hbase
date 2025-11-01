@@ -33,7 +33,8 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
     list.map<MenuEntry>((String name) => MenuEntry(value: name, label: name)),
   );
 
-  String dropdownValue = list.first;  
+  String? gender = list.first;  
+
   DateTime? birthDay;
 
   @override
@@ -65,6 +66,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                       ),
                     ),
                   ),
+                  maxLength: 16,
                   /// The validator receives the text that the user has entered.
                   /// TODO https://pub.dev/packages/async_textformfield 弥补 [TextFormField] 不支持 async/await 
                   ///   相关讨论：https://stackoverflow.com/questions/53194662/flutter-async-validator-of-textformfield
@@ -90,11 +92,11 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                 child: const Align(alignment: Alignment.centerRight, child: Text('性别：'))
               ),
               DropdownMenu<String>(
-                initialSelection: list.first,
+                initialSelection: gender ?? list.first,
                 onSelected: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
-                    dropdownValue = value!;
+                    gender = value!;
                   });
                 },
                 dropdownMenuEntries: menuEntries,

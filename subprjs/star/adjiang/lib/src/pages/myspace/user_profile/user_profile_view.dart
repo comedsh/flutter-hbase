@@ -2,7 +2,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:adjiang/src/pages/myspace/myspace_page.dart';
-import 'package:adjiang/src/pages/myspace/user_profile/user_profile_editor_page.dart';
+import 'package:adjiang/src/pages/myspace/user_profile/user_profile_editor/user_profile_editor_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
