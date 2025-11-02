@@ -8,8 +8,11 @@ import 'package:get/get.dart';
 import 'package:appbase/appbase.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 
 
+/// 仅支持中文、字母、数字、_ 的组合
+final usernameValidationRegex = RegExp(r"^[a-zA-Z0-9_\u4e00-\u9fa5]{1,}$");
 const List<String> list = <String>['保密', '男生', '女生'];
 typedef MenuEntry = DropdownMenuEntry<String>;
 
@@ -26,16 +29,15 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
 
   /// Create a global key that uniquely identifies the Form widget and allows validation of the form.
   /// Note: This is a `GlobalKey<FormState>`, not a GlobalKey<MyCustomFormState>.
-  /// 
   final _formKey = GlobalKey<FormState>();
-
   static final List<MenuEntry> menuEntries = UnmodifiableListView<MenuEntry>(
     list.map<MenuEntry>((String name) => MenuEntry(value: name, label: name)),
   );
-
   String? gender = list.first;  
-
   DateTime? birthDay;
+  /// 注意，异步错误消息是通过 [TextFormField.forceErrorText] 设置的
+  String? forceUsernameValidationMessage;
+  bool loading = false;  // 异步检查状态
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
               SizedBox(
                 width: inputFieldWidth,
                 child: TextFormField(
+                  forceErrorText: forceUsernameValidationMessage,
                   decoration: InputDecoration(
                     // Customize the underline when the field is enabled (not focused)
                     enabledBorder: UnderlineInputBorder(
@@ -68,16 +71,17 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   ),
                   maxLength: 16,
                   /// The validator receives the text that the user has entered.
-                  /// TODO https://pub.dev/packages/async_textformfield 弥补 [TextFormField] 不支持 async/await 
-                  ///   相关讨论：https://stackoverflow.com/questions/53194662/flutter-async-validator-of-textformfield
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return '用户名不能为空';
-                    }
-                    else if (value.length < 2) {
-                      return '用户名需要最少 2 个字符';
-                    }
-                    return null;
+                  validator: (value) => validateUsernameSyntax(value),
+                  /// 唯一的遗憾是 validator 方法不支持异步，因此想到的解决方案就是在 onChange 中实现异步检查
+                  onChanged: (value) async {
+                    EasyDebounce.debounce(
+                      'usernameRemoteChecking',               // <-- An ID for this particular debouncer
+                      const Duration(milliseconds: 600),      // <-- The debounce duration
+                      () async {
+                        debugPrint('onChanged: $value');
+                        await validateUsernameOnChange(value);
+                      }
+                    );
                   },
                   style: Theme.of(context).textTheme.bodyLarge,  // bodyLarge 也是 TextFormField 的默认值
                 ),
@@ -194,6 +198,53 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
     );
   }
 
+  /// 当 [TextFormField] 在 onChange 的过程中即用户输入的过程中就开始验证了，验证包含两个步骤
+  /// 1. [validateUsernameSyntax]
+  /// 2. [isUsernameExists]，执行这一步的前提是第一步验证通过后
+  /// 而为了让错误消息展示的一致性，使用状态参数 [forceUsernameValidationMessage] 注入 [TextFormField.forceErrorText] 的方式回显错误消息
+  validateUsernameOnChange(String? username) async {
+    var errMessage = validateUsernameSyntax(username);
+    debugPrint('errMessage: $errMessage');
+    setState(() => forceUsernameValidationMessage = errMessage);
+    /// 如果语法验证通过才开始异步检查用户名是否存在
+    if (errMessage == null) {
+      if (username != null && username.trim() != "") await isUsernameExists(username);
+    }
+  }
+
+  /// 同步检查用户名是否合法
+  String? validateUsernameSyntax(String? username) {
+    if (username == null || username.isEmpty) {
+      return '用户名不能为空';
+    } else if (!usernameValidationRegex.hasMatch(username)) {
+      return '仅支持中文、字母、数字、_ 的组合';  
+    } else if (username.length < 2) {
+      return '用户名需要最少 2 个字符';
+    }
+    return null;
+  }
+
+  /// 异步检查用户名是否重复了
+  isUsernameExists(String username) async {
+    setState(() {
+      loading = true;
+      forceUsernameValidationMessage = null;
+    });
+    await Future.delayed(const Duration(seconds: 2), () {
+      if (username == '123') {
+        setState(() {
+          forceUsernameValidationMessage = '用户名“$username“已经存在，请重新输入';
+          loading = false;
+        });
+      } else {
+        setState(() {
+          forceUsernameValidationMessage = null;
+          loading = false;
+        });
+      }
+    });
+  }
+
   Widget __bigButton({
     required String text, 
     required double width, 
@@ -210,16 +261,18 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
       onPressed: () {
         clickCallback();
       },
-      child: Text(
-        text, 
-        style: TextStyle(
-          fontSize: fontSize, 
-          fontWeight: FontWeight.bold, 
-          color: Colors.white,
+      child: !loading 
+      ? Text(
+          text, 
+          style: TextStyle(
+            fontSize: fontSize, 
+            fontWeight: FontWeight.bold, 
+            color: Colors.white,
+          )
         )
-      )
+      : SizedBox(width: sp(20), height: sp(20), child: const CircularProgressIndicator(strokeWidth: 2.0,))
     );
-  }  
+  }
 
   double get labelWidth => sp(100);
   double get inputFieldWidth => sp(280);
