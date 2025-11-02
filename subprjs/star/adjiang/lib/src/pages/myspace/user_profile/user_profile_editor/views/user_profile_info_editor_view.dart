@@ -48,7 +48,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
         // Add TextFormFields and ElevatedButton here.
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// ✅用户名 /// 
+          /// ✅✅用户名 /// 
           Row(
             children: [
               SizedBox(
@@ -71,9 +71,13 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   ),
                   maxLength: 16,
                   /// The validator receives the text that the user has entered.
+                  /// 这里是同步验证，因为异步验证有 debounce 延迟，因此用户可以在这个延迟提交未验证的结果，因此不能仅依靠
+                  /// 异步验证；因此通过这里的同步验证，在提交的时候确保语法是正常的。
                   validator: (value) => validateUsernameSyntax(value),
                   /// 唯一的遗憾是 validator 方法不支持异步，因此想到的解决方案就是在 onChange 中实现异步检查
                   onChanged: (value) async {
+                    /// 因为使用了 debounce 因此开启异步验会有延迟，在异步验证结果返回之前用户可以趁这个短的时间内
+                    /// 进行提交即可绕过异步检查而提交；不过问题不大，这个时候服务器可以返回对应的错误消息；
                     EasyDebounce.debounce(
                       'usernameRemoteChecking',               // <-- An ID for this particular debouncer
                       const Duration(milliseconds: 600),      // <-- The debounce duration
@@ -88,7 +92,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
               ),
             ],
           ),
-          /// ✅性别 /// 
+          /// ✅✅性别 /// 
           Row(
             children: [
               SizedBox(
@@ -113,7 +117,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
               ),
             ]
           ),
-          /// ✅出生日期 /// 
+          /// ✅✅出生日期 /// 
           Row(
             children: [
               SizedBox(
@@ -147,7 +151,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
               ))
             ],
           ),
-          /// ✅个性签名 ///
+          /// ✅✅个性签名 ///
           Row(
             children: [
               SizedBox(
@@ -177,17 +181,17 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
             ]
           ),
           const SizedBox(height: 60),
-          /// 保存 ///
+          /// ✅✅保存/提交 ///
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               __bigButton(text: '保存', width: sp(290), fontSize: 18, clickCallback: () {
                 // Validate returns true if the form is valid, or false otherwise.
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate() && forceUsernameValidationMessage == null && loading == false) {
                   // If the form is valid, display a snackbar. In the real world,
                   // you'd often call a server or save the information in a database.
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
+                    const SnackBar(content: Text('Submitting data')),
                   );
                 }
               }),
@@ -258,9 +262,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
         AppServiceManager.appConfig.appTheme.fillGradientEndColor,
       ]),
       borderRadius: BorderRadius.circular(30.0),
-      onPressed: () {
-        clickCallback();
-      },
+      onPressed: () => clickCallback(),
       child: !loading 
       ? Text(
           text, 
