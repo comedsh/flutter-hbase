@@ -218,7 +218,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                       'signature': signature
                     });
                     if (r.data['usernameExist'] != null) {
-                      setState(() => forceUsernameValidationMessage = r.data['usernameExists']);
+                      setState(() => forceUsernameValidationMessage = r.data['usernameExist']);
                     } else {
                       await showAlertDialogWithoutContext(content: '修改成功', confirmBtnTxt: '确定');
                       Get.back();
