@@ -180,7 +180,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   initialValue: signature,
                   minLines: 1, // can be 1 or more
                   maxLines: 5, // can be 1 or more, or null for unlimited
-                  maxLength: 100,
+                  maxLength: 60,
                   onChanged: (value) => signature = value,
                   decoration: InputDecoration(
                     // hintText: '字数不要超过 50 字',

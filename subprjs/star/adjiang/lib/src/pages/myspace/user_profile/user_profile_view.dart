@@ -78,12 +78,12 @@ class _UserProfileViewState extends State<UserProfileView> {
               padding: EdgeInsets.only(left: sp(6), right: sp(6), top: sp(12)),
               child: SizedBox(
                 width: Screen.width(context) * 0.85,
-                child: Text(
+                child: Obx(() => Text(
                   (UserService.user as AdJiangUser).signature ?? '还没有个性签名哦...', 
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: Theme.of(context).hintColor)
-                ),
+                )),
               ),
             )
           ],
