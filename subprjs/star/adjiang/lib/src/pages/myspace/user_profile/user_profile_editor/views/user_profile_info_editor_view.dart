@@ -156,7 +156,8 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   children: <Widget>[
                     Text(
                       birthday != null
-                        ? DateFormat('yyyy-MM-dd', 'zh_CN').format(birthday!)
+                        /// 注意，因为保存的是 UTC 时区，因此必须 toLocal 否则显示可能会不准确
+                        ? DateFormat('yyyy-MM-dd', 'zh_CN').format(birthday!.toLocal())  
                         : '请选择',
                       style: Theme.of(context).textTheme.bodyLarge
                     ),

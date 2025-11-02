@@ -12,7 +12,7 @@ class AdJiangUser extends HBaseUser {
   AdJiangUser.fromJson(super.json) 
     : username = json['username'],
       gender = json['gender'],
-      birthday = DateTime.tryParse(json['birthday']),
+      birthday = json['birthday'] != null ? DateTime.tryParse(json['birthday']) : null,
       signature = json['signature'],
       likeCount = json['likeCount'],
       favoriteCount = json['favoriteCount'],

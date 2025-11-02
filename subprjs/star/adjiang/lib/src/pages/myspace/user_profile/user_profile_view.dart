@@ -42,7 +42,15 @@ class _UserProfileViewState extends State<UserProfileView> {
               Obx(() => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text((UserService.user as AdJiangUser).username, style: TextStyle(fontSize: sp(24))),
+                  SizedBox(
+                    width: sp(210),
+                    child: Text(
+                      (UserService.user as AdJiangUser).username, 
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: sp(24))
+                    ),
+                  ),
                   SizedBox(height: sp(4)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
