@@ -12,7 +12,7 @@ abstract class HBaseAppConfig extends AppConfig {
 class HBaseDisplay extends Display {
   final bool showJubao;
   final bool showMeHomeScore;
-  final bool showPostSubmit;
+  final bool? showPostSubmit;
   final UploadTsDisplayMode uploadTsDisplayMode;
   final List<String> chnCodes;
   /// 总分类标签
