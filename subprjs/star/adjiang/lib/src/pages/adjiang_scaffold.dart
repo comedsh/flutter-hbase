@@ -1,10 +1,15 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-
+import 'package:get/get.dart';
 import 'commons/services/page_service.dart';
+import 'package:sypages/pages.dart' hide TabData;
+import 'package:appbase/appbase.dart';
+
+import 'skeleton.dart';
 
 
 class AdJiangScaffold extends StatelessWidget {
@@ -35,8 +40,17 @@ class AdJiangScaffold extends StatelessWidget {
     AdJiangPageService.darkModeSwicher,
     IconButton(
       icon: const Icon(FeatherIcons.search), 
-      onPressed: () {          
-      }
+      onPressed: () => Get.to(() => SearchBarInAppBar(
+        appBarAutomaticallyImplyLeading: true,
+        isEmptyFocusToShowKeywordListPage: false,
+        flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
+        // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
+        searchResultPageCreator: (String keyword) => 
+          searchProfileResultPageCreator(keyword: keyword, chnCodes: (AppServiceManager.appConfig.display as HBaseDisplay).chnCodes),
+        isShowSearchResultDuringInput: true,
+        hintText: '请输入爱豆的名字或者 IG id...',  // TODO configure this.
+        )
+      )
     ),
     // 会员皇冠，如果已经是会员了则跳转到会员中心页
     IconButton(
@@ -46,8 +60,12 @@ class AdJiangScaffold extends StatelessWidget {
         color: const Color.fromARGB(255, 252, 126, 1),
         size: sp(32)
       ),
-      onPressed: () async {
-      },
+      onPressed: () => UserService.user.isUnSubscribing()
+        ? Get.to(() => SalePage(
+            saleGroups: AppServiceManager.appConfig.saleGroups,
+            backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
+          ))
+        : EventBus().emit(NAV_TO_PAGE_EVENT, 4), // 4 是 MeHome Page index.
     )
   ];
 }

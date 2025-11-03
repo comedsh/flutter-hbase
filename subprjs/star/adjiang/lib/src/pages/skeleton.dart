@@ -14,7 +14,10 @@ import 'homepage/homepage.dart';
 import 'hotspot/hotspot_view.dart';
 import 'myspace/myspace_page.dart';
 import 'commons/services/page_service.dart';
+import 'package:sycomponents/components.dart';
 
+// ignore: constant_identifier_names
+const String NAV_TO_PAGE_EVENT = 'navToPageEvent';
 
 class Skeleton extends StatefulWidget {
   const Skeleton({super.key});
@@ -25,16 +28,18 @@ class Skeleton extends StatefulWidget {
 
 class _SkeletonState extends State<Skeleton> {
   
-  int _current = 0;
+  int _currentPage = 0;
 
   @override
   void initState() {
+    EventBus().on(NAV_TO_PAGE_EVENT, navToPageHandler);
     super.initState();
   }
 
   @override
   void dispose() {
     debugPrint('$Skeleton dispose calls');
+    EventBus().off(NAV_TO_PAGE_EVENT, navToPageHandler);
     super.dispose();
   }
 
@@ -45,7 +50,7 @@ class _SkeletonState extends State<Skeleton> {
       key: mainScaffoldKey,
       extendBody: true,
       body: ProsteIndexedStack(
-        index: _current,
+        index: _currentPage,
         children: [
           /// 首页
           IndexedStackChild(
@@ -109,7 +114,7 @@ class _SkeletonState extends State<Skeleton> {
         key: const Key('hqjguan-bottom-navbar'),
         onVisibilityChanged: (info) => info.visibleFraction >= 0.8
           ? HBaseStateService.setBottomNavigationBarVisible(true)
-          : HBaseStateService.setBottomNavigationBarVisible(false),          
+          : HBaseStateService.setBottomNavigationBarVisible(false),
         child: LiquidGlassBottomBar(
           /// 务必设置为 Colors.black，在真机环境下，之前设置为 Colors.black54 或者 Colors.black87，并且在 reel 使用 BoxFit.cover 
           /// 的布局下的翻页的过程中，在 BottomNavigationBar 中可以看到 unblur 的内容，但是如果改成 BoxFit.contain 却不会；其原因未知，
@@ -121,10 +126,10 @@ class _SkeletonState extends State<Skeleton> {
           // type: BottomNavigationBarType.fixed,
           key: bottomNavigationBarKey,
           onTap: (int index) { 
-            setState(() => _current = index);
+            setState(() => _currentPage = index);
             ScoreService.notifyScoreSimple();
           },
-          currentIndex: _current,
+          currentIndex: _currentPage,
           activeColor: AppServiceManager.appConfig.appTheme.seedColor,
           items: [
             LiquidGlassBottomBarItem(
@@ -157,4 +162,6 @@ class _SkeletonState extends State<Skeleton> {
       ),
     );
   }
+
+  navToPageHandler(pageIndex) => setState(() => _currentPage = pageIndex);
 }
