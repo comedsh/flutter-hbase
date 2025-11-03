@@ -30,7 +30,7 @@ class AdJiangAppConfig extends HBaseAppConfig {
   String get sysCode => 'adjiang';
   
   @override
-  AppTheme get appTheme => DemoAppTheme();
+  AppTheme get appTheme => AdJiangAppTheme();
   
   @override
   String get appStoreId => '6752983105';
@@ -42,7 +42,7 @@ class AdJiangAppConfig extends HBaseAppConfig {
 
 }
 
-class DemoAppTheme extends AppTheme {
+class AdJiangAppTheme extends AppTheme {
 
   @override
   ThemeData get darkTheme => ThemeData(
@@ -74,5 +74,15 @@ class DemoAppTheme extends AppTheme {
   
   @override
   Color get seedColor => Colors.red;
+
+}
+
+class AdJiangDisplay extends HBaseDisplay {
+
+  final String searchHintText;
+
+  AdJiangDisplay.fromJson(super.json) 
+    : searchHintText = json['searchHintText'],
+      super.fromJson();
 
 }

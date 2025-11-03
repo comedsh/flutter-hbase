@@ -10,9 +10,9 @@ import 'src/pages/skeleton.dart';
 main() async {
 
   AdJiangInitializer initializer = AdJiangInitializer();
-  HQJGuanUserService userService = HQJGuanUserService();
+  AdJiangUserService userService = AdJiangUserService();
   AdJiangAppConfig appConfig = AdJiangAppConfig();
-  HQJGuanResponseHandler responseHandler = HQJGuanResponseHandler();
+  AdJiangResponseHandler responseHandler = AdJiangResponseHandler();
 
   await Runner.run(
     initializer: initializer, 

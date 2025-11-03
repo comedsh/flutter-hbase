@@ -5,6 +5,7 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
+import '../core/appconfig.dart';
 import 'commons/services/page_service.dart';
 import 'package:sypages/pages.dart' hide TabData;
 import 'package:appbase/appbase.dart';
@@ -48,7 +49,7 @@ class AdJiangScaffold extends StatelessWidget {
         searchResultPageCreator: (String keyword) => 
           searchProfileResultPageCreator(keyword: keyword, chnCodes: (AppServiceManager.appConfig.display as HBaseDisplay).chnCodes),
         isShowSearchResultDuringInput: true,
-        hintText: '请输入爱豆的名字或者 IG id...',  // TODO configure this.
+        hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText,  // TODO configure this.
         )
       )
     ),

@@ -6,15 +6,15 @@ import 'package:flutter/material.dart';
 import 'user.dart';
 
 
-class HQJGuanUserService extends UserService {
+class AdJiangUserService extends UserService {
 
   /// 使用了私有构造函数，这样外部无法初始化实例了，外部只能通过工厂方法构造实例了
-  HQJGuanUserService._internal();
+  AdJiangUserService._internal();
 
-  static final HQJGuanUserService _instance = HQJGuanUserService._internal();
+  static final AdJiangUserService _instance = AdJiangUserService._internal();
 
   /// 通过工厂方法 + 私有构造函数构造出单例模式
-  factory HQJGuanUserService() {
+  factory AdJiangUserService() {
     return _instance;
   }
 

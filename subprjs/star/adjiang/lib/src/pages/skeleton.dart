@@ -10,6 +10,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../core/appconfig.dart';
 import 'homepage/homepage.dart';
 import 'hotspot/hotspot_view.dart';
 import 'myspace/myspace_page.dart';
@@ -76,7 +77,7 @@ class _SkeletonState extends State<Skeleton> {
               // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
               searchResultPageCreator: (String keyword) => searchProfileResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
               isShowSearchResultDuringInput: true,
-              hintText: '请输入爱豆的名字或者 IG id...',  // TODO configure this.
+              hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText,  // TODO configure this.
             )
           ),
           /// 分类页
@@ -111,7 +112,7 @@ class _SkeletonState extends State<Skeleton> {
         ]
       ),
       bottomNavigationBar: VisibilityDetector(
-        key: const Key('hqjguan-bottom-navbar'),
+        key: const Key('adjiang-bottom-navbar'),
         onVisibilityChanged: (info) => info.visibleFraction >= 0.8
           ? HBaseStateService.setBottomNavigationBarVisible(true)
           : HBaseStateService.setBottomNavigationBarVisible(false),
