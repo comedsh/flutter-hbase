@@ -2,6 +2,7 @@ import 'package:hbase/hbase.dart';
 
 class AdJiangUser extends HBaseUser {
   final String username;
+  final String? avatarUrl;
   final String? gender;
   final DateTime? birthday;
   final String? signature;
@@ -11,6 +12,7 @@ class AdJiangUser extends HBaseUser {
 
   AdJiangUser.fromJson(super.json) 
     : username = json['username'],
+      avatarUrl = json['avatarUrl'],
       gender = json['gender'],
       birthday = json['birthday'] != null ? DateTime.tryParse(json['birthday']) : null,
       signature = json['signature'],

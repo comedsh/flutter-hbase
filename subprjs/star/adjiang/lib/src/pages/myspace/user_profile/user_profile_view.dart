@@ -31,11 +31,10 @@ class _UserProfileViewState extends State<UserProfileView> {
             mainAxisSize: MainAxisSize.max,
             children: [
               // ✅✅avatar
-              SyCircleAvatar(
-                width: avatarSize,
-                image: const Image(image: AssetImage("images/anonymous_user_avatar.png")),
-                borderColor: Colors.white,
-                borderWidth: 2.0,
+              Obx(() =>
+                (UserService.user as AdJiangUser).avatarUrl == null 
+                ? SyCircleAvatar(width: avatarSize, image: const Image(image: AssetImage("images/anonymous_user_avatar.png")), borderColor: Colors.white, borderWidth: 2.0)
+                : SyCircleAvatar(width: avatarSize, imgUrl: (UserService.user as AdJiangUser).avatarUrl, borderColor: Colors.white, borderWidth: 2.0),
               ),
               SizedBox(width: sp(22)),
               // ✅✅introduce

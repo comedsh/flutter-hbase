@@ -48,9 +48,9 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>爱豆酱Dev需要访问您的相册，以便为您保存图片等资源</string>
+	<string>爱豆酱Dev需要访问您的相册，以便为你可以保存或上传图片等资源</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>爱豆酱Dev需要访问您的相册，以便为您保存图片等资源</string>
+	<string>爱豆酱Dev需要访问您的相册，以便为你可以保存或上传图片等资源</string>
     <key>NSCameraUsageDescription</key>
     <string>爱豆酱Dev需要访问您的相机，以便为您进行拍照或者录像上传作品</string>
 	<key>NSMicrophoneUsageDescription</key>
