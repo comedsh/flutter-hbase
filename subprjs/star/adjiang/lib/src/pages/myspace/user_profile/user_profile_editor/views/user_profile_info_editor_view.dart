@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 
-import '../../../../../domain/user/user.dart';
+import '../../../../../domain/user/adjiang_user.dart';
 
 
 /// 仅支持中文、字母、数字、_ 的组合

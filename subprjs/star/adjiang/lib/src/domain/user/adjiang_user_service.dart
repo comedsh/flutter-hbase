@@ -3,7 +3,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 
-import 'user.dart';
+import 'adjiang_user.dart';
 
 
 class AdJiangUserService extends UserService {

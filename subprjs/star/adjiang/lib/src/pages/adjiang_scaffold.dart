@@ -5,7 +5,7 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:get/get.dart';
-import '../core/appconfig.dart';
+import '../core/adjiang_appconfig.dart';
 import 'commons/services/page_service.dart';
 import 'package:sypages/pages.dart' hide TabData;
 import 'package:appbase/appbase.dart';

@@ -6,7 +6,7 @@ import 'package:appbase/appbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:get/get.dart';
 
-import '../../../../../domain/user/user.dart';
+import '../../../../../domain/user/adjiang_user.dart';
 import '../../../myspace_page.dart';
 
 class UserProfileAvatarEditorView extends StatefulWidget {

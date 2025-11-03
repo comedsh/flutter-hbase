@@ -10,7 +10,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import '../core/appconfig.dart';
+import '../core/adjiang_appconfig.dart';
 import 'homepage/homepage.dart';
 import 'hotspot/hotspot_view.dart';
 import 'myspace/myspace_page.dart';

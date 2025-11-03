@@ -1,7 +1,7 @@
 
 
 // ignore_for_file: depend_on_referenced_packages
-import 'package:adjiang/src/core/appconfig.dart';
+import 'package:adjiang/src/core/adjiang_appconfig.dart';
 import 'package:hbase/hbase.dart';
 import 'package:appbase/appbase.dart';
 

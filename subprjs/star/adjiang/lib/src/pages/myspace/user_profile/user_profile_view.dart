@@ -10,7 +10,7 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:ionicons/ionicons.dart';
 
-import '../../../domain/user/user.dart';
+import '../../../domain/user/adjiang_user.dart';
 
 class UserProfileView extends StatefulWidget {
   const UserProfileView({super.key});
