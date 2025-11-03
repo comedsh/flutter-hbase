@@ -145,7 +145,8 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   final DateTime? pickedDate = await showDatePicker(
                     context: context,
                     locale: const Locale.fromSubtags(languageCode: 'zh'),
-                    initialDate: birthday ?? DateTime.now(),
+                    /// 注意，因为保存的是 UTC 时区，因此 birthday 必须 toLocal 否则显示可能会不准确
+                    initialDate: birthday?.toLocal() ?? DateTime.now(),
                     firstDate: DateTime(1960),  // 设置能够选择的最小范围
                     lastDate: DateTime.now(),   // 设置能够选择的最大值
                   );
