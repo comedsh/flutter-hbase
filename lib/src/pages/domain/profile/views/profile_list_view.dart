@@ -9,7 +9,9 @@ import 'package:sycomponents/components.dart';
 class ProfileListView extends StatefulWidget {
   final Pager<Profile> pager;
   final EdgeInsets? margin;
-  const ProfileListView({super.key, required this.pager, this.margin});
+  /// 为搜索 profile 提供收录组件的接口
+  final WidgetBuilder? noItemsFoundIndicatorBuilder;
+  const ProfileListView({super.key, required this.pager, this.margin, this.noItemsFoundIndicatorBuilder});
 
   @override
   State<ProfileListView> createState() => _ProfileListViewState();
@@ -145,7 +147,10 @@ class _ProfileListViewState extends State<ProfileListView> {
                 errMsg: '网络异常，点击重试',
                 onTap: () => pagingController.retryLastFailedRequest()),
             // 第一页就没有数据时候所使用的组件
-            noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有数据'),),
+            noItemsFoundIndicatorBuilder: (context) => widget.noItemsFoundIndicatorBuilder != null
+              ? widget.noItemsFoundIndicatorBuilder!(context)
+              : const Center(child: Text('没有数据'),
+            ),
         
           ),
         ),

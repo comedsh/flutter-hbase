@@ -180,7 +180,7 @@ Widget? searchPostResultPageCreator({required String keyword, List<String>? chnC
   );  
 }
 
-Widget? searchProfileResultPageCreator({required String keyword, List<String>? chnCodes}) {
+Widget? searchProfileResultPageCreator({required String keyword, List<String>? chnCodes, WidgetBuilder? noResultFoundCallbackBuidler}) {
   debugPrint('searchProfileResultPageCreator, keyword: $keyword');
   var profilePager = SearchProfilePager(
     token: keyword,
@@ -188,9 +188,14 @@ Widget? searchProfileResultPageCreator({required String keyword, List<String>? c
     pageSize: 24,
   );
 
-  /// 下面的 key 是随着输入显示查询结果能够更新视图的关键，否则 Flutter 会认为 key 相同而不予更新视图，进而
-  /// 无法动态的更新视图
-  return ProfileListView(pager: profilePager, key: Key("PLV_${DateTime.timestamp()}"));  
+  return ProfileListView(
+    /// [key] 是随着输入显示查询结果能够更新视图的关键，否则 Flutter 会认为 key 相同而不予更新视图，进而无法动态的更新视图
+    key: Key("PLV_${DateTime.timestamp()}"),    
+    pager: profilePager, 
+    noItemsFoundIndicatorBuilder: (context) => noResultFoundCallbackBuidler != null 
+      ? noResultFoundCallbackBuidler(context) 
+      : const Center(child: Text('没有数据')),
+  ); 
 }
 
 Widget? mockSearchResultPageCreator(String keyword) {

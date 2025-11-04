@@ -28,7 +28,6 @@ class UserProfileInfoEditorView extends StatefulWidget {
 }
 
 class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
-
   /// Create a global key that uniquely identifies the Form widget and allows validation of the form.
   /// Note: This is a `GlobalKey<FormState>`, not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
@@ -59,7 +58,6 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
     return Form(
       key: _formKey,
       child: Column(
-        // Add TextFormFields and ElevatedButton here.
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// ✅✅用户名 /// 

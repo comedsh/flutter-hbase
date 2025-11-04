@@ -2,6 +2,7 @@
 
 import 'package:adjiang/src/pages/adjiang_scaffold.dart';
 import 'package:adjiang/src/pages/myspace/settings/my_settings_view.dart';
+import 'package:adjiang/src/pages/myspace/shoulu/shoulu_application.dart';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
@@ -9,6 +10,7 @@ import 'package:sypages/pages.dart' hide TabData;
 import 'package:ionicons/ionicons.dart';
 import 'package:proste_indexed_stack/proste_indexed_stack.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:get/get.dart';
 
 import '../core/adjiang_appconfig.dart';
 import 'homepage/homepage.dart';
@@ -75,9 +77,20 @@ class _SkeletonState extends State<Skeleton> {
               isEmptyFocusToShowKeywordListPage: false,
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
               // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
-              searchResultPageCreator: (String keyword) => searchProfileResultPageCreator(keyword: keyword, chnCodes: display.chnCodes),
+              searchResultPageCreator: (String keyword) => searchProfileResultPageCreator(
+                keyword: keyword, 
+                chnCodes: display.chnCodes,
+                noResultFoundCallbackBuidler: (context) => Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(onPressed: () => Get.to(() => const ShouluApplication()), child: const Text('收录申请')),
+                    const Text('没有数据'),
+                  ]
+                )
+              ),
               isShowSearchResultDuringInput: true,
-              hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText,  // TODO configure this.
+              hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText, 
             )
           ),
           /// 分类页
