@@ -10,6 +10,7 @@ import 'commons/services/page_service.dart';
 import 'package:sypages/pages.dart' hide TabData;
 import 'package:appbase/appbase.dart';
 
+import 'myspace/shoulu/shoulu_application.dart';
 import 'skeleton.dart';
 
 
@@ -46,12 +47,21 @@ class AdJiangScaffold extends StatelessWidget {
         isEmptyFocusToShowKeywordListPage: false,
         flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
         // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
-        searchResultPageCreator: (String keyword) => 
-          searchProfileResultPageCreator(keyword: keyword, chnCodes: (AppServiceManager.appConfig.display as HBaseDisplay).chnCodes),
+        searchResultPageCreator: (String keyword) => searchProfileResultPageCreator(
+          keyword: keyword, 
+          chnCodes: (AppServiceManager.appConfig.display as HBaseDisplay).chnCodes,
+          noResultFoundCallbackBuidler: (context) => Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(onPressed: () => Get.to(() => const ShouluApplication()), child: const Text('收录申请')),
+              const Text('没有数据'),
+            ]
+          )
+        ),
         isShowSearchResultDuringInput: true,
         hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText,  // TODO configure this.
-        )
-      )
+      ))
     ),
     // 会员皇冠，如果已经是会员了则跳转到会员中心页
     IconButton(
