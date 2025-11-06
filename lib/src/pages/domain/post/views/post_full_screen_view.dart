@@ -11,6 +11,9 @@ import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import '../../../common/widgets/shadow.dart';
+import '../../../common/widgets/shadow_words_text.dart';
+
 
 final compactFormat = NumberFormat.compact(locale: 'zh_CN');
 
@@ -203,31 +206,19 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: sp(8.0)),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: <Color>[
-                          Colors.black12.withOpacity(0.3),
-                          Colors.black12.withOpacity(0.2)
-                        ]
-                      ),
-                    ),
-                    child: Obx(() => isShowEnterProfileTooltip.value 
-                      ? TooltipShowCase(
-                          name: 'enterProfileTooltip',
-                          tooltipText: '点击进入我的空间',
-                          popupDirection: TooltipDirection.up,
-                          showDurationMilsecs: 3200,
-                          learnCount: 1,
-                          child: _profileName(post),
-                        )
-                      : ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: sp(160.0)),
+                  child: Obx(() => isShowEnterProfileTooltip.value 
+                    ? TooltipShowCase(
+                        name: 'enterProfileTooltip',
+                        tooltipText: '点击进入我的空间',
+                        popupDirection: TooltipDirection.up,
+                        showDurationMilsecs: 3200,
+                        learnCount: 1,
                         child: _profileName(post),
-                      ), 
-                    ),
+                      )
+                    : ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: sp(160.0)),
+                      child: _profileName(post),
+                    ), 
                   )   
                 ),
               ),
@@ -283,34 +274,20 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   }
 
   rightPanel(Post post, BuildContext context) {
-    /// Container 是蒙版，避免因为贴文太白导致控制面板看不清
-    return Container(
-      width: sp(50),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerRight,
-          end: Alignment.centerLeft,
-          colors: <Color>[
-            Colors.black12.withOpacity(0.2),
-            Colors.black12.withOpacity(0.1)
-          ]
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          children: [
-            StatefulLikeButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
-            SizedBox(height: sp(26)),
-            StatefulFavoriteButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
-            SizedBox(height: sp(26)),
-            ... _unSeenPostButton(post, context),
-            ... _downloadButton(post),
-            if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
-              const JuBao()
-
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+      child: Column(
+        children: [
+          StatefulLikeButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
+          SizedBox(height: sp(26)),
+          StatefulFavoriteButton(post: post, unactivedIconColor: Colors.white, concretedFontColor: Colors.white,),
+          SizedBox(height: sp(26)),
+          ... _unSeenPostButton(post, context),
+          ... _downloadButton(post),
+          if ((AppServiceManager.appConfig.display as HBaseDisplay).showJubao)
+            const JuBao()
+    
+        ],
       ),
     );
   }
@@ -332,9 +309,10 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
           },
           child: Column(
             children: [
-              Icon(Ionicons.cloud_download_outline, size: sp(30), color: Colors.white),
+              Icon(Ionicons.cloud_download_outline, size: sp(30), color: Colors.white, shadows: [TextShadow.defaultShadow],),
               SizedBox(height: sp(4)),
-              Text('下载', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+              // Text('下载', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+              ShadowedWordsText(text: '下载', baseStyle: TextStyle(fontSize: sp(14), color: Colors.white))
             ],
           ),
         ),
@@ -347,55 +325,75 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
   /// 使用 maxWidth 来控制 profile name 避免越界
   _profileName(Post post) => ConstrainedBox(
     constraints: BoxConstraints(maxWidth: sp(160.0)),
-    child: Text(
-      post.profile.name,
-      style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+    // child: Text(
+    //   post.profile.name,
+    //   style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+    //   overflow: TextOverflow.ellipsis,
+    // ),
+    child: ShadowedWordsText(
+      text: post.profile.name,
+      baseStyle: TextStyle(
+        fontSize: sp(16),
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
       overflow: TextOverflow.ellipsis,
+      maxLines: 1,
     ),
-  );    
+  );
   
 
   _followButton(Post post, BuildContext context) {
     return StatefulFollowButton(
       profile: post.profile,
       followButtonCreator: ({required bool loading, required onTap}) =>
-        TextButton(
-          onPressed: () => onTap(context), 
-          style: TextButton.styleFrom(
-            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
-            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.zero,
-            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
-            /// 设置 text button 的 border                          
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
-              side: const BorderSide(
-                color: Colors.white, // Color of the border
-                width: 1.0, // Width of the border
-              ),
-            ),
-            backgroundColor: Colors.black12.withOpacity(0.1)
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.1), offset: const Offset(2.0, 2.0), blurRadius: 1.0)]
           ),
-          child: loading 
-            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : Text('关注', style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white)),
+          child: TextButton(
+            onPressed: () => onTap(context), 
+            style: TextButton.styleFrom(
+              /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+              /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: EdgeInsets.zero,
+              minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+              /// 设置 text button 的 border                          
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
+                side: const BorderSide(
+                  color: Colors.white, // Color of the border
+                  width: 1.0, // Width of the border
+                ),
+              ),
+              backgroundColor: Colors.black12.withOpacity(0.1)
+            ),
+            child: loading 
+              ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white))
+              : Text('关注', style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
         ),
       cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
-        TextButton(
-          onPressed: () => onTap(context), 
-          style: TextButton.styleFrom(
-            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
-            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.zero,
-            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
-            /// 设置 text button 的 border                          
-            backgroundColor: Colors.black12.withOpacity(0.1)
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.1), offset: const Offset(2.0, 2.0), blurRadius: 1.0)]
           ),
-          child: loading 
-            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : Text('已关注', style: TextStyle(fontSize: sp(14), color: Colors.white54)),
+          child: TextButton(
+            onPressed: () => onTap(context), 
+            style: TextButton.styleFrom(
+              /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+              /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: EdgeInsets.zero,
+              minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+              /// 设置 text button 的 border                          
+              backgroundColor: Colors.black12.withOpacity(0.1),
+            ),
+            child: loading 
+              ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white70))
+              : ShadowedWordsText(text: '已关注', baseStyle: TextStyle(fontSize: sp(14), color: Colors.white70))
+          ),
         ),
     );
   }
@@ -420,9 +418,10 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
         },
         child: Column(
           children: [
-            Icon(Ionicons.eye_off_outline, size: sp(28), color: Colors.white,),
+            Icon(Ionicons.eye_off_outline, size: sp(28), color: Colors.white, shadows: [TextShadow.defaultShadow],),
             SizedBox(height: sp(4)),
-            Text('屏蔽', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+            // Text('屏蔽', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+            ShadowedWordsText(text: '屏蔽', baseStyle: TextStyle(fontSize: sp(14), color: Colors.white))
           ],
         ),
       ),

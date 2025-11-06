@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hbase/src/pages/common/widgets/shadow.dart';
+import 'package:hbase/src/pages/common/widgets/shadow_words_text.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
 
@@ -79,10 +81,11 @@ class _JuBaoState extends State<JuBao> {
       child: Column(
         children: [
           /// 因为举报 icon 只会在 [PostFullScreenView] 页面中展示，因此固定为白色
-          Icon(Ionicons.alert_circle_outline, size: sp(30), color: Colors.white,),
+          Icon(Ionicons.alert_circle_outline, size: sp(30), color: Colors.white, shadows: [TextShadow.defaultShadow],),
           SizedBox(height: sp(4)),
           /// 因为举报 icon 只会在 [PostFullScreenView] 页面中展示，因此固定为白色
-          Text('举报', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+          // Text('举报', style: TextStyle(fontSize: sp(14), color: Colors.white)),
+          ShadowedWordsText(text: '举报', baseStyle: TextStyle(fontSize: sp(14), color: Colors.white))
         ],
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+import 'package:hbase/src/pages/common/widgets/shadow.dart';
+import 'package:hbase/src/pages/common/widgets/shadow_words_text.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
 
@@ -92,12 +94,22 @@ class _StatefulLikeButtonState extends State<StatefulLikeButton> {
     isLiked.value ? Ionicons.heart : Ionicons.heart_outline, 
     color: isLiked.value ? widget.activedIconColor : widget.unactivedIconColor,
     size: widget.iconSize ?? sp(30),
+    shadows: [TextShadow.defaultShadow],
   );
 
-  Text likesNum() => Text(
+  // Text likesNum() => Text(
+  //   /// 注意这里的 compactFormat 必须在 10000 的时候才会缩放
+  //   compactFormat.format(widget.post.likes), 
+  //   style: TextStyle(
+  //     color: widget.concretedFontColor,
+  //     fontSize: widget.fontSize ?? sp(14),      
+  //   )
+  // );
+
+  Widget likesNum() => ShadowedWordsText(
     /// 注意这里的 compactFormat 必须在 10000 的时候才会缩放
-    compactFormat.format(widget.post.likes), 
-    style: TextStyle(
+    text: compactFormat.format(widget.post.likes), 
+    baseStyle: TextStyle(
       color: widget.concretedFontColor,
       fontSize: widget.fontSize ?? sp(14),      
     )

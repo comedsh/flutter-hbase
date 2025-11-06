@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 
+import '../../../common/widgets/shadow_words_text.dart';
+
 class SimplePorifleIntroPanel extends StatelessWidget {
   /// 该参数是保持 [PostFullScreenView] 中所需要的逻辑，为将来重构保留原有逻辑。
   final int postIndex;
@@ -51,25 +53,13 @@ class SimplePorifleIntroPanel extends StatelessWidget {
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: sp(8.0)),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: <Color>[
-                    Colors.black12.withOpacity(0.3),
-                    Colors.black12.withOpacity(0.2)
-                  ]
-                ),
-              ),
-              /// 使用 maxWidth 避免名字过长而越界
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: sp(160)),
-                child: Text(
-                  post.profile.name,
-                  style: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
-                  overflow: TextOverflow.ellipsis,
-                ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: sp(160)),
+              child: ShadowedWordsText(
+                text: post.profile.name,
+                baseStyle: TextStyle(fontSize: sp(16), fontWeight: FontWeight.bold, color: Colors.white),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             )
           ),
@@ -84,43 +74,53 @@ class SimplePorifleIntroPanel extends StatelessWidget {
     return StatefulFollowButton(
       profile: post.profile,
       followButtonCreator: ({required bool loading, required onTap}) =>
-        TextButton(
-          onPressed: () => onTap(context), 
-          style: TextButton.styleFrom(
-            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
-            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.zero,
-            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
-            /// 设置 text button 的 border                          
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
-              side: const BorderSide(
-                color: Colors.white, // Color of the border
-                width: 1.0, // Width of the border
-              ),
-            ),
-            backgroundColor: Colors.black12.withOpacity(0.1)
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.1), offset: const Offset(2.0, 2.0), blurRadius: 1.0)]
           ),
-          child: loading 
-            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : Text('关注', style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white)),
+          child: TextButton(
+            onPressed: () => onTap(context), 
+            style: TextButton.styleFrom(
+              /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+              /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: EdgeInsets.zero,
+              minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+              /// 设置 text button 的 border                          
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0), // Adjust border radius as needed
+                side: const BorderSide(
+                  color: Colors.white, // Color of the border
+                  width: 1.0, // Width of the border
+                ),
+              ),
+              backgroundColor: Colors.black12.withOpacity(0.1)
+            ),
+            child: loading 
+              ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white))
+              : Text('关注', style: TextStyle(fontSize: sp(14), fontWeight: FontWeight.bold, color: Colors.white)),
+          ),
         ),
       cancelFollowButtonCreator: ({required bool loading, required onTap}) => 
-        TextButton(
-          onPressed: () => onTap(context), 
-          style: TextButton.styleFrom(
-            /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
-            /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.zero,
-            minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
-            /// 设置 text button 的 border                          
-            backgroundColor: Colors.black12.withOpacity(0.1)
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.1), offset: const Offset(2.0, 2.0), blurRadius: 1.0)]
           ),
-          child: loading 
-            ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white54))
-            : Text('已关注', style: TextStyle(fontSize: sp(14), color: Colors.white54)),
+          child: TextButton(
+            onPressed: () => onTap(context), 
+            style: TextButton.styleFrom(
+              /// 注意，下面三个参数是用来设置 TextButton 的内部 padding 的，默认的值比较大
+              /// 参考 https://stackoverflow.com/questions/66291836/flutter-textbutton-remove-padding-and-inner-padding
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              padding: EdgeInsets.zero,
+              minimumSize: Size(sp(50), sp(30)),  // 重要：定义按钮的大小
+              /// 设置 text button 的 border                          
+              backgroundColor: Colors.black12.withOpacity(0.1),
+            ),
+            child: loading 
+              ? SizedBox(width: sp(14), height: sp(14), child: const CircularProgressIndicator(strokeWidth: 1.5, color: Colors.white70))
+              : ShadowedWordsText(text: '已关注', baseStyle: TextStyle(fontSize: sp(14), color: Colors.white70))
+          ),
         ),
     );
   }

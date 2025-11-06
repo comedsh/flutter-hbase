@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
+import 'package:hbase/src/pages/common/widgets/shadow_words_text.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
+
+import '../../../common/widgets/shadow.dart';
 
 class StatefulFavoriteButton extends StatefulWidget {
   final Post post;
@@ -67,15 +70,23 @@ class _StatefulFavoriteButtonState extends State<StatefulFavoriteButton> {
             isFavorited.value ? Ionicons.star : Ionicons.star_outline, 
             color: isFavorited.value ? widget.activedIconColor ?? Colors.amber.shade800 : widget.unactivedIconColor,            
             size: sp(30),
+            shadows: [TextShadow.defaultShadow],
           ),
           SizedBox(height: sp(4)),
-          Text(
-            compactFormat.format(widget.post.favorites), 
-            style: TextStyle(
+          // Text(
+          //   compactFormat.format(widget.post.favorites), 
+          //   style: TextStyle(
+          //     color: widget.concretedFontColor,
+          //     fontSize: sp(14)
+          //   )
+          // ),
+          ShadowedWordsText(
+            text: compactFormat.format(widget.post.favorites), 
+            baseStyle: TextStyle(
               color: widget.concretedFontColor,
               fontSize: sp(14)
             )
-          ),
+          )
         ],
       )),
     );
