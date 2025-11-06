@@ -22,14 +22,14 @@ import 'package:sycomponents/components.dart';
 // ignore: constant_identifier_names
 const String NAV_TO_PAGE_EVENT = 'navToPageEvent';
 
-class Skeleton extends StatefulWidget {
-  const Skeleton({super.key});
+class AdJiangSkeleton extends StatefulWidget {
+  const AdJiangSkeleton({super.key});
 
   @override
-  State<Skeleton> createState() => _SkeletonState();
+  State<AdJiangSkeleton> createState() => _AdJiangSkeletonState();
 }
 
-class _SkeletonState extends State<Skeleton> {
+class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
   
   int _currentPage = 0;
 
@@ -41,7 +41,7 @@ class _SkeletonState extends State<Skeleton> {
 
   @override
   void dispose() {
-    debugPrint('$Skeleton dispose calls');
+    debugPrint('$AdJiangSkeleton dispose calls');
     EventBus().off(NAV_TO_PAGE_EVENT, navToPageHandler);
     super.dispose();
   }

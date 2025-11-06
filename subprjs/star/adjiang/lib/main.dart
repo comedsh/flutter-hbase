@@ -14,11 +14,14 @@ main() async {
   AdJiangAppConfig appConfig = AdJiangAppConfig();
   AdJiangResponseHandler responseHandler = AdJiangResponseHandler();
 
+
+  /// 注入：爱豆酱的入口执行，[initializer] 提供入口选项的参数，[appConfig] 提供应用的配置项
+  /// [responseHandler] 提供响应解析入口
   await Runner.run(
     initializer: initializer, 
     appConfig: appConfig,
     responseHandler: responseHandler,
     userService: userService,
-    homePageCreator: (context) => const Skeleton(),
+    homePageCreator: (context) => const AdJiangSkeleton(),
   );
 }
