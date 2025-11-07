@@ -37,7 +37,7 @@ class AdJiangAppConfig extends HBaseAppConfig {
   
   @override
   Widget get salePageBackgroundImage {
-      return const Image(image: AssetImage('images/sale_page_bg.jpg'));
+      return const Image(image: AssetImage('images/subscription_page_background.png'));
   }
 
 }
