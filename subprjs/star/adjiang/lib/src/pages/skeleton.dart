@@ -30,7 +30,6 @@ class AdJiangSkeleton extends StatefulWidget {
 }
 
 class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
-  
   int _currentPage = 0;
 
   @override
@@ -55,11 +54,11 @@ class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
       body: ProsteIndexedStack(
         index: _currentPage,
         children: [
-          /// 首页
+          ///✅✅ 首页
           IndexedStackChild(
             child: const AdJiangScaffold(child: HomePage()),
           ),
-          /// 热榜页
+          ///✅✅ 热榜页
           IndexedStackChild(
             child: AdJiangScaffold(
               child: HotspotView(
@@ -68,12 +67,14 @@ class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
               ),
             )
           ),
-          /// 搜索页
+          ///✅✅ 搜索页
           IndexedStackChild(
             child: SearchBarInAppBar(
               // 想了想还是展示 leading button 吧，这样布局上好看些。
               appBarAutomaticallyImplyLeading: false,
-              appBarLeadingCreator: () => const Icon(Ionicons.airplane),  // FIXME change this to app logo
+              appBarLeading: const UnconstrainedBox(child: SizedBox(width: 28, height: 28, child: Image(image: AssetImage('images/logo_loukong_colored.png')))),
+              // appBarLeadingDark: const UnconstrainedBox(child: SizedBox(width: 28, height: 28, child: Image(image: AssetImage('images/logo_loukong_white.png')))),
+              appBarLeadingDark: const UnconstrainedBox(child: SizedBox(width: 28, height: 28, child: Image(image: AssetImage('images/logo_loukong_colored.png')))),
               isEmptyFocusToShowKeywordListPage: false,
               flashPageCreator: (TextEditingController controller) => flashPageCreator(controller),
               // keywordsListPageCreator: (TextEditingController controller) => searchKeywordListPage(controller),
@@ -93,7 +94,7 @@ class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
               hintText: (AppServiceManager.appConfig.display as AdJiangDisplay).searchHintText, 
             )
           ),
-          /// 分类页
+          ///✅✅ 分类页
           IndexedStackChild(
             child: AdJiangScaffold(
               child: CategoryPostAlbumListViewPage(
@@ -104,7 +105,7 @@ class _AdJiangSkeletonState extends State<AdJiangSkeleton> {
               ),
             ),
           ),
-          /// 用户中心页
+          ///✅✅ 用户中心页
           IndexedStackChild(
             child: AdJiangScaffold(
               actions: [

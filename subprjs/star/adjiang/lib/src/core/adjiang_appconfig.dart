@@ -5,6 +5,7 @@
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
+import 'package:sycomponents/components.dart';
 
 class AdJiangAppConfig extends HBaseAppConfig {
 
@@ -37,7 +38,8 @@ class AdJiangAppConfig extends HBaseAppConfig {
   
   @override
   Widget get salePageBackgroundImage {
-      return const Image(image: AssetImage('images/subscription_page_background.png'));
+    /// 避免背景图被压缩得太狠（或者没有预计到将来的大尺寸屏幕），这里采用屏幕尺寸 + 填充模式
+    return Image(image: const AssetImage('images/subscription_page_bg.png'), width: Screen.widthWithoutContext(), fit: BoxFit.cover,);
   }
 
 }

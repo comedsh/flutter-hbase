@@ -85,3 +85,20 @@ flutter:
   assets:
     - .env
     - images/
+
+
+# 教程 https://www.bilibili.com/video/BV1ky411B7bR/?spm_id_from=333.337.search-card.all.click&vd_source=fe48b1dc8c7e4efee263b9b66133fd9c
+# flutter_native_splash 是在加载 flutter 之前填充 iOS 默认的白屏页面的
+# 配置更改后执行 `dart run flutter_native_splash:create` 然后重新启动 app 即可；但是如果没有生效，则首先尝试 flutter clean and recompile your app，
+# 如果还是不行，则需要首先删除 app、然后重启设备、然后重新安装并启动 app 即可修复
+flutter_native_splash:
+  # color: "#39075f"
+  # 实测：会拉升 launcher_bg.png 以填充满整个屏幕，这样便弥补了 color 无法渐变的遗憾
+  background_image: "images/splash_background.png"  
+  image: "images/splash_logo.png"
+  # branding: "assets/branding.png"
+  # ios_content_mode can be one of the following iOS UIView.ContentMode (see
+  # https://developer.apple.com/documentation/uikit/uiview/contentmode): scaleToFill,
+  # scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight,
+  # bottomLeft, or bottomRight.
+  # ios_content_mode: center

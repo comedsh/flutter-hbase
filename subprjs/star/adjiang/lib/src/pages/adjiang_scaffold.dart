@@ -14,7 +14,7 @@ import 'myspace/shoulu/shoulu_application.dart';
 import 'skeleton.dart';
 
 
-class AdJiangScaffold extends StatelessWidget {
+class AdJiangScaffold extends StatefulWidget {
   final Widget child;
   /// 提供自定义的 appbar actions
   final List<Widget>? actions;
@@ -23,18 +23,43 @@ class AdJiangScaffold extends StatelessWidget {
   const AdJiangScaffold({super.key, required this.child, this.actions, this.endDrawer});
 
   @override
+  State<AdJiangScaffold> createState() => _AdJiangScaffoldState();
+}
+
+class _AdJiangScaffoldState extends State<AdJiangScaffold> {
+
+  bool _isDark = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDark = Get.isDarkMode;
+    EventBus().on(EventConstants.themeChanged, themeChangedHandler);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    EventBus().off(EventConstants.themeChanged, themeChangedHandler);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('爱豆酱'),
+        // title: const Text('爱豆酱'),
+        title: _isDark 
+          // ? const Image(image: AssetImage('images/logo_font_transparent.png'), width: 72)
+          ? const Image(image: AssetImage('images/logo_font_colored.png'), width: 72)
+          : const Image(image: AssetImage('images/logo_font_colored.png'), width: 72),
         centerTitle: false,
         automaticallyImplyLeading: false,
         elevation: 4.0,
-        actions: actions ?? defautlActions
+        actions: widget.actions ?? defautlActions
       ),
-      body: child,
+      body: widget.child,
       /// 通过调用 [Scaffold.of(context).openEndDrawer()] 可以打开
-      endDrawer: endDrawer,
+      endDrawer: widget.endDrawer,
     );
   }
 
@@ -79,4 +104,6 @@ class AdJiangScaffold extends StatelessWidget {
         : EventBus().emit(NAV_TO_PAGE_EVENT, 4), // 4 是 MeHome Page index.
     )
   ];
+
+  themeChangedHandler(isDark) => setState(() => _isDark = isDark);    
 }

@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: appbase
-      sha256: cbcaa4905258097cf0a148fa1f96e2d3a202703f2769789351d9c56d65491fb4
+      sha256: e3e23f3ad9b5a1d45f4ef0a2d79fc64683521dbbf77a7441e226549df791d73b
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.1+5"
+    version: "1.0.1+8"
   archive:
     dependency: transitive
     description:
@@ -547,7 +547,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.1+11"
+    version: "1.0.2+1"
   hive:
     dependency: transitive
     description:
@@ -1309,10 +1309,10 @@ packages:
     dependency: transitive
     description:
       name: sypages
-      sha256: d6b26ae5f507b6859edbf4f78314f697f58aecd05b87195dae389c970fcb41b9
+      sha256: "59f1c42ac4e4889b16bb1afe113355a3d4773ff58ca7b559bda8c2a9dd4aa48d"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.0+12"
+    version: "2.0.0+17"
   sypayment:
     dependency: transitive
     description:

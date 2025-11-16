@@ -157,15 +157,39 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
           Divider(thickness: 0.5, color: widget.isDark ? Colors.white24 : Colors.black12),
           Text('会员权益', style: TextStyle(color: widget.isDark ? Colors.white38 : Colors.black54)),
           SizedBox(height: sp(2)),
-          BulletList(
-            items: user.subscr!.ruleDescs,
-            bulletSize: sp(12), 
-            fontSize: sp(14),
-            fontColor: widget.isDark ? null : Colors.black87,
-            bulletPaddingLeft: sp(4), 
-            textPaddingLeft: sp(6),
-            rowPaddingBottom: 0
-          ),
+          SizedBox(
+            /// SizedBox width 是可选属性，目的是为了限制全屏的时候（不展示升级订阅按钮的情况下），布局更合理更紧凑些
+            width: Screen.width(context) * .78,
+            child: GridView(
+              /// crossAxisCount 设置每一行的元素个数，childAspectRatio 设置每一行元素的高度（利用宽高比值来设定）
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 5.6),
+              /// 关键属性：控制元素的布局在可视范围内，否则将试图占满整个 scroll 方向的空间，这里的空间是 vertical
+              /// 如果设置为 false 的话，他会被不受约束的占满 vertical scroll 的整个空间进而导致布局溢出报错
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              children: user.subscr!.ruleDescs.map((desc) => Row(
+                children: [
+                  Text('•', style: TextStyle(fontSize: sp(12), color: widget.isDark ? null : Colors.black87,)),
+                  SizedBox(width: sp(6)),
+                  /// 添加 wrap 的目的是让超长的文本能够换行展示（当升级订阅按钮出现的时候容易超长，比如“图片帖子无限次下载“文本会超长）
+                  /// Wrap 元素要求使用 Expanded 否则布局报错；但是弊端是，换行后最后一行文本的高度无法完全展示，是因为 GridView 布局
+                  /// 是不会提前知道 Wrap 会提前换行的；因此为了完美的解决文本超长展示的问题，同时还采用了下面的方式，即是判断是否会展示
+                  /// bigButton，如果要展示的话，那么条款的文本大小采用 sp(12)
+                  Expanded(
+                    child: Wrap(
+                      children: [
+                        Text(
+                          desc, 
+                          style: TextStyle(
+                            fontSize: bigButton() == null ? sp(14) : sp(12),  
+                            color: widget.isDark ? null : Colors.black87,)
+                          ),
+                      ],
+                  )),
+                ],
+              )).toList(),
+            ),
+          )
         ]
     ];
   }  
