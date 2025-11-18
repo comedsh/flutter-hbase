@@ -13,10 +13,10 @@ packages:
     dependency: "direct dev"
     description:
       name: appbase
-      sha256: "480d8e5eb4972810134e8de68eae99d211da45ddd9a47687fbd6e2bcdd2ab8f3"
+      sha256: bb8b4a4ce9b018ed5d980b52a95ab74f8eb9c29d72e4d24f7e5764ebe3db0f87
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.0+58"
+    version: "1.0.2+2"
   archive:
     dependency: transitive
     description:
@@ -345,6 +345,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  flukit:
+    dependency: transitive
+    description:
+      name: flukit
+      sha256: e71be5693a2c612be09ca1d1e97dd2584c60f9e467fec7674bf4198f47ef2037
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -362,10 +370,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_dotenv
-      sha256: b7c7be5cd9f6ef7a78429cabd2774d3c4af50e79cb2b7593e3d5d763ef95c61b
+      sha256: d4130c4a43e0b13fefc593bc3961f2cb46e30cb79e253d4a526b1b5d24ae1ce4
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.1"
+    version: "6.0.0"
   flutter_font_icons:
     dependency: transitive
     description:
@@ -517,6 +525,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.2"
+  get_time_ago:
+    dependency: transitive
+    description:
+      name: get_time_ago
+      sha256: cd111914562ca2b938afbc73f715fab1f37795cc053924d08f6de59878781388
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.2"
   gradient_borders:
     dependency: transitive
     description:
@@ -531,7 +547,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "1.0.0+15"
+    version: "1.0.2+1"
   hive:
     dependency: transitive
     description:
@@ -1177,6 +1193,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.12"
+  soft_edge_blur:
+    dependency: transitive
+    description:
+      name: soft_edge_blur
+      sha256: "3e9a6c981d298d6aa2bf98716bc521fb043708833a570cd9f559a7d523973c51"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.3"
   source_span:
     dependency: transitive
     description:
@@ -1269,10 +1293,10 @@ packages:
     dependency: transitive
     description:
       name: sycomponents
-      sha256: "8748a0548c18ac50795d4757c72d84c20edd98e881393099d11e1750050cac9e"
+      sha256: b225b8538fae02d7e0ef7d6c9372dadfda7e08ffa4d66fb6a98c4cbcb0ae13db
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.6+1"
+    version: "2.1.6+29"
   synchronized:
     dependency: transitive
     description:
@@ -1281,22 +1305,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0+3"
+  sypages:
+    dependency: transitive
+    description:
+      name: sypages
+      sha256: "1d103c0a6f9a6ac2b2e0d81a35cde7126a5faac780646094045589b9d6af68f6"
+      url: "http://localhost:4000"
+    source: hosted
+    version: "2.0.0+18"
   sypayment:
     dependency: transitive
     description:
       name: sypayment
-      sha256: "77349757791b790b3992711d3931eb6e050785e97f8967e23691caa5979ab6fc"
+      sha256: "335f11ce1b0690ffa151dd338dbd02da0f917819eb52cc0313e1c1f1cf9e5a60"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.2+5"
+    version: "2.1.3+1"
   syrequest:
     dependency: transitive
     description:
       name: syrequest
-      sha256: "65c28600385eefd15ead747f33709565fd365794b534d207119c09375cbb06fd"
+      sha256: "871f28dbb82d80071a36085856b204314c7bfdcb5cceabec054005e4693218fa"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.0+1"
+    version: "2.0.0+2"
   term_glyph:
     dependency: transitive
     description:
