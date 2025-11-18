@@ -50,7 +50,7 @@ class MeViewhisPostPager extends Pager<Post> {
   Future<List<Post>> fetchNextPage() async {
     /// API_GET_USER_VIEWHIS_PAGE_PREFIX -> /u/page/viewhis
     var r = await dio.get('${dotenv.env['API_GET_USER_VIEWHIS_PAGE_PREFIX']}/$pageNum/$pageSize');
-    return r.data.map<Post>((data) => Post.fromJson(data)).toList();    
+    return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
 
 }

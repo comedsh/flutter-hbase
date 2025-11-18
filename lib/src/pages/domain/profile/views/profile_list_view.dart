@@ -181,5 +181,9 @@ class _ProfileListViewState extends State<ProfileListView> {
     pagingController.itemList?.removeWhere((p) => blockedProfiles.contains(p));
   }
 
-  themeChangedHandler(isDark) => setState(() => dark = isDark);
+  themeChangedHandler(isDark) {
+    /// 避免出现  This error might indicate a memory leak if setState() is being called because another object
+    /// is retaining a reference to this State object after it has been removed from the tree.
+    if (mounted) setState(() => dark = isDark);
+  }
 }

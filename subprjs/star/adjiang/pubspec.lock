@@ -1301,10 +1301,10 @@ packages:
     dependency: transitive
     description:
       name: sycomponents
-      sha256: b225b8538fae02d7e0ef7d6c9372dadfda7e08ffa4d66fb6a98c4cbcb0ae13db
+      sha256: cf82cd00f5d8fe944d8be481b0dbd18b83f603c7585d042f320c928f12c0bf3c
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.6+29"
+    version: "2.1.7+5"
   synchronized:
     dependency: transitive
     description:
