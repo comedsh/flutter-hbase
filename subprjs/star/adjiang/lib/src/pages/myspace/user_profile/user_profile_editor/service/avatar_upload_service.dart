@@ -6,6 +6,7 @@ import 'package:appbase/appbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AvatarUploadService {
 
@@ -77,7 +78,8 @@ class AvatarUploadService {
           filename: 'avatar${FileUtils.extension(filePath)}'
         ),
       });
-      await dio.post('/u/avatar/upload', data: formData);
+      /// API_POST_USER_AVATAR_UPLOAD -> /u/avatar/upload
+      await dio.post(dotenv.env['API_POST_USER_AVATAR_UPLOAD']!, data: formData);
       debugPrint('$uploadAvatar, the avatar ${FileUtils.basename(filePath)} has been uploaded');
     } on Exception {
       showErrorToast(msg: '网络异常，请稍后再试');

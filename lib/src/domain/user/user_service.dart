@@ -1,47 +1,57 @@
 
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart';
 import 'package:hbase/hbase.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HBaseUserService {
 
   static follow(String profileCode) async {
-    await dio.post('/u/follow/set', data: {
+    /// API_POST_USER_FOLLOW_SET -> /u/follow/set
+    await dio.post(dotenv.env['API_POST_USER_FOLLOW_SET']!, data: {
       'profileCode': profileCode
     });
   } 
 
   static disFollow(String profileCode) async {
-    await dio.post('/u/follow/unset', data: {
+    /// API_POST_USER_FOLLOW_UNSET -> /u/follow/unset
+    await dio.post(dotenv.env['API_POST_USER_FOLLOW_UNSET']!, data: {
       'profileCode': profileCode
     });
   }
 
   static favorite(String shortcode) async {
-    await dio.post('/u/favorite/set', data: {
+    /// API_POST_USER_FAVORITE_SET -> /u/favorite/set
+    await dio.post(dotenv.env['API_POST_USER_FAVORITE_SET']!, data: {
       'shortcode': shortcode
     });
   }
 
   static disFavorite(String shortcode) async {
-    await dio.post('/u/favorite/unset', data: {
+    /// API_POST_USER_FAVORITE_UNSET -> /u/favorite/unset
+    await dio.post(dotenv.env['API_POST_USER_FAVORITE_UNSET']!, data: {
       'shortcode': shortcode
     });
   }
 
   static like(String shortcode) async {
-    await dio.post('/u/like/set', data: {
+    /// API_POST_USER_LIKE_SET -> /u/like/set
+    await dio.post(dotenv.env['API_POST_USER_LIKE_SET']!, data: {
       'shortcode': shortcode
     });
   }
 
   static disLike(String shortcode) async {
-    await dio.post('/u/like/unset', data: {
+    /// API_POST_USER_LIKE_UNSET -> /u/like/unset
+    await dio.post(dotenv.env['API_POST_USER_LIKE_UNSET']!, data: {
       'shortcode': shortcode
     });
   }
 
   static saveViewHis(String shortcode) async {
-    await dio.post('/u/viewhis', data: {
+    /// API_POST_USER_VIEWHIS -> /u/viewhis
+    await dio.post(dotenv.env['API_POST_USER_VIEWHIS']!, data: {
       'shortcode': shortcode        
     }); 
   }

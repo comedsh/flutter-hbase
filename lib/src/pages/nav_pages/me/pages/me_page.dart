@@ -1,11 +1,12 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-import 'package:hbase/src/pages/nav_pages/me/views/me_subscr_info_view.dart';
-import 'package:hbase/src/pages/nav_pages/me/widgets/clear_cache_list_tile.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:sycomponents/components.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MePage extends StatefulWidget {
   final String? title;
@@ -165,7 +166,8 @@ class _MePageState extends State<MePage> {
                   if (isConfirmed) {
                     GlobalLoading.show();
                     try {
-                      await dio.post('/u/logout');
+                      /// API_POST_USER_LOGOUT -> /u/logout
+                      await dio.post(dotenv.env['API_POST_USER_LOGOUT']!);
                       GlobalLoading.close();
                       await showAlertDialogWithoutContext(
                         content: '已登出',

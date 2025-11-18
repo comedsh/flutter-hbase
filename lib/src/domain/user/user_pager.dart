@@ -10,7 +10,7 @@ class MeLikePostPager extends Pager<Post> {
   @override
   Future<List<Post>> fetchNextPage() async {
     /// API_GET_USER_LIKE_PAGE_PREFIX -> /u/page/like
-    var r = await dio.get('${dotenv.env['API_GET_USER_LIKE_PAGE_PREFIX']}/$pageNum/$pageSize');
+    var r = await dio.get('${dotenv.env['API_GET_USER_LIKE_PAGE_PREFIX']!}/$pageNum/$pageSize');
     return r.data.map<Post>((data) => Post.fromJson(data)).toList();
   }
 

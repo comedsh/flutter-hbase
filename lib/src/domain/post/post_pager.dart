@@ -71,7 +71,8 @@ class SearchPostPager extends Pager<Post> {
 
   @override
   Future<List<Post>> fetchNextPage() async {
-    var r = await dio.post('/search/posts', data: {
+    /// API_POST_SERACH_POST -> /search/posts
+    var r = await dio.post(dotenv.env['API_POST_SERACH_POST']!, data: {
       'pageNum': pageNum,
       'pageSize': pageSize,
       'token': token,

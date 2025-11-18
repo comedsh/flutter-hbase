@@ -1,6 +1,9 @@
 
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart';
 import 'package:hbase/hbase.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class PointReceiptPager extends Pager<PointReceipt> {
 
@@ -11,7 +14,8 @@ class PointReceiptPager extends Pager<PointReceipt> {
 
   @override
   Future<List<PointReceipt>> fetchNextPage() async{
-    var r = await dio.post('/u/point/receipt/page', data: {
+    /// API_POST_USER_POINT_RECEIPT_PAGE -> /u/point/receipt/page
+    var r = await dio.post(dotenv.env['API_POST_USER_POINT_RECEIPT_PAGE']!, data: {
       "pageNum": pageNum,
       "pageSize": pageSize
     });
@@ -25,7 +29,8 @@ class PointConsumptionPager extends Pager<PointConsumption> {
 
   @override
   Future<List<PointConsumption>> fetchNextPage() async {
-    var r = await dio.post('/u/point/consumption/page', data: {
+    /// API_POST_USER_POINT_CONSUMPTION_PAGE -> /u/point/consumption/page
+    var r = await dio.post(dotenv.env['API_POST_USER_POINT_CONSUMPTION_PAGE']!, data: {
       "pageNum": pageNum,
       "pageSize": pageSize
     });

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:appbase/appbase.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ShouluApplication extends StatefulWidget {
   const ShouluApplication({super.key});
@@ -162,7 +163,8 @@ class _ShouluApplicationState extends State<ShouluApplication> {
                   if (_formKey.currentState!.validate()) {
                     try {
                       GlobalLoading.show();
-                      await dio.post('/u/shoulu/apply', data: {
+                      /// API_POST_USER_SHOULU_APPLY -> /u/shoulu/apply
+                      await dio.post(dotenv.env['API_POST_USER_SHOULU_APPLY']!, data: {
                         'name': name,
                         'igId': igId,
                         'reason': reason

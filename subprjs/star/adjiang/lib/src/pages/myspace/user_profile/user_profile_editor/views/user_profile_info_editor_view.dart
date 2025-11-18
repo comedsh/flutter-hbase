@@ -9,6 +9,7 @@ import 'package:appbase/appbase.dart';
 import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../../../../domain/user/adjiang_user.dart';
 
@@ -211,7 +212,8 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   debugPrint('submitting data');
                   GlobalLoading.show();
                   try {
-                    var r = await dio.post('/u/add/info', data: {
+                    /// API_POST_USER_ADD_INFO -> /u/add/info
+                    var r = await dio.post(dotenv.env['API_POST_USER_ADD_INFO']!, data: {
                       'username': username,
                       'gender': gender,
                       'birthday': birthday?.toIso8601String(),
@@ -271,7 +273,8 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
       forceUsernameValidationMessage = null;
     });
     try {
-      var r = await dio.post('/u/check/username/exist', data: {'username': username});
+      /// API_POST_USER_CHECK_USERNAME_EXIST -> /u/check/username/exist
+      var r = await dio.post(dotenv.env['API_POST_USER_CHECK_USERNAME_EXIST']!, data: {'username': username});
       var isExist = r.data['exist'];
       if (isExist) {
         setState(() {

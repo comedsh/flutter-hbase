@@ -1,13 +1,14 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
-// ignore: depend_on_referenced_packages
 import 'package:sycomponents/components.dart';
 import 'package:sypages/pages.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 Widget flashPageCreator(TextEditingController textEditingController) {
@@ -109,7 +110,8 @@ KeywordsListPage searchKeywordListPage(TextEditingController controller) {
     textEditingController: controller,
     fetchKeywordObjsCallback: (String? keyword) async {
       keyword = keyword ?? ""; // resolve keyword nullable.
-      var r = await dio.post('/search/match-tokens', data: {"token": keyword});
+      /// API_POST_SERACH_MATCH_TOKENS -> /search/match-tokens
+      var r = await dio.post(dotenv.env['API_POST_SERACH_MATCH_TOKENS']!, data: {"token": keyword});
       var tokens = r.data;
       return tokens;
     },

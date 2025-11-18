@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:async';
 
 import 'package:appbase/appbase.dart';
@@ -5,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class ScoreStateManager extends GetxService {
   Rx<int> scoreSimple = 0.obs;
@@ -119,7 +123,8 @@ class ScoreService {
     ///    延迟，那么要等待很久才会跳转评分；
     /// 2. 不阻塞 post 请求；因为这里一旦完成，前端就会对相关的操作就会被上一把锁；这样用户就无法再次发起了。
     ///    明显这个方案更好！
-    dio.post('/u/tscore/save');
+    /// API_POST_USER_TSCORE_SAVE -> /u/tscore/save
+    dio.post(dotenv.env['API_POST_USER_TSCORE_SAVE']!);
     Rating.openStoreListing(AppServiceManager.appConfig.appStoreId);
     Get.back();
     /// 这就是上面因为不阻塞 post 请求后跳转导致前端无法及时接收 server response 的解决方案 #2 的实现；由

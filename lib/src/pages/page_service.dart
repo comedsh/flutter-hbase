@@ -1,7 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sycomponents/components.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// 将一些页面上会共用到的业务逻辑放到这里
 class PageService {
@@ -18,7 +21,8 @@ class PageService {
     if (isConfirmed) {
       GlobalLoading.show();
       try {
-        await dio.post('/u/zhuxiao');
+        /// API_POST_USER_ZHUXIAO -> /u/zhuxiao
+        await dio.post(dotenv.env['API_POST_USER_ZHUXIAO']!);
         GlobalLoading.close();
         await showAlertDialogWithoutContext(
           content: '账户已注销',

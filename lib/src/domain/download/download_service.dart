@@ -1,5 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
-
+// ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 import 'dart:async';
 import 'dart:convert';
 
@@ -11,6 +10,8 @@ import 'package:hbase/hbase.dart';
 import 'package:sycomponents/components.dart';
 import 'package:sypayment/sypayment.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 
 class DownloadService {
 
@@ -282,7 +283,8 @@ class DownloadService {
   static Future<DownloadStrategy> getDownloadStrategy(PostType postType) async {
       try {
         GlobalLoading.show();
-        var r = await dio.post('/u/download/strategy', data: {
+        /// API_POST_USER_DOWNLOAD_STRATEGY -> /u/download/strategy
+        var r = await dio.post(dotenv.env['API_POST_USER_DOWNLOAD_STRATEGY']!, data: {
           "postType": postType.name
         });
         var data = r.data;
@@ -346,7 +348,8 @@ class DownloadService {
   /// 将无效的链接发送到后台进行重新签名，然后返回新签名后的链接
   static Future<List<String>> __reSignCdn(List<String> urls) async {
     try {
-      var r = await dio.post('/post/resign/urls', data: {
+      /// API_POST_POST_RESIGN_URLS -> /post/resign/urls
+      var r = await dio.post(dotenv.env['API_POST_POST_RESIGN_URLS']!, data: {
         "urls": urls
       });
       // covnert r.data List<dynamic> to List<String>
@@ -374,8 +377,9 @@ class DownloadHandler {
     if (isConfirmed) {
       try {
         GlobalLoading.show();
-        // 该 post 请求会再次检查当前用户的积分是否够用并同时扣除积分，如果积分不足，则会返回通知类型异常 580，由框架处理
-        var r = await dio.post('/u/download/point', data: {
+        /// 该 post 请求会再次检查当前用户的积分是否够用并同时扣除积分，如果积分不足，则会返回通知类型异常 580，由框架处理
+        /// API_POST_USER_DOWNLOAD_POINT -> /u/download/point
+        var r = await dio.post(dotenv.env['API_POST_USER_DOWNLOAD_POINT']!, data: {
           'shortcode': post.shortcode,
           'postType': post.type.name
         });
@@ -409,8 +413,9 @@ class DownloadHandler {
     if (isConfirmed) {
       try {
         GlobalLoading.show();
-        // 该 post 请求会再次检查当前用户的配额是否够用并同时保存下载记录，如果配额不足，则会返回通知类型异常 580，由框架处理
-        var r = await dio.post('/u/download/quota', data: {
+        /// 该 post 请求会再次检查当前用户的配额是否够用并同时保存下载记录，如果配额不足，则会返回通知类型异常 580，由框架处理
+        /// API_POST_USER_DOWNLOAD_QUOTA -> /u/download/quota
+        var r = await dio.post(dotenv.env['API_POST_USER_DOWNLOAD_QUOTA']!, data: {
           'shortcode': post.shortcode,
           'postType': post.type.name
         });

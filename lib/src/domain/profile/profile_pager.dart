@@ -80,7 +80,8 @@ class SearchProfilePager extends Pager<Profile> {
 
   @override
   Future<List<Profile>> fetchNextPage() async {
-    var r = await dio.post('/search/profiles', data: {
+    /// API_POST_SERACH_PROFILE -> /search/profiles
+    var r = await dio.post(dotenv.env['API_POST_SERACH_PROFILE']!, data: {
       'pageNum': pageNum,
       'pageSize': pageSize,
       'token': token,
