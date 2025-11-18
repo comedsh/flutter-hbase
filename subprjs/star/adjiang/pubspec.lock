@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: appbase
-      sha256: e3e23f3ad9b5a1d45f4ef0a2d79fc64683521dbbf77a7441e226549df791d73b
+      sha256: bb8b4a4ce9b018ed5d980b52a95ab74f8eb9c29d72e4d24f7e5764ebe3db0f87
       url: "http://localhost:4000"
     source: hosted
-    version: "1.0.1+8"
+    version: "1.0.2+2"
   archive:
     dependency: transitive
     description:
@@ -370,10 +370,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_dotenv
-      sha256: b7c7be5cd9f6ef7a78429cabd2774d3c4af50e79cb2b7593e3d5d763ef95c61b
+      sha256: d4130c4a43e0b13fefc593bc3961f2cb46e30cb79e253d4a526b1b5d24ae1ce4
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.1"
+    version: "6.0.0"
   flutter_feather_icons:
     dependency: "direct main"
     description:
@@ -1301,10 +1301,10 @@ packages:
     dependency: transitive
     description:
       name: sycomponents
-      sha256: a7f7e89807d1af74f76dc17f8710e89d43f5fcbe64120f82d7fdc8eeb089a5b4
+      sha256: b225b8538fae02d7e0ef7d6c9372dadfda7e08ffa4d66fb6a98c4cbcb0ae13db
       url: "http://localhost:4000"
     source: hosted
-    version: "2.1.6+28"
+    version: "2.1.6+29"
   synchronized:
     dependency: transitive
     description:
@@ -1317,10 +1317,10 @@ packages:
     dependency: transitive
     description:
       name: sypages
-      sha256: "59f1c42ac4e4889b16bb1afe113355a3d4773ff58ca7b559bda8c2a9dd4aa48d"
+      sha256: "1d103c0a6f9a6ac2b2e0d81a35cde7126a5faac780646094045589b9d6af68f6"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.0+17"
+    version: "2.0.0+18"
   sypayment:
     dependency: transitive
     description:
@@ -1333,10 +1333,10 @@ packages:
     dependency: transitive
     description:
       name: syrequest
-      sha256: "65c28600385eefd15ead747f33709565fd365794b534d207119c09375cbb06fd"
+      sha256: "871f28dbb82d80071a36085856b204314c7bfdcb5cceabec054005e4693218fa"
       url: "http://localhost:4000"
     source: hosted
-    version: "2.0.0+1"
+    version: "2.0.0+2"
   term_glyph:
     dependency: transitive
     description:
