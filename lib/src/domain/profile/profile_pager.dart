@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: depend_on_referenced_packages
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:appbase/appbase.dart';
 import 'package:flutter/material.dart';
 import 'package:hbase/hbase.dart';
@@ -17,7 +19,8 @@ class HotestPerTagsProfileGroupPager extends Pager<List<Profile>> {
     var chnCodesStr = chnCodes.join(',');
     var tagCodesStr = tagCodes.join(',');
 
-    var r = await dio.get('/profile/hot/pertags/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
+    // API_GET_PROFILE_HOT_PERTAGS_PREFIX -> /profile/hot/pertags
+    var r = await dio.get('${dotenv.env['API_GET_PROFILE_HOT_PERTAGS_PREFIX']}/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
     var profileGroupData = r.data;
     List<List<Profile>> profileGroup = [];
     for (var rawProfiles in profileGroupData) {
@@ -57,7 +60,8 @@ class HotestProfilePager extends Pager<Profile> {
   Future<List<Profile>> fetchNextPage() async {
     var chnCodesStr = chnCodes?.join(',');
     var tagCodesStr = tagCodes?.join(',');
-    var r = await dio.get('/profile/hot/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
+    // API_GET_PROFILE_HOT_PREFIX -> /profile/hot
+    var r = await dio.get('${dotenv.env['API_GET_PROFILE_HOT_PREFIX']}/$pageNum/$pageSize/$chnCodesStr/$tagCodesStr');
     return r.data.map<Profile>((data) => Profile.fromJson(data)).toList();
   }
 
