@@ -32,15 +32,19 @@ class UserProfileEditorPageState extends State<UserProfileEditorPage> {
         ),
         leadingWidth: 80,
       ),
-      body: Padding(
-        padding: EdgeInsets.only(top: 22, left: sp(15), right: sp(15)),
-        child: const Column(
-          children: [
-            UserProfileAvatarEditorView(),
-            Divider(thickness: 0.4,),
-            SizedBox(height: 12),
-            UserProfileInfoEditorView()
-          ],
+      /// iPad 小屏幕测试中，当编辑个性签名弹出键盘的时候，高度会溢出，因此使用 scroll 完全杜绝
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: EdgeInsets.only(top: 22, left: sp(15), right: sp(15)),
+          child: const Column(
+            children: [
+              UserProfileAvatarEditorView(),
+              Divider(thickness: 0.4,),
+              SizedBox(height: 12),
+              UserProfileInfoEditorView()
+            ],
+          ),
         ),
       )
     );
