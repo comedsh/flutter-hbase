@@ -103,6 +103,10 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                     );
                   },
                   style: Theme.of(context).textTheme.bodyLarge,  // bodyLarge 也是 TextFormField 的默认值
+                  /// 当焦点在该 TextField 中的时候，点击屏幕其它地方 onTapOutside 回调将会被触发，此回调的的作用就是关闭键盘
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  /// 当 TextField 允许多行后，键盘的回车键会自动改为换行键，导致键盘无法关闭；下面这一行代码是把换行键改为确定键
+                  textInputAction: TextInputAction.done,                  
                 ),
               ),
             ],
@@ -184,7 +188,7 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                   maxLength: 60,
                   onChanged: (value) => signature = value,
                   decoration: InputDecoration(
-                    // hintText: '字数不要超过 50 字',
+                    // hintText: '字数不要超过 50 字',s
                     // Customize the underline when the field is enabled (not focused)
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
@@ -195,6 +199,10 @@ class UserProfileInfoEditorViewState extends State<UserProfileInfoEditorView> {
                     ),
                   ),
                   style: Theme.of(context).textTheme.bodyLarge,  // bodyLarge 也是 TextFormField 的默认值
+                  /// 当焦点在该 TextField 中的时候，点击屏幕其它地方 onTapOutside 回调将会被触发，此回调的的作用就是关闭键盘
+                  onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                  /// 当 TextField 允许多行后，键盘的回车键会自动改为换行键，导致键盘无法关闭；下面这一行代码是把换行键改为确定键
+                  textInputAction: TextInputAction.done,
                 ),
               )
             ]
