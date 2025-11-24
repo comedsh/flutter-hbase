@@ -20,7 +20,8 @@ class PostCarouselService {
     required Post post, 
     required String url,
     required double width, 
-    required double aspectRatio
+    required double aspectRatio,
+    required BoxFit fit,
   }) {
     var user = HBaseUserService.user;
     if (!user.isUnlockBlur && post.blurType == BlurType.blur) {
@@ -32,10 +33,10 @@ class PostCarouselService {
             backgroundImage: (AppServiceManager.appConfig as HBaseAppConfig).salePageBackgroundImage,
           )),
           unlockButtonColor: AppServiceManager.appConfig.appTheme.seedColor,
-          child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,),
+          child: CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio, fit: fit),
         );
     } else {
-      return CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio,);
+      return CachedImage(width: width, imgUrl: url, aspectRatio: aspectRatio, fit: fit);
     }    
   }
 

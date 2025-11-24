@@ -111,7 +111,8 @@ class _HotspotPostCardSwiperViewState extends State<HotspotPostCardSwiperView> {
           post: post, 
           url: url, 
           width: width, 
-          aspectRatio: aspectRatio
+          aspectRatio: aspectRatio,
+          fit: BoxFit.cover
         ) ,
       videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
         PostCarouselService.videoCreator(

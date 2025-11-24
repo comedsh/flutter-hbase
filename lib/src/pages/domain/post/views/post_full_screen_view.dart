@@ -138,7 +138,8 @@ class _PostFullScreenViewState extends State<PostFullScreenView> {
               post: widget.post, 
               url: url, 
               width: width, 
-              aspectRatio: aspectRatio
+              aspectRatio: aspectRatio,
+              fit: BoxFit.contain
             )),
           videoCreator: (String videoUrl, String coverImgUrl, double width, double aspectRatio, BoxFit fit) =>
             Obx(() => PostCarouselService.videoCreator(
