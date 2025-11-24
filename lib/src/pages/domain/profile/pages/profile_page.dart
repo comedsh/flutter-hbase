@@ -80,12 +80,15 @@ class ProfilePage extends StatelessWidget {
             var postPager = ProfilePostPager(profileCode: profile.code, sortBy: tab.id, pageSize: 24);
             return PostAlbumListView(
               postPager: postPager, 
+              /// 很遗憾，不能启动 navback 的 autoscroll 特性，否则 NestedScrollView 联动滚动的特性就没有了
+              isEnableAutoScroll: false,
               onCellTapped: (posts, post, postPager) async =>
                 /// 当点击 cell 后会跳转到第三方页面，这里的返回值 index 是从第三方页面返回时的 post index，
                 /// 这样 PostAlbumListView 根据这个值就可以进行 scrollTo 操作了
                 await Get.to<int>(() => 
                   PostFullScreenListViewPage(
-                    posts: posts, 
+                    /// 下面 [...array] 是对原数组的 copy，避免两个页面的数据相互干扰从而导致可能出现重复的数据
+                    posts: [...posts], 
                     post: post, 
                     postPager: postPager,
                     title: post.profile.name,

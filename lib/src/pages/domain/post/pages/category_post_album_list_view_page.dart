@@ -40,7 +40,8 @@ class CategoryPostAlbumListViewPage extends StatelessWidget {
             /// 这样 PostAlbumListView 根据这个值就可以进行 scrollTo 操作了
             await Get.to<int>(() => 
               PostFullScreenListViewPage(
-                posts: posts, 
+                /// 下面 [...array] 是对原数组的 copy，避免两个页面的数据相互干扰从而导致可能出现重复的数据
+                posts: [...posts], 
                 post: post, 
                 postPager: postPager,
                 title: tab.name,
