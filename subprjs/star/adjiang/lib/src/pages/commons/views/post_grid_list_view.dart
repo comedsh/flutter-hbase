@@ -145,7 +145,10 @@ class _PostGridListViewState extends State<PostGridListView> {
                 borderRadius: const BorderRadius.all(Radius.circular(16.0)),
                 child: PostCoverService.attachBadgedIcon(
                   post: post, 
-                  img: CachedImage(width: coverImg.width, aspectRatio: coverImg.width / coverImg.height, imgUrl: coverImg.pic), 
+                  img: resolveBlurCase(
+                    CachedImage(width: coverImg.width, aspectRatio: coverImg.width / coverImg.height, imgUrl: coverImg.pic), 
+                    post
+                  ),
                   isPaintPinned: false
                 )
               ),
@@ -223,6 +226,13 @@ class _PostGridListViewState extends State<PostGridListView> {
     widget.postPager.reset();
     pagingController.refresh();
   }
+
+  Widget resolveBlurCase(CachedImage img, Post post) {
+    if (!HBaseUserService.user.isUnlockBlur && post.blurType == BlurType.blur) { 
+      return BlurrableImage(unlockable: false, blurDepth: post.blurDepth, child: img);
+    }
+    return img;
+  }  
 
   removedRevantPostsFromBlockedProfiles() async {
     final blockedProfiles = await BlockProfileService.getAllBlockedProfiles();
