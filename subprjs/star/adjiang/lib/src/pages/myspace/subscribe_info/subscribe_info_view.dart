@@ -21,7 +21,7 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
   
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Obx(() => Card(
       elevation: 0, // Controls the shadow size
       clipBehavior: Clip.hardEdge,
       shape: RoundedRectangleBorder(
@@ -67,7 +67,7 @@ class _SubscribeInfoViewState extends State<SubscribeInfoView> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   /// 只有用户未买过会员且有购买会员的 Auth
