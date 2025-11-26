@@ -146,7 +146,7 @@ class ScoreTargetWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('您认为${AppServiceManager.appConfig.appName}怎么样？', style: TextStyle(fontSize: sp(18))),
+              Text('您觉得${AppServiceManager.appConfig.appName}怎么样？', style: TextStyle(fontSize: sp(18))),
               SizedBox(height: sp(40)),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,6 +180,7 @@ class ScoreTargetWidget {
                     width: sp(98),
                     height: sp(32.0),
                     borderRadius: BorderRadius.circular(13.0),
+                    dense: true,
                     onPressed: () {
                       Get.back();
                       ScoreTargetWidget.showSecond();
